@@ -1,0 +1,181 @@
+<!DOCTYPE DDTXT>
+
+// This is a very basic DDTXT.
+// For more details on the DDTXT format, please see TUTORIAL.ddtxt.
+
+<global>
+
+name = DDTXT README
+author = Michael Rumpff (MZRPRoductions)
+
+<style>
+
+color = white
+backgroundColor = black
+// Usually, break is set to <br><br>, completely splitting lines apart, but by setting break to only <br>, we can use (break) as a newline, or a press of enter.
+break = <br>
+titleColor = white
+headingColor = orange
+
+</style>
+
+</global>
+
+<character>
+
+code = MZRProductions
+// Name here is useful since you can't have a space in a character code.
+name = Michael Rumpff
+color = lightblue
+
+<pronouns>
+
+subject = he
+possessive = his
+object = him
+reflexive = himself
+present = he is
+presentCompacted = he's
+
+</pronouns>
+
+</character>
+
+<chapter>
+// This isn't missing, this is a way to remove the name and subtitle.
+// By not putting anything after the equal sign, the name and subtitle are set to nothing.
+name = 
+subtitle = 
+
+<text>
+
+// This next part is the notice that is recommended to put in project files by the GNU PUBLIC LICENSE.
+// It looks broken apart, but the breaks are to format it the way it would be in a plain text:
+Digital Dialogue Text Reader (and Parser)
+(break)
+Copyright (C) 2023 Michael Rumpff (MZRProductions)
+(break)
+(break)
+This program is free software: you can redistribute it and/or modify
+(break)
+it under the terms of the GNU General Public License as published by
+(break)
+the Free Software Foundation, either version 3 of the License, or
+(break)
+(at your option) any later version.
+(break)
+(break)
+This program is distributed in the hope that it will be useful,
+(break)
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+(break)
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+(break)
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+(break)
+// We have to escape the < and > here because otherwise they will be seen as character references, which is incorrect. We do this by immediately placing a hashtag (#) before these two symbols.
+// The finished document will not show these hashtags used to escape the symbols.
+along with this program.  If not, see  #<https://www.gnu.org/licenses/#>.
+
+(divide)
+
+[MZRProductions: You can find the full license at LICENSE.txt in the main folder.]
+
+[MZRProductions: You can also view this README as a plain text file (.txt) at README.txt in the main folder.]
+
+(divide)
+
+</text>
+</chapter>
+
+// TABLE OF CONTENTS
+
+<chapter>
+
+name = TABLE OF CONTENTS:
+// This is a unique way of including headers.
+// This might break when headings are formatted properly, but I'll figure that out then.
+subtitle = Section 1:<br>Opening and using the DDTXT Reader.<br>Section 2:<br>A brief description of each file included with the DDTXT Reader.<br>Section 3:<br>Using the DDTXT Reader's builtin editor.<br>Section 4:<br>More about the license.
+
+<text>
+
+(divide)
+
+</text>
+
+</chapter>
+
+// SECTION 1: Opening and using the DDTXT Reader.
+
+<chapter>
+	
+name = SECTION 1:
+subtitle = Opening and using the DDTXT Reader.
+<text>
+	The DDTXT Reader included here is a webpage saved locally as an HTML file. This file is named "DDTXTReader.html". Any browser can open this file, either by right-clicking the file and selecting your browser as the program to open it with, or by using a "file://"... URL in your browser. Of these options, opening the file with your browser from a file viewer is far simpler and recommended to avoid file path typos.
+	(break)
+	(break)
+	Once you have opened the file, you should see the DDTXT Reader appear as a webpage in your browser in a new tab. From here, please enter this tab and click on the large "Read a DDTXT" button. From here, simply open the file you want to read. If there are strange occurrences, you can always open the browser's console and read the text printed there. (Please look up how to open your browser's console if you are not sure. There is a good chance you can right-click the webpage and click "Inspect" or access developer tools there.)
+	(break)
+	(break)
+	You are currently reading this README as a DDTXT! Congratulations!
+</text>
+
+</chapter>
+
+// SECTION 2: A brief description of each file included with the DDTXT Reader.
+
+<chapter>
+
+name = SECTION 2:
+subtitle = A brief description of each file included with the DDTXT Reader.
+<text>
+
+DDTXTReader.html  #~  The webpage that reads DDTXT files.
+(break)
+(break)
+LICENSE.txt  #~  The full GNU GENERAL PUBLIC LICENSE.
+(break)
+(break)
+README.txt  #~  The basic README file that helps users get started.
+(break)
+(break)
+README.ddtxt  #~  The same README as README.txt in DDTXT format. (You are here.)
+
+</text>
+
+</chapter>
+
+// SECTION 3: Using the DDTXT Reader's builtin editor.
+
+<chapter>
+
+name = SECTION 3:
+subtitle = Using the DDTXT Reader's builtin editor.
+
+<text>
+	The DDTXT Reader has a very basic text editor built into the webpage. This editor can be accessed by pressing the E key at any point. A resizeable text box will appear to the left. You can edit the currently loaded document just like you would with any other text editor. When you would like to update the finished document with the changes you have made, simply click the "Refresh" button above the editor. The "Jump to bottom" button scrolls the entire webpage to the end of the DDTXT, so that you can see any new content you have written. The "Export" button allows you to save your changes locally to keep them safe. Of course, you can always use a regular text editor, but this is a way to make changes quickly.
+	(break)
+	(break)
+	Since you are reading this document in the DDTXT Reader, you can press E to view the editor right now.
+	// You can only see this if you are in the editor or viewing this in a regular text editor. Hello!
+</text>
+
+</chapter>
+
+// SECTION 4: Learning to create DDTXTs.
+
+<chapter>
+
+name = SECTION 4:
+subtitle = Learning to create DDTXTs.
+
+<text>
+
+	Included with the DDTXT Reader is a manual on writing DDTXTs, proper syntax and usage, and general advice on creating clean DDTXTs. You can find this by opening TUTORIAL.ddtxt.
+
+</text>
+
+</chapter>
