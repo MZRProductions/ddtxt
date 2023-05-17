@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+
+<!--
+
+	Digital Dialogue Text Reader (and Parser)
+    Copyright (C) 2023 Michael Rumpff (MZRProductions)
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+-->
+
+<!--
+NOTE: All mentions of DDT or DDTXT are interchangeable. They both stand for the Digital Dialogue Text format, although due to a slight name change there might be some discrepancies in naming.
+TODO: Make all "DDT"s "DDTXT"s
+-->
+
+<!-- HTML -->
+
+<html>
+
+<!-- CSS -->
+
+<style>
+
+body {
+	color: white;
+	background-color: black;
+}
+
+#reloadText {
+	text-align: center;
+	font-size: 20px;
+}
+
+#printText {
+	text-align: center;
+	font-size: 20px;
+}
+
+#fileButton {
+	font-size: 25px;
+	text-align: center;
+	display: block;
+	width: 46%;
+	margin-left: 25%;
+	padding: 2%;
+	background-color: white;
+	color: black;
+	border: 10px ridge black;
+}
+
+#fileInput {
+	display: none;
+}
+
+#documentHeading {
+	text-align: center;
+}
+
+.chapterHeading {
+	text-align: center;
+}
+
+.chapterSubHeading {
+	text-align: center;
+}
+
+.divide {
+	text-align: center;
+}
+
+/* This container holds optional UI */
+#fixedUI {
+	visibility: hidden;
+	width: 100%;
+	position: fixed;
+	background-color: inherit;
+	color: inherit;
+	font-size: 20px;
+	padding-left: 10px;
+	padding-right: 10px;
+	margin: -10px;
+	border: 2px solid white;
+}
+
+#ui {
+	text-align: center;
+}
+
+#ui-name {
+	font-size: 25px;
+	font-weight: bold;
+}
+
+#ui-toggle {
+	font-size: 25px;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-right: 10px;
+	background-color: black;
+	border: 2px solid white;
+}
+
+/* This container holds the reader and the editor: */
+#mainPage {
+	display: flex;
+}
+
+/* This container holds the contents of the DDTXT */
+#DDT {
+	background-color: inherit;
+	flex: 1;
+}
+
+/* DDT editor */
+#editor {
+	margin-top: 8%;
+	flex: 0;
+	background-color: inherit;
+	visibility: hidden;
+	display: none;
+}
+
+#editor-content {
+	width: 48.5%;
+	max-width: 48.5%;
+	height: 78.5%;
+	max-height: 78.5%;
+	position: fixed;
+	resize: both;
+	background-color: black;
+	color: white;
+}
+
+#editor-ui {
+	width: 100%;
+}
+
+.editor-style {
+	border: 2px solid white;
+	padding: 1%;
+	text-align: center;
+}
+
+/* @media print holds special cases for printing the webpage */
+/* Printing can also mean converting to a PDF, which is the most useful purpose of the following adjustments: */
+@media print {
+	#footer {
+		display: none;
+	}
+	#fixedUI {
+		display: none;
+	}
+	#editor {
+		display: none;
+	}
+	#DDT {
+		width: 100%;
+	}
+}
+
+</style>
+
+<head>
+	<title id="webpageTitle">DDTXT Reader</title>
+</head>
+
+<!-- Fixed UI at top of page -->
+<div id="fixedUI">
+
+<table id="ui">
+
+<tr id="documentInfo">
+
+<td id="ui-stats"></td>
+<td id="ui-toggle">Hide stats.</td>
+
+</tr>
+
+</table>
+
+</div>
+
+<div id="mainPage">
+
+<!-- DDT editor -->
+<div id="editor">
+	<table id="editor-ui">
+		<tr>
+			<td id="editor-save" class="editor-style">Export</td>
+			<td id="editor-refresh" class="editor-style">Refresh</td>
+			<td id="editor-bottom" class="editor-style">Jump to bottom</td>
+		</tr>
+	</table>
+	<textarea id="editor-content" autocomplete="off" spellcheck="off"></textarea>
+</div>
+
+<!-- DDT content -->
+<div id="DDT"></div>
+
+</div>
+
+<!-- Universal footer not dependent on content -->
+<div id="footer">
+
+<br>
+
+<label id="fileButton" for="fileInput">Read a DDTXT</label>
+
+<input id="fileInput" type="file" accept=".txt, .ddtxt"></input>
+
+<p id="reloadText" onclick="loadFileInput()">Click me to reload the DDTXT file.</p>
+
+<p id="printText" onclick="printDDTXT()">Click me to save this DDTXT as a PDF or print it out!<br>(You may have to enable background graphics to get the correct background color.)</p>
+
+</div>
+
+
+<!-- JS -->
+
+
+<script>
+
+// TODO: Fix usePluralVerbForm Character attribute usage.
+// TODO: Fix or remove hardbaked text, as it currently provides more problems than benefits.
+
+var stringifiedDDT = "";
+
+const genericPronounsList = [
+	"subject",
+	"possessive",
+	"object",
+	"instance",
+	"reflexive",
+	"present",
+	"presentCompacted",
+];
+
+const genericPronouns = {
+	["subject"]: "they",
+	["possessive"]: "their",
+	["object"]: "them",
+	["instance"]: "person",
+	["reflexive"]: "themselves",
+	["present"]: "they are",
+	["presentCompacted"]: "they're",
+};
+
+// Classes (I just use a function to make an object)
+// var newCharacter = new Character();
+
+// Character class used to store character data in the main DDT object
+var Character = function (
+	code = "",
+	name = "Unnamed Character",
+	pronouns = genericPronouns,
+	usePluralVerbForm = false,
+	content = "There is no biographic summary present.",
+	color = "inherit",
+	paragraphColor = "inherit",
+	backgroundColor = "none",
+) {
+	this.name = name;
+	this.code = code;
+	this.pronouns = pronouns;
+	// Check to make sure we have each pronoun. If not, use the generic form:
+	for (index of genericPronounsList) {
+		if (!this.pronouns [index]) {
+			this.pronouns [index] = genericPronouns [index];
+		}
+	}
+	this.usePluralVerbForm = usePluralVerbForm;
+	this.bio = content;
+	this.color = color;
+	this.paragraphColor = paragraphColor;
+	this.backgroundColor = backgroundColor;
+	
+	// Grab a style element
+	const CSSAccess = document.createElement("style");
+	CSSAccess.type = "text/css";
+	// Character tag:
+	CSSAccess.innerHTML += "\n.character-" + this.code + " {\n\tcolor: " + this.color + ";\n\tbackground-color: " + this.backgroundColor + ";\n\tfont-weight: bold;\n}";
+	// Character dialog:
+	CSSAccess.innerHTML += "\n.dialog-" + this.code + " {\n\tcolor: " + this.paragraphColor + ";\n\tbackground-color: " + this.backgroundColor + ";\n}";
+	document.getElementsByTagName("head") [0].appendChild(CSSAccess);
+};
+
+
+// Chapter class used to store chapter data in the main DDT object
+var Chapter = function (
+	name = "Untitled Chapter",
+	subtitle = "",
+	content = "",
+) {
+	this.name = name;
+	this.subtitle = subtitle;
+	this.text = content;
+};
+
+
+
+const DDTHeader = "<!DOCTYPE DDTXT>";
+
+var DDT = {}; // Empty container (for now)
+
+const characterReferences = [
+	"@", // Character's name: @test went to the store. => Test Character went to the store.
+	"=", // Belonging to character, possessive: It was =test store. => It was their store.
+	"+", // Belonging to character using character's name, same as @character's, although this syntax does not work: +test => Test Character's
+	"<", // Subject: <test did it! => They did it!
+	">", // Object: The ball was thrown to >test => The ball was thrown to them.
+	"~", // Instance, generally what a character physically (or similarly) is: @test is a ~test. => Test Character is a ???. NOTE: This one is inherently much more loose and can cause problems if not used with care.
+	"*", // Reflexive: @test had to feed *test. => Test Character had to feed themselves.
+	"{", // Present progressive: {test walking quickly! => They are walking quickly!
+	"}", // Present progressive contraction: }test walking quickly! => They're walking quickly!
+	"&", // Verb conjugation help, splices words to conform to grammar given the character's subject form. NOTE: This uses the most recent reference before this one which means that you must use a reference before using this! : <test walk&s to the store => they walk to the store / he/she/etc... walks to the store 
+];
+
+// What to consider punctuation:
+const punctuation = [
+	",",
+	".",
+	":",
+	";",
+	"\"",
+	"\'",
+	"?",
+	"!",
+];
+
+// Characters that get spaces added after them if not already present:
+const spacedPunctuation = [
+	",",
+	".",
+	":",
+	";",
+	"?",
+	"!",
+];
+
+// Characters that are considered the beginning of a sentence:
+const newSentencePunctuation = [
+	".",
+	"!",
+	"?",
+	"[",
+	"]",
+	"\n"
+];
+
+// Characters that are considered to not be part of reference codes, even if they are directly connected to the code (@james). -> @james)
+const charactersNotAllowedInCodes = [
+	".",
+	",",
+	";",
+	"[",
+	"]",
+	"(",
+	")",
+	"!",
+	"?"
+];
+
+// Only keep the contents of a string BEFORE disallowed characters, assuming that the beginning of the string is fine.
+var trimStringToValidPart = function (disallowedChars, string) {
+	var tempString = string;
+	
+	for (var currentChar = 0; currentChar < disallowedChars.length; currentChar ++) {
+		const badCharacter = tempString.indexOf(disallowedChars [currentChar]);
+		
+		if (badCharacter > -1) { // If a "banned" character is present,
+			tempString = tempString.substring(0, badCharacter); // then only keep the part before the character.
+		}
+	}
+
+	return tempString;
+};
+
+// Return the correct part and the trimmed part, in case we need it too  
+var trimAndRetainStringToValidPart = function (disallowedChars, string) {
+	const tempString = trimStringToValidPart(disallowedChars, string); // Use the function above to trim the string.
+	return [tempString, string.substring(tempString.length, string.length)]; // Then, using the length to find what was cut, give us the part that was trimmed.
+};
+
+var clearDDT = function () {
+	DDT = {
+		style: {
+			color: "black",
+			titleColor: "black",
+			headingColor: "black",
+			backgroundColor: "white",
+			divideSize: "50px",
+			divide: "~~~",
+			divideColor: "inherit",
+			break: "<br><br>",
+		},
+		errorContextLength: 30, // How much text errors should provide follwing an error (so that people can read where the error happened)
+		addMissingSpaces: true, // Whether or not the DDT parser should append needed spaces after most punctuation.
+		// NOTE: (addMissingSpaces = true) is a good idea because it maintains consistency no matter how the DDTXT is spaced out.
+		formatHeadings: false, // Convert references in chapter headings. If you disable this, chapter headings will be hard baked.
+		global: {
+			name: "Untitled DDTXT",
+			webtitle: "",
+			author: "Unknown Author",
+			summary: "There is no summary present.",
+		},
+		// This object holds character information
+		cast: {
+			characters: {}, // Empty list to be filled with characters
+			lastCharacterReferenced: "",
+			lastReferenceType: "",
+			getCharacterByCode: function (code, context) {
+				code = code.split(".") [0]; // If bad concatenation results in two sentences getting smooshed together, only use the part of the code before the period (this code works whether there is a period or not.
+				// Allow for implicit character references (shorthand for referencing the same character multiple times in a row)
+				if (code === "") { // Shorthand (there is no character code)
+					if (DDT.cast.lastCharacterReferenced !== "") {
+						code = DDT.cast.lastCharacterReferenced; // Use the previously referenced character as a reference (redundancy)
+					}
+					else {
+						console.error("DDTReferenceError: There was an attempt to use shorthand with no previous character to go by! Please reference a character at least once before using this shorthand." + context);
+						return new Character();
+					}
+				}
+				// Standard search:
+				const result = DDT.cast.characters [code];
+				
+				if (result) {
+					return result;
+				}
+				else {
+					console.error("DDTReferenceError: Character of code \"" + code + "\" does not exist or has not been registered." + context);
+					return new Character();
+				}
+			},
+			// Capitalize a string
+			capitalizeWord: function (word) {
+				return word [0].toUpperCase() + word.substring(1, word.length);
+			},
+			// See if a spot is the first word of a sentence
+			isFirstWordOfSentence: function (spot, text, withinDialogue = false) {
+				// Check for stupid cases first:
+				if (spot === 0 || newSentencePunctuation.includes(text [spot - 1])) {
+					return true;
+				}
+				
+				spot --; // We've already checked the first character back, so move on
+				
+				while (spot > 0) {
+					// Once you hit a space, assume you are outside of the original word you started at and check for punctuation
+					if ([" ", "\t"].includes(text [spot - 1])) {
+						spot --;
+					}
+					else if (newSentencePunctuation.includes(text [spot - 1]) || (withinDialogue && text [spot - 1] === ":")) { // There is an end to a sentence before (for dialogue the colon acts as a division)
+						return true; // This should allow truthiness to work
+					}
+					else { // There is a regular word before
+						return false;
+					}
+				}
+			},
+			// TODO: THIS FOLLOWING FUNCTION DOES NOT WORK!!
+			// THIS IS MERELY A STARTING POINT
+			getCompleteWordFromMiddle: function (spot, text, withinDialogue = false) {
+				const originalSpot = spot; // Save this for later to avoid checking characters we have already checked
+				
+				// Check for stupid cases first:
+				if (spot === 0 || newSentencePunctuation.includes(text [spot - 1])) {
+					return text.substring(0, 0);
+				}
+				
+				spot --; // We've already checked the first character back, so move on
+				var start = -1;
+				var end = -1;
+				
+				// Find the start
+				while (spot > 0) {
+					// Once you hit a space, assume you are outside of the original word you started at
+					if ([" ", "\t"].includes(text [spot - 1]) || punctuation.includes(text [spot - 1])) { // Punctuation acts as the end of a word
+						start = spot;
+						break;
+					}
+					else { // Skip alphanumeric characters
+						spot --;
+					}
+				}
+				
+				// Reset the seeker
+				spot = originalSpot;
+				
+				// Find the end
+				while (spot < text.length - 1) {
+					// Once you hit a space, assume you are outside of the original word you started at
+					if ([" ", "\t"].includes(text [spot + 1]) || punctuation.includes(text [spot + 1])) { // Punctuation acts as the end of a word
+						end = spot;
+						break;
+					}
+					else { // Skip alphanumeric characters
+						spot ++;
+					}
+				}
+				
+				return text.substring(start + 1, end);
+			},
+			// Convert an already known reference type and a known code to the correct pronoun and/or character information
+			// spot, fullText, and withinDialogue parameters are used for debugging and context
+			getCharacterPronounByCode: function (code, referenceCharacter, spot, fullText, withinDialogue = false) {
+				const DDTCharacter = DDT.cast.getCharacterByCode(((referenceCharacter === "&") ? "" : code), " (This problem occurs around the following: \"" + fullText.substring(spot, spot + DDT.errorContextLength) + "\")"); // If the reference is a verb form checker (&), then pass through an empty string (which means reuse the previous code)
+				
+				const referenceToPronoun = {
+					["="]: "possessive",
+					[">"]: "object",
+					["<"]: "subject",
+					["~"]: "instance",
+					["*"]: "reflexive",
+					["{"]: "present",
+					["}"]: "presentCompacted",
+				};
+				// Unique cases
+				if (referenceCharacter === "&") { // Verb forms
+					if (DDT.cast.lastCharacterReferenced !== "") {
+						return (DDT.cast.lastReferenceType !== "@" && DDTCharacter.usePluralVerbForm) ? "" : code; // "code" here is the letters that should be used for the singular form of the verb. This ternary handles most cases of verb conjugations.
+						// If ((the character always uses plural verb form) or (the most recent reference is not the character's name)) then omit the extra letters of the verb.
+					}
+					else {
+						console.error("DDTReferenceError: There was an attempt to use shorthand with no previous character to go by! Please reference a character at least once before using this shorthand.");
+						return "";
+					}
+				}
+				// Intra-document chapter links dont work right now:
+				/*
+				if (referenceCharacter === ">" && fullText [spot - 2] === "-") { // Links to different parts of the document
+					// Link shorthand
+					const fullWord = DDT.cast.getCompleteWordFromMiddle(spot, fullText, withinDialogue);
+					console.log(fullWord);
+					const linkText = fullWord.split("->") [0]; // The visual text is the word directly before the arrow
+					// Unless the destination is "title", assume it is a chapter, using the number provided (2 becomes chapter-2)
+					const isTitle = code.toLowerCase() === "title";
+					//return "<a href=\"#" + ((isTitle) ? "documentHeading" : ("chapter-" + code)) + "\" alt=\"Redirection to " + (isTitle) ? "the title section." : "chapter of name " + DDT.chapters [parseInt(code)].name + "\">" + linkText + "</a>";
+					return "<a href=\"#documentHeading\"></a>";
+				}*/
+				
+				// Save the last reference type:
+				DDT.cast.lastReferenceType = referenceCharacter;
+				if (code !== "") { // Don't overwrite the character code when using shorthand. That would be silly because it would set the last character to an empty string after the first time.
+					DDT.cast.lastCharacterReferenced = code;
+				}
+				
+				// More unique cases
+				if (referenceCharacter === "@") { // Name
+					return DDTCharacter.name;
+				}
+				else if (referenceCharacter === "+") { // Possessive name (Emily's)
+					const name = DDTCharacter.name;
+					return (name [name.length - 1] === "s") ? name + "\'" : name + "\'s"; // The ternary here handles apostrophes following an s
+				}
+				// Standard
+				else {
+					// Lookout for capitalization at the beginning of sentences:
+					var result = DDTCharacter.pronouns [referenceToPronoun [referenceCharacter]];
+					if (DDT.cast.isFirstWordOfSentence(spot, fullText, withinDialogue)) {
+						result = DDT.cast.capitalizeWord(result);
+					}
+					// Return the final answer
+					return result;
+				}
+			},
+			// Call this function to convert character references into actual words
+			convertReference: function (text, start, referenceCharacter, withinDialogue = false) {
+				var word = text.substring(start, text.length).split(" ") [0]; // Pull out the first word of the string
+				const totalOriginalLength = word.length + 1; // Save the original word length for later use.
+				// Make sure the code does not have bad characters, saving them to add back in later:
+				const trimData = trimAndRetainStringToValidPart(charactersNotAllowedInCodes, word); // The code is now only the usable portion of the original code, with the unusable portion saved to add back in upon return.
+				// Assign the results of the above function:
+				word = trimData [0]; // Trim the original word to the new code
+				const extra = trimData [1]; // Hold the extra characters here for future use.
+				// Return the reference and the extra characters:
+				return text.substring(0, start - 1) + DDT.cast.getCharacterPronounByCode(word, referenceCharacter, start, text, withinDialogue) + extra + text.substring(start + totalOriginalLength - 1, text.length); // Old + converted text + extra text not used + future
+			},
+			// This formats all DDTXT syntax other than (hardbaked) segments, which require the simpler format() function below
+			formatChunk: function (text) {
+				var withinBrackets = false;
+				var lastSpot = -1;
+				var charactersShifted = 0;
+				
+				// Character reference and hashtag pass-through:
+				
+				for (var currentChar = 0; currentChar + charactersShifted < text.length; currentChar ++) {
+					const spot = currentChar + charactersShifted;
+					
+					// Ascertain whether we are in HTML or not:
+					
+					// Ascertain whether we are in dialogue or not:
+					if (["[", "]"].includes(text [spot])) {
+						withinBrackets = !withinBrackets; // Toggle where we are upon either of these (this could break, but it'll work with appropiate syntax usage)
+					}
+					
+					if (characterReferences.includes(text [spot])) {
+						// Remove all hashtags and skip the next character
+						if (text [spot - 1] === "#") {
+							text = text.substring(0, spot - 1) + text.substring(spot, text.length);
+							charactersShifted --; // Remove a character from the seeker
+							// Skip the next character (since we already have it covered. This also allows us to use ## to include hashtags)
+							currentChar ++;
+						}
+						else {
+							const originalLength = text.length;
+							text = DDT.cast.convertReference(text, spot + 1, text [spot], withinDialogue = withinBrackets); // The +1 in the middle omits the reference character from the character code. withinDialogue tells the conversion function to count a colon as a new sentence.
+							charactersShifted += text.length - originalLength;
+						}
+					}
+				}
+				
+				// Quote pass-through
+				
+				charactersShifted = 0;
+				withinBrackets = false; // (THIS SHOULD BE FALSE ANYWAY, but someone's bound to make a typo at some point. (Me))
+				
+				for (var currentChar = 0; currentChar + charactersShifted < text.length; currentChar ++) {
+					const spot = currentChar + charactersShifted;
+
+					if (!withinBrackets && text [spot] === "[") {
+						withinBrackets = true;
+						lastSpot = currentChar; // Save this spot, EXCLUDING the shift that we add later
+					}
+					else if (withinBrackets && text [spot] == "]") {
+						withinBrackets = false;
+						const dialog = text.substring(lastSpot + 1 + charactersShifted, spot).split(":"); // Pull out the dialog and split it into both parts
+						
+						// Syntax error handling
+						if (dialog.length !== 2) {
+							console.error("DDTSyntaxError: Character dialog does not have a colon around \"" + dialog [0] + "\"");
+							return text;
+						}
+						
+						// Calculate the length of the original text representing dialogue
+						const totalOriginalLength = dialog [0].length + dialog [1].length + 3; // The +2 includes the brackets as part of the length and the other +1 keeps the seeker on track
+						
+						// Character code
+						const characterCode = (dialog [0].trim() === "") ? DDT.cast.lastCharacterReferenced : dialog [0].trim(); // If shorthand is in use, use the last character referenced.
+						
+						// Dialog
+						const spokenWords = dialog [1].trim();
+						
+						// Formal character name
+						const characterName = (characterCode [0] === "#") ? characterCode.substring(1, characterCode.length) : DDT.cast.getCharacterByCode(characterCode).name;
+						// If the name begins with a hashtag, that means that it has been casted in, and therefore does not exist. In this case, use the name provided, removing the hashtag at the beginning (substring).
+						
+						// Proper, formal HTML text:
+						const htmlDialog = "<h3 class=\"character-" + characterCode + "\">" + characterName + ": <nothing class=\"dialog-" + characterCode + "\">" + spokenWords + "</nothing></h3>";
+						
+						// Prepare the ends:
+						const previousText = text.substring(0, lastSpot + charactersShifted);
+						const finalText = text.substring(lastSpot + charactersShifted + totalOriginalLength, text.length);
+						
+						text = previousText + htmlDialog + finalText; // Apply changes to text, ready for further parsing
+						lastSpot = -1; // Clear the most recent open bracket
+						
+						// Make sure to ignore extra added text characters
+						charactersShifted = charactersShifted - totalOriginalLength + htmlDialog.length; // charactersShifted will probably be a negative number.
+						// Save this character reference for future shorthand:
+						DDT.cast.lastCharacterReferenced = characterCode;
+					}
+					// End of quote parsing
+				}
+				
+				// Divide pass-through
+				
+				const literalDivideText = "<h2 class=\"divide\" style=\"font-size: " + DDT.style.divideSize + "; color: " + DDT.style.divideColor + "\">" + DDT.style.divide + "</h2>";
+				
+				text = text.replaceAll("(divide)", literalDivideText);
+				
+				// Break line pass-through
+				
+				text = text.replaceAll("(break)", DDT.style.break); // Replace all breaks with the actual HTML <br>, which is impossible due to the greater/less than symbols.
+				
+				// Final steps
+				
+				if (withinBrackets) { // Check for weird syntax problems
+					console.error("DDTSyntaxError: Character dialog has not been closed off around \"" + text.substring(0, DDT.errorContextLength) + "\".");
+				}
+				
+				return text;
+			},
+			// Call this function to convert formatted DDTXT text to literal HTML text
+			format: function (text) {
+				// Convert all HTML segment ends to beginnings, since we are going to use a simple split:
+				text.replaceAll("(/hardbaked)", "(hardbaked)");
+				// Simply split by "(hardbaked)"s
+				const textChunks = text.split("(hardbaked)");
+				
+				tempString = ""; // Create a temp string to concatenate to.
+				
+				for (currentChunk = 0; currentChunk < textChunks.length; currentChunk ++) { // Append each chunk, formatting, excluding odd chunks from formatting
+					if (currentChunk % 2 === 1) {
+						tempString += "<pre>" + textChunks [currentChunk].replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("&", "&amp;") + "</pre>";
+						// Convert all tags to their stringified equivalent and 
+					}
+					else {
+						tempString += DDT.cast.formatChunk(textChunks [currentChunk]);
+					}
+				}
+				
+				return tempString;
+			},
+		},
+		// List to be filled with the document's Chapters
+		chapters: [
+			
+		],
+	};
+};
+
+var HTMLFormat = ""; // To be filled with the literal HTML version of the DDTXT
+
+// Reference to the HTML file input object
+const inputReference = document.getElementById("fileInput");
+
+// Apply the DDTXT's 
+var updateBodyCSS = function () {
+	const DDHTMLText = document.getElementById("DDT"); // Grab the body element
+	// Update DDTXT background color:
+	DDHTMLText.style.backgroundColor = DDT.style.backgroundColor;
+	// Update basic DDTXT text color:
+	DDHTMLText.style.color = DDT.style.color;
+	// Update footer
+	const footer = document.getElementById("footer");
+	footer.style.backgroundColor = DDT.style.backgroundColor;
+	footer.style.color = DDT.style.color;
+	// Update UI colors
+	const header = document.getElementById("fixedUI");
+	header.style.backgroundColor = DDT.style.backgroundColor;
+	header.style.color = DDT.style.color;
+	header.style.border = "2px solid " + DDT.style.color;
+	document.getElementById("ui").style.backgroundColor = DDT.style.backgroundColor;
+	// Update editor background color
+	document.getElementById("editor").style.backgroundColor = DDT.style.backgroundColor;
+	// Update toggle button color
+	document.getElementById("ui-toggle").style.backgroundColor = DDT.style.backgroundColor;
+	// Update webpage colors
+	const webpage = document.documentElement;
+	webpage.style.backgroundColor = DDT.style.backgroundColor;
+	webpage.style.color = DDT.style.color;
+};
+
+// Take the loaded DDT and convert each chapter's formatted DDTXT content to the literal HTML webpage
+var convertDDTToHTML = function () {
+	const DDHTMLText = document.getElementById("DDT");
+	
+	HTMLFormat = ""; // Clear the HTML formatted text
+	
+	// Append space before for the fixed UI at the top
+	HTMLFormat += "<br><br><br><br>";
+	
+	// Append the document header first
+	HTMLFormat += "<h1 id=\"documentHeading\" style=\"color: " + DDT.style.titleColor + "\">" + DDT.global.name + "</h1><h2 style=\"text-align: center; color: " + DDT.style.titleColor + "\">by " + DDT.global.author + "</h2><br>";
+	
+	// Keep track of the numerical identity of each chapter
+	var chapterNumber = 0;
+	
+	// Append each chapter to the webpage (DDT.cast.format() does most of the work here)
+	for (const chapter of DDT.chapters) {
+		chapterNumber ++;
+		//HTMLFormat += "<h1 class=\"chapterHeading\" style=\"color: " + DDT.style.headingColor + "\">" + (DDT.formatHeadings) ? DDT.cast.format(chapter.name) : chapter.name + "</h1><h2 class=\"chapterSubHeading\" style=\"color: " + DDT.style.headingColor + "\">" + (DDT.formatHeadings) ? DDT.cast.format(chapter.subtitle) : chapter.subtitle + "</h2><br><p>" + DDT.cast.format(chapter.text) + "</p>"; // If the subtitle is blank, the second header will become an empty string which is not shown by browsers. If DDT.formatHeadings is true, then character references will be converted in chapter names. (That is the ternary in chapter.name and chapter.subtitle).
+		HTMLFormat += "<h1 class=\"chapterHeading\" id=\"chapter-" + chapterNumber + "\" style=\"color: " + DDT.style.headingColor + "\">" + chapter.name + "</h1><h2 class=\"chapterSubHeading\" style=\"color: " + DDT.style.headingColor + "\">" + chapter.subtitle + "</h2><br><p>" + DDT.cast.format(chapter.text) + "</p>"; // Same as above but without the ternary.
+	}
+	
+	// Add a final space to provide more breathing room on the webpage:
+	HTMLFormat += "<br>";
+	
+	// Push HTML to the webpage:
+	DDHTMLText.innerHTML = HTMLFormat;
+	updateBodyCSS(); // Update global CSS as defined in DDT document
+};
+
+// Basic conversion to boolean: (Does Boolean(value) do the same? IDK)
+var toBool = function (value) {
+	// Use boolean evaluations to handle these two data types:
+	if (typeof(value) === "string") {
+		return (value.trim().casefold() === "true");
+	}
+	else if (typeof(value) === "number") {
+		return (value === 1);
+	}
+};
+
+// Parsing modes (track what we are looking at)
+
+const NONE = -1;
+const CHARACTER = 0;
+const CHAPTER = 1;
+const GLOBAL = 2;
+
+// Convert mode numbers to string for debugging (simple index)
+const parseTypes = [
+	"NONE",
+	"character",
+	"chapter",
+	"global",
+];
+
+// Sub types:
+
+const STYLE = 0;
+const PRONOUNS = 1;
+
+// Convert mode numbers to string for debugging (simple index)
+const subParseTypes = [
+	"style",
+	"pronouns",
+];
+
+// Text types:
+
+const HARDBAKED = 0;
+
+// Variables for keeping track of limited parsing possibilites:
+var parseType = NONE; // Current main node type (global, chapter, ect...)
+var subParseType = NONE; // Current sub node type (style, ect...)
+var currentlyInTextNode = false; // Whether or not we are in a text sub node, which can be almost anywhere
+var textBuffer = ""; // The text within the current text sub node
+var currentNode = {}; // The information within the current node
+var currentSubNode = {}; // The information within the current sub node
+var textMode = NONE; // The overall way the DDTXT is interpreted. Right now, hardbaked (no DDTXT interpretation), and normal (regular DDTXT interpretation)
+
+// Data types accepted in the DDTXT format:
+const dataTypes = [
+	"name",
+	"subtitle",
+	"code",
+	"color",
+	"backgroundColor",
+	"paragraphColor",
+	"webtitle",
+	"author",
+	"divide",
+	"divideSize",
+	"divideColor",
+	"break",
+	"titleColor",
+	"headingColor",
+	// Character pronouns:
+	"subject",
+	"possessive",
+	"object",
+	"instance",
+	"reflexive",
+	"present",
+	"presentCompacted",
+];
+
+// Only split the string at the first instance of the splitting point, leaving the other instances connected
+var splitLineAtFirst = function (text, splitSignal) {
+	const spot = text.indexOf(splitSignal);
+	if (spot) { // If we can split
+		return [text.substring(0, spot), text.substring(spot + splitSignal.length, text.length - 1)]; // Return both parts
+	}
+	else {
+		return [text]; // Much like the String.split() function, always return a list, even on returning original input
+	}
+};
+
+// Interpret a single trimmed line as data
+var parseDDTLine = function (line, lineNumber = -1) {
+	// Top level
+	if (parseType === NONE) {
+		if (line === "<character>") {
+			parseType = CHARACTER;
+			subParseType = NONE;
+		}
+		else if (line === "<chapter>") {
+			parseType = CHAPTER;
+			subParseType = NONE;
+		}
+		else if (line === "<global>") {
+			parseType = GLOBAL;
+			subParseType = NONE;
+		}
+		else if (line [0] !== "<") { // Line is not a tag, therefore it is assignment information not going anywhere:
+			console.error("DDTLevelError: Misplaced information at the top level at line " + ((lineNumber === -1) ? "UNKNOWN" : lineNumber) + ": \"" + line + "\"");
+		}
+	}
+	// Check for breaking:
+	else {
+		if (line.substring(0, 2) === "</" && textMode === NONE) { // If the line is breaking a group, then break the group
+			// If we are in a text node, then leave the text node (THIS TAKES PRIORITY OVER ALL)
+			if (currentlyInTextNode) {
+			// Otherwise reset the parse mode (character, chapter, etc..)			
+				currentlyInTextNode = false; // Switch text mode off
+				currentNode.content = textBuffer; // Copy the buffer to the content to be appended to the next node
+				textBuffer = ""; // Clear the buffer
+			}
+			// If we are in a sub type, go back to the main type:
+			else if (subParseType !== NONE) {
+				if (subParseType === STYLE) {
+					const defaults = DDT.style; // Grab the defaults, in case not all atributes are defined.
+					const attributeNames = [ // For iteration:
+						"color",
+						"backgroundColor",
+						"headingColor",
+						"titleColor",
+						"divide",
+						"divideColor",
+						"divideSize",
+						"break",
+					];
+					// Copy over any missing attributes to the current sub node:
+					for (var index = 0; index < attributeNames.length; index ++) {
+						const attribute = attributeNames [index];
+						if (!currentSubNode [attribute]) {
+							currentSubNode [attribute] = defaults [attribute];
+						}
+					}
+					const styleCopy = currentSubNode; // Create a deep copy
+					DDT.style = styleCopy; // Move the data over to the DDT object
+				}
+				if (subParseType === PRONOUNS) {
+					const pronounsCopy = currentSubNode; // Create a deep copy
+					currentNode.pronouns = pronounsCopy; // Move the data to the currentNode object
+				}
+				currentSubNode = {}; // Clear the current sub node
+				subParseType = NONE;
+			}
+			else {
+				// Push stored character information to a new Character
+				if (parseType === CHARACTER) {
+					DDT.cast.characters [currentNode.code] = new Character (
+						code = currentNode.code,
+						name = currentNode.name,
+						pronouns = currentNode.pronouns,
+						usePluralVerbForm = toBool(currentNode.usePluralVerbForm),
+						bio = currentNode.content,
+						color = currentNode.color,
+						paragraphColor = currentNode.paragraphColor,
+						backgroundColor = currentNode.backgroundColor
+					);
+				}
+				// Push stored chapter information to a new Chapter
+				if (parseType === CHAPTER) {
+					DDT.chapters [DDT.chapters.length] = new Chapter (
+						name = currentNode ["name"],
+						subtitle = currentNode ["subtitle"],
+						content = currentNode.content,
+					);
+				}
+				// Push global data to the DDT object
+				if (parseType === GLOBAL) {
+					DDT.global.name = currentNode.name;
+					DDT.global.webtitle = currentNode.webtitle;
+					DDT.global.author = (currentNode.author) ? currentNode.author : "Unknown Author"; // Default to "Unknown Author" if the DDTXT does not specify an author
+					DDT.global.summary = (currentNode.content) ? currentNode.content : "Document summary is not present."; // Default to "Document summary is not present." if the DDTXT does not specify a summary
+				}
+				currentNode = {}; // Clear stored node data
+				parseType = NONE;
+			}
+		}
+		// Text node "parsing"
+		else if (currentlyInTextNode) {
+			if (textMode === HARDBAKED) {
+				textBuffer += "<br>"; // When text is hardbaked, lines are actually lines (the new lines are kept by DDT.cast.format())
+			}
+			// Hardbaked mode checks:
+			if (line === "(/hardbaked)") {
+				textMode = NONE;
+			}
+			else if (line === "(hardbaked)") {
+				textMode = HARDBAKED;
+			}
+			// Regular text addition:
+			textBuffer += ((DDT.addMissingSpaces && spacedPunctuation.includes(textBuffer [textBuffer.length - 1])) ? " " : "") + line; // Push the text forward to the text buffer, adding an extra space after certain punctuation if not present.
+		}
+		// Check if a text node is starting:
+		else if (line === "<text>") {
+			currentlyInTextNode = true; // Toggle text mode on
+		}
+		// Check if a we are starting one of the following sub nodes:
+		else if (subParseType === NONE && line === "<style>") {
+			subParseType = STYLE;
+		}
+		else if (subParseType === NONE && line === "<pronouns>") {
+			subParseType = PRONOUNS;
+		}
+		else {
+			// Parse line by line data in a group
+			// Indexing constants
+			const VARIABLE = 0;
+			const VALUE = 1;
+			
+			// Split the provided line into both sides
+			const splitLine = line.split("=");
+			
+			// Error handling
+			if (splitLine.length < 2) {
+				console.error("DDTAssignmentError: Line " + ((lineNumber === -1) ? "UNKNOWN" : lineNumber) + " does not have an equal sign (\"=\"): \"" + line + "\"");
+				return;
+			}
+			else if (splitLine.length > 2) {
+				console.error("DDTAssignmentError: Line " + ((lineNumber === -1) ? "UNKNOWN" : lineNumber) + " has an extra equal sign (\"=\"): \"" + line + "\"");
+				return;
+			}
+			
+			// Store and trim each side
+			const variable = splitLine [VARIABLE].trim();
+			const value = splitLine [VALUE].trim();
+			
+			// If we are in a sub node, then assign this data to the sub node	
+			if (dataTypes.includes(variable)) { // If the data type is implemented, then care about it:
+				if (subParseType !== NONE) {
+					currentSubNode [variable] = value;
+				}
+				else {
+					// Otherwise, assign the data to the currentNode data:
+					currentNode [variable] = value;
+				}
+			}
+			
+			// End of standard data parsing
+		}
+	}
+};
+
+var performFinalDDTChecks = function () {
+	// See if the webpage title is defined (default to DDT title):
+	if (!DDT.global.webtitle) { // If we don't have a webtitle
+		DDT.global.webtitle = (DDT.global.name) ? DDT.global.name : "DDTXT Reader"; // Use the DDT's name, using DDTXT Reader as a last resort.
+	}
+	// Make sure divide size is formatted appropiately:
+	if (DDT.style.divideSize.substring(DDT.style.divideSize.length - 3, DDT.style.divideSize.length - 1) !== "px" && DDT.style.divideSize [DDT.style.divideSize.length - 1] !== "%") { // If the size does not specify pixels or percent, assume pixels:
+		DDT.style.divideSize += "px";
+	}
+};
+
+var parseDDTText = function (text = stringifiedDDT) {
+	stringifiedDDT = text; // In case we don't have the string yet, copy it to a more permanent location
+	document.getElementById("editor-content").innerHTML = stringifiedDDT;
+	//clearDDT(); // The object has already been cleared in loadFileInput() below
+	
+	// Break the file into lines:
+	const lines = text.split("\n");
+	
+	if (lines [0] == DDTHeader) {
+		for (var currentLineIndex = 1; currentLineIndex < lines.length; currentLineIndex ++) { // Read each line
+			const line = lines [currentLineIndex].trim(); // Grab the line
+			// If the line is not empty or beginning with a comment identifier, then parse it
+			if (!(line === "" || line.substring(0, 2) === "//")) {
+				parseDDTLine(line, currentLineIndex + 1);
+			}
+		}
+		// Check for syntax errors:
+		if (subParseType !== NONE) {
+			console.error("DDTXTSyntaxError: File ends without closing off a " + subParseTypes [subParseType] + " subnode!");
+		}
+		if (parseType !== NONE) {
+			console.error("DDTXTSyntaxError: File ends without closing off a " + parseTypes [parseType + 1] + " node!");
+		}
+		if (textMode !== NONE) {
+			console.error("DDTXTSyntaxError: File ends without closing off a hardbaked segment of a text node!");
+		}
+		performFinalDDTChecks();
+	}
+	else {
+		console.error("Current file is not a DDTXT! (The first line must be \"" + DDTHeader + "\" exactly.)");
+	}
+	
+	// Print the object to the console. Some web consoles allow for interactive viewing of this information, which allows authors to make sure everything is correct.
+	console.log(DDT);
+	// Having loaded all file contents to the DDT object, convert the DDT object into a string readable by HTML
+	convertDDTToHTML();
+};
+
+
+// HTML elements' code:
+
+
+// Load the contents of the file and convert it to HTML DDT
+var loadFileInput = function () {
+	// Load the file
+	const file = inputReference.files [0]; // Grab the first file (only one at once)
+	
+	// If there is a file, then read it:
+	if (file) {
+		// Reset the DDTXT before starting
+		clearDDT();
+		
+		const readFile = inputReference.files [0].text();
+		
+		stringifiedResult = readFile.then(
+			function (result) {
+				parseDDTText(text = result);
+				// After parsing (this clears DDT), save the filename (not a file path)
+				// Update the webpage title:
+				document.getElementById("webpageTitle").innerHTML = DDT.global.webtitle + " (" + inputReference.files [0].name + ")";
+				// Save this filename for use by the editor:
+				DDT.global.filename = inputReference.files [0].name;
+				// Update the document statistics:
+				// Make the document statistics UI visible
+				document.getElementById("fixedUI").style.visibility = "visible";
+				// Update the UI initially
+				updateScrollProgress();
+				return result;
+			}
+		);
+	}
+};
+
+// Load a new file's contents
+var updateFileInput = function () {
+	// Load and parse the file, assigning the data to the DDT object:
+	loadFileInput();
+};
+
+// Print (convert the webpage to a PDF) the DDTXT
+
+var printDDTXT = function () {
+	// Get footer reference
+	const footer = document.getElementById("footer");
+	
+	// Hide the footer
+	footer.visibility = "hidden";
+	
+	print(); // This seems to trigger the browser's webpage printing.
+	
+	// Show the footer again
+	footer.visibility = "visible";
+};
+
+// Setup document progress statistic:
+const documentStats = document.getElementById("ui-stats");
+const UIToggle = document.getElementById("ui-toggle");
+
+// Whether or not the document statistics are visible.
+var statsAreVisible = false;
+
+// Update the percentage:
+var updateScrollProgress = function () {
+	const DDTXTElement = document.getElementById("DDT");
+	const DDTXTContentLength = DDTXTElement.scrollHeight - (document.getElementById("footer").scrollHeight * 2);
+	var progressPercentage = (100 * document.defaultView.scrollY / DDTXTContentLength).toFixed(1); // This rounds the percentage to a single decimal position
+	// Round up from 99.9 to 100.0 percent:
+	if (progressPercentage === "99.9") {
+		progressPercentage = "100.0";
+	}
+	documentStats.innerHTML = "<h3><em id=\"ui-name\">" + DDT.global.name + "</em> by " + DDT.global.author + " (" + progressPercentage + "% finished)</h3>";
+};
+
+var updateToggleButton = function () {
+	UIToggle.innerHTML = (statsAreVisible) ? "Show stats." : "Hide stats.";
+};
+
+// Setup statistics toggle button:
+var toggleStats = function () {
+	statsAreVisible = !statsAreVisible; // Toggle the boolean
+	if (statsAreVisible) {
+		document.getElementById("fixedUI").style.visibility = "hidden";
+		// Make sure the toggle button is always visible:
+		document.getElementById("ui-toggle").style.visibility = "visible";
+		document.getElementById("ui-toggle").style.backgroundColor = DDT.style.backgroundColor;
+	}
+	else {
+		document.getElementById("fixedUI").style.visibility = "visible";
+	}
+	updateToggleButton(); // This function updates the text of the toggle button.
+}
+
+// Append the code to the HTML element:
+document.getElementById("ui-toggle").onclick = toggleStats;
+
+// Append the code object to the DDTXT element
+document.onscroll = updateScrollProgress;
+
+// Attach the update function to the input element
+inputReference.addEventListener("change", updateFileInput);
+
+// Editor functions
+
+// Jump to the bottom of the editor
+var jumpToEditorBottom = function () {
+	const editorElement = document.getElementById("editor-content");
+	const editorElementLength = editorElement.scrollHeight - (document.getElementById("footer").scrollHeight * 2);
+	document.defaultView.scrollTo(0, editorElementLength); // x: 0, y: editorElementLength
+};
+
+document.getElementById("editor-bottom").onclick = jumpToEditorBottom;
+
+// Refresh the contents of the editor to the reader (push changes forward to the left side of the screen)
+var refreshEditorToReader = function () {
+	const editorContent = document.getElementById("editor-content").value;
+	const newDDTXT = editorContent.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+	stringifiedDDT = newDDTXT;
+	parseDDTText(text = stringifiedDDT);
+};
+
+document.getElementById("editor-refresh").onclick = refreshEditorToReader;
+
+// Export the contents of the editor textbox to a .ddtxt file
+var exportToDDTXT = function () {
+	// Refresh the DDT's contents
+	refreshEditorToReader();
+	// Prepare the file data and exporting path
+	const exportFile = new Blob([stringifiedDDT]);
+	const exportFileInternalLink = document.createElement("a", "id=tempLink");
+	exportFileInternalLink.href = URL.createObjectURL(exportFile);
+	exportFileInternalLink.download = DDT.global.filename;
+	// If there's already a link present, remove it
+	const tempLink = document.getElementById("tempLink");
+	if (tempLink) {
+		tempLink.remove();
+	}
+	// Append the correct child
+	document.getElementById("editor-save").appendChild(exportFileInternalLink);
+}
+
+document.getElementById("editor-save").onclick = exportToDDTXT;
+
+// Allow the editor to be opened and closed
+var editorState = true;
+var currentlyEditing = false;
+
+// Open and close the editor:
+var toggleEditor = function () {
+	editorState = !editorState;
+	editorElement = document.getElementById("editor");
+	if (editorState) {
+		editorElement.style.flex = 0;
+		editorElement.style.visibility = "hidden";
+		editorElement.style.display = "none";
+	}
+	else {
+		editorElement.style.flex = 1;
+		editorElement.style.visibility = "visible";
+		editorElement.style.display = "initial";
+	}
+	// Always reset DDT's flex weight to 1
+	document.getElementById("DDT").style.flex = 1;
+};
+
+// Connect the press of the E key to opening and closing the editor:
+var checkForKey = function (key) {
+	// If E is pressed, we are not typing in the editor, and there is a DDTXT loaded, then toggle the editor.
+	if (key.key === "e" && !currentlyEditing && stringifiedDDT !== "") {
+		toggleEditor();
+	}
+};
+
+/*
+var adjustEditorWidth = function () {
+	const editorWidth = 2 * (document.getElementById("editor-content").getBoundingClientRect().width) / document.defaultView.innerWidth;
+	console.log(editorWidth);
+	const DDTWidth = (2 - editorWidth);
+	document.getElementById("DDT").style.flex = DDTWidth;
+	document.getElementById("editor").style.flex = editorWidth;
+};*/
+
+document.documentElement.addEventListener("keydown", (key) => {checkForKey(key)}); // Pass the key event down to the above function
+
+document.getElementById("editor-content").addEventListener("keydown", () => {currentlyEditing = true});
+document.getElementById("editor-content").addEventListener("keyup", () => {currentlyEditing = false});
+//document.getElementById("editor-content").onclick = adjustEditorWidth;
+
+
+</script>
+
+</html>
