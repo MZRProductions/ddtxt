@@ -608,7 +608,7 @@ var clearDDT = function () {
 					if (characterReferences.includes(text [spot])) {
 						// Remove all hashtags and skip the next character
 						if (text [spot - 1] === "#") {
-							text = text.substring(0, spot - 1) + text.substring(spot, text.length);
+							text = text.substring(0, spot - 2) + text.substring(spot, text.length);
 							charactersShifted --; // Remove a character from the seeker
 							// Skip the next character (since we already have it covered. This also allows us to use ## to include hashtags)
 							currentChar ++;
@@ -620,6 +620,9 @@ var clearDDT = function () {
 						}
 					}
 				}
+				
+				// Now that all references have been converted, any remaining <s and >s can be converted to the HTML friendly &lt; and &gt; respectively:
+				text = text.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 				
 				// Quote pass-through
 				
@@ -763,7 +766,9 @@ var convertDDTToHTML = function () {
 	HTMLFormat += "<br><br><br><br>";
 	
 	// Append the document header first
-	HTMLFormat += "<h1 id=\"documentHeading\" style=\"color: " + DDT.style.titleColor + "\">" + DDT.global.name + "</h1><h2 style=\"text-align: center; color: " + DDT.style.titleColor + "\">by " + DDT.global.author + "</h2><br>";
+	if (DDT.global.name !== "" || DDT.global.author !== "") { // If a title or author is defined, attach the DDTXT document header:
+		HTMLFormat += "<h1 id=\"documentHeading\" style=\"color: " + DDT.style.titleColor + "\">" + DDT.global.name + "</h1><h2 style=\"text-align: center; color: " + DDT.style.titleColor + "\">by " + DDT.global.author + "</h2><br>";
+	}
 	
 	// Keep track of the numerical identity of each chapter
 	var chapterNumber = 0;
@@ -771,6 +776,8 @@ var convertDDTToHTML = function () {
 	// Append each chapter to the webpage (DDT.cast.format() does most of the work here)
 	for (const chapter of DDT.chapters) {
 		chapterNumber ++;
+		// I believe that the following line is unnecessary since empty HTML elements do not take up space anyway.
+		// I will comment it out for now:
 		//HTMLFormat += "<h1 class=\"chapterHeading\" style=\"color: " + DDT.style.headingColor + "\">" + (DDT.formatHeadings) ? DDT.cast.format(chapter.name) : chapter.name + "</h1><h2 class=\"chapterSubHeading\" style=\"color: " + DDT.style.headingColor + "\">" + (DDT.formatHeadings) ? DDT.cast.format(chapter.subtitle) : chapter.subtitle + "</h2><br><p>" + DDT.cast.format(chapter.text) + "</p>"; // If the subtitle is blank, the second header will become an empty string which is not shown by browsers. If DDT.formatHeadings is true, then character references will be converted in chapter names. (That is the ternary in chapter.name and chapter.subtitle).
 		HTMLFormat += "<h1 class=\"chapterHeading\" id=\"chapter-" + chapterNumber + "\" style=\"color: " + DDT.style.headingColor + "\">" + chapter.name + "</h1><h2 class=\"chapterSubHeading\" style=\"color: " + DDT.style.headingColor + "\">" + chapter.subtitle + "</h2><br><p>" + DDT.cast.format(chapter.text) + "</p>"; // Same as above but without the ternary.
 	}
@@ -1252,6 +1259,7 @@ var checkForKey = function (key) {
 	}
 };
 
+// The following function is currently broken:
 /*
 var adjustEditorWidth = function () {
 	const editorWidth = 2 * (document.getElementById("editor-content").getBoundingClientRect().width) / document.defaultView.innerWidth;
@@ -1265,7 +1273,7 @@ document.documentElement.addEventListener("keydown", (key) => {checkForKey(key)}
 
 document.getElementById("editor-content").addEventListener("keydown", () => {currentlyEditing = true});
 document.getElementById("editor-content").addEventListener("keyup", () => {currentlyEditing = false});
-//document.getElementById("editor-content").onclick = adjustEditorWidth;
+//document.getElementById("editor-content").onclick = adjustEditorWidth; // Currently broken
 
 
 </script>
