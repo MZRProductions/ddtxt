@@ -7,6 +7,8 @@
 
 name = DDTXT README
 author = Michael Rumpff (MZRPRoductions)
+// We are going to define a different table of contents
+provideTableOfContents = false
 
 <style>
 
@@ -76,10 +78,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 (break)
 // We have to escape the < and > here because otherwise they will be seen as character references, which is incorrect. We do this by immediately placing a hashtag (#) before these two symbols.
-// The finished document will not show these hashtags used to escape the symbols.
-along with this program.  If not, see  #<https://www.gnu.org/licenses/#>.
-
-// Here is the link without the hashtags, in case you want to easily click the link: https://www.gnu.org/licenses/
+// The finished document will not show these hashtags used to escape the symbols, the brackets, or the "href" and the colon.
+along with this program.  If not, see  #<[href: $https://www.gnu.org/licenses/ ] #>.
 
 (divide)
 
@@ -99,11 +99,19 @@ along with this program.  If not, see  #<https://www.gnu.org/licenses/#>.
 name = TABLE OF CONTENTS:
 // This is a unique way of including headers.
 // This might break when headings are formatted properly, but I'll figure that out then.
-subtitle = Section 1:<br>Opening and using the DDTXT Reader.<br>Section 2:<br>A brief description of each file included with the DDTXT Reader.<br>Section 3:<br>Using the DDTXT Reader's builtin editor.<br>Section 4:<br>More about the license.
+subtitle = none
 
 <text>
 
 (divide)
+
+Section 1: Opening and using the DDTXT Reader. [href: #chapter-2]
+(break)
+Section 2: A brief description of each file included with the DDTXT Reader. [href: #chapter-3]
+(break)
+Section 3: Using the DDTXT Reader's builtin editor. [href: #chapter-4]
+(break)
+Section 4: More about the license. [href: #chapter-5]
 
 </text>
 
