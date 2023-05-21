@@ -27,7 +27,7 @@ TODO: Make all "DDT"s "DDTXT"s
 
 <!-- HTML -->
 
-<html>
+<html lang="en-US">
 
 <!-- CSS -->
 
@@ -81,31 +81,45 @@ body {
 }
 
 /* This container holds optional UI */
-#fixedUI {
+#ui {
 	visibility: hidden;
-	width: 100%;
+	width: 94%;
+	height: 11%;
 	position: fixed;
 	background-color: inherit;
 	color: inherit;
-	font-size: 20px;
-	padding-left: 10px;
-	padding-right: 10px;
-	margin: -10px;
+	padding: 1%;
+	margin-top: -1%;
+	margin-left: 1%;
 	border: 2px solid white;
+	display: flex;
+	font-size: 25px;
+	font-weight: bold;
 }
 
-#ui {
+/* UI Buttons to the right */
+#ui-buttons {
+	flex: 0.3;
+}
+
+#ui-stats {
+	flex: 0.7;
+	font-size: 22px;
+	font-weight: default;
+	height: 1%;
 	text-align: center;
 }
 
 #ui-name {
-	font-size: 25px;
-	font-weight: bold;
+	font-size: 30px;
+	font-weight: inherit;
 }
 
+/* How a UI button should look: */
 .ui-button {
-	font-size: 25px;
-	font-weight: bold;
+	text-align: center;
+	font-size: inherit;
+	font-weight: inherit;
 	padding-left: 10px;
 	padding-right: 10px;
 	background-color: black;
@@ -173,6 +187,13 @@ body {
 	overflow-y: scroll; /* Only scroll vertically */
 }
 
+/* I'm not sure if this (the scroll-behavior attribute) will be supported in older browsers,
+but it's supported in modern browsers and it should not adversely affect 
+reading on unsupported browsers */
+html {
+	scroll-behavior: smooth;
+}
+
 .editor-style {
 	border: 2px solid white;
 	padding: 1%;
@@ -185,7 +206,7 @@ body {
 	#footer {
 		display: none;
 	}
-	#fixedUI {
+	#ui {
 		display: none;
 	}
 	#editor {
@@ -206,15 +227,18 @@ body {
 </head>
 
 <!-- Fixed UI at top of page -->
-<div id="fixedUI">
+<div id="ui">
 
-<table id="ui">
+<!-- Left side -->
+<p id="ui-stats"></p>
+
+<!-- Right side -->
+<table id="ui-buttons">
 
 <tr id="documentInfo">
 
-<td id="ui-stats"></td>
-<td id="ui-toggle" class="ui-button">Hide stats.</td>
 <td id="ui-summary" class="ui-button">Summary</td>
+<td id="ui-toggle" class="ui-button">Hide stats.</td>
 
 </tr>
 
@@ -431,6 +455,7 @@ var trimAndRetainStringToValidPart = function (disallowedChars, string) {
 };
 
 var clearDDT = function () {
+	// The following object should be used as the definition of the DDT (DDTXT) object
 	DDT = {
 		style: {
 			color: "black",
@@ -451,6 +476,7 @@ var clearDDT = function () {
 			webtitle: "",
 			author: "Unknown Author",
 			summary: "There is no summary present.",
+			provideTableOfContents: false,
 			lastModified: null,
 		},
 		// This object holds character information
@@ -575,18 +601,6 @@ var clearDDT = function () {
 						return "";
 					}
 				}
-				// Intra-document chapter links dont work right now:
-				/*
-				if (referenceCharacter === ">" && fullText [spot - 2] === "-") { // Links to different parts of the document
-					// Link shorthand
-					const fullWord = DDT.cast.getCompleteWordFromMiddle(spot, fullText, withinDialogue);
-					console.log(fullWord);
-					const linkText = fullWord.split("->") [0]; // The visual text is the word directly before the arrow
-					// Unless the destination is "title", assume it is a chapter, using the number provided (2 becomes chapter-2)
-					const isTitle = code.toLowerCase() === "title";
-					//return "<a href=\"#" + ((isTitle) ? "documentHeading" : ("chapter-" + code)) + "\" alt=\"Redirection to " + (isTitle) ? "the title section." : "chapter of name " + DDT.chapters [parseInt(code)].name + "\">" + linkText + "</a>";
-					return "<a href=\"#documentHeading\"></a>";
-				}*/
 				
 				// Save the last reference type:
 				DDT.cast.lastReferenceType = referenceCharacter;
@@ -662,7 +676,9 @@ var clearDDT = function () {
 					// Special case: dollar sign used to skip the parser past a word (for example, links)
 					if (text [spot] === "$") {
 						const currentWord = text.substring(spot, text.length).split(" ") [0]; // Stop after the next space
-						currentChar += currentWord.length - 1; // Skip the parser that many characters, removing a character for the dollar sign that we are removing
+						// Skip the parser that many characters, removing a character for the dollar sign that we are removing
+						currentChar += currentWord.length;
+						charactersShifted --;
 						// Remove the dollar sign
 						text = text.substring(0, spot) + text.substring(spot + 1, text.length);
 					}
@@ -670,6 +686,10 @@ var clearDDT = function () {
 				
 				// Now that all references have been converted, any remaining <s and >s can be converted to the HTML friendly &lt; and &gt; respectively:
 				text = text.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+				
+				// Same for quote marks, which should be converted to the more HTML friendly "&quot;":
+				
+				text = text.replaceAll("\"", "&quot;");
 				
 				// Quote pass-through
 				
@@ -711,8 +731,26 @@ var clearDDT = function () {
 						// If the "dialog" is a link, don't format it. Simply return the string as a link that opens in a new tab be default:
 						// (links that open in the same tab annoy me)
 						if (characterCode.toLowerCase() === "href") {
-							htmlDialog = "<a target=\"_blank\" href=\"" + spokenWords + "\">" + spokenWords + "</a>";
+							var linkAddress = spokenWords;
+							var linkText = spokenWords;
+							var linkMode = "_blank"; // Open in a new tab
+							if (spokenWords [0] === "#") {
+								// Hashtags specify destinations within the document
+								if (spokenWords.substring(1, 9) === "chapter-" && (parseInt(spokenWords.substring(8, spokenWords.length)) !== NaN)) { // If the link is going to a chapter and there is a number after the hyphen/dash (-), then format the link text that the reader sees.
+									linkText = "(Go to Chapter " + spokenWords.split("-") [1] + ")";
+								}
+								linkMode = "_self"; // Don't open a new tab since that doesn't have the DDTXT loaded
+								try {
+									document.getElementById(spokenWords);
+								}
+								catch {
+									console.log("DDTLinkError: There is no \"" +  + "\". Links to other chapters must be in the form chapter-X, where X is the chapter number with no leading zeroes. This is case sensitive (6 is fine, but 006 is not fine.)");
+								}
+							}
+							// Standard link using target mode, address, and text to display:
+							htmlDialog = "<a target=\"" + linkMode + "\" href=\"" + linkAddress + "\">" + linkText + "</a>";
 						}
+						// Regular dialogue:
 						else {
 							htmlDialog = "<h3 class=\"character-" + characterCode + "\">" + characterName + ": <nothing class=\"dialog-" + characterCode + "\">" + spokenWords + "</nothing></h3>";
 						}
@@ -796,11 +834,11 @@ var updateBodyCSS = function () {
 	footer.style.backgroundColor = DDT.style.backgroundColor;
 	footer.style.color = DDT.style.color;
 	// Update UI colors
-	const header = document.getElementById("fixedUI");
+	const header = document.getElementById("ui");
 	header.style.backgroundColor = DDT.style.backgroundColor;
 	header.style.color = DDT.style.color;
 	header.style.border = "2px solid " + DDT.style.color;
-	document.getElementById("ui").style.backgroundColor = DDT.style.backgroundColor;
+	document.getElementById("ui-buttons").style.backgroundColor = DDT.style.backgroundColor;
 	// Update editor background color
 	document.getElementById("editor").style.backgroundColor = DDT.style.backgroundColor;
 	// Update toggle button color
@@ -824,6 +862,15 @@ var generateHTMLSummaryText = function () {
 	return DDT.cast.format(DDT.global.summary) + "<hr>by <em>" + DDT.global.author + "</em><hr>Last modifed on " + lastModifiedDate.toDateString() + ", " + lastModifiedDate.toTimeString() + "<hr>(Click anywhere to close this summary.)";
 };
 
+// Create DDTXT content for the table of contents:
+var generateTableOfContents = function () {
+	var chapterText = "";
+	for (var currentChapter = 0; currentChapter < DDT.chapters.length; currentChapter ++) {
+		chapterText += "(Chapter " + (currentChapter + 1) + ") " + DDT.chapters [currentChapter].name + ": [href: #chapter-" + (currentChapter + 1) + "](break)";
+	}
+	return chapterText;
+};
+
 // Take the loaded DDT and convert each chapter's formatted DDTXT content to the literal HTML webpage
 var convertDDTToHTML = function () {
 	const DDHTMLText = document.getElementById("DDT");
@@ -838,16 +885,19 @@ var convertDDTToHTML = function () {
 		HTMLFormat += "<h1 id=\"documentHeading\" style=\"color: " + DDT.style.titleColor + "\">" + DDT.global.name + "</h1><h2 style=\"text-align: center; color: " + DDT.style.titleColor + "\">by " + DDT.global.author + "</h2><br>";
 	}
 	
+	// If there should be a table of contents, then generate that first:
+	if (DDT.global.provideTableOfContents) {
+		const tableOfContents = generateTableOfContents(); // Get generated table of contents in DDTXT format
+		HTMLFormat += "<h1 class=\"chapterHeading\" id=\"chapter-0\" style=\"color: " + DDT.style.headingColor + "\">Table of Contents</h1><br><p style=\"text-align: center; font-size: 20px\">" + DDT.cast.format(tableOfContents) + "</p>";
+	}
+	
 	// Keep track of the numerical identity of each chapter
 	var chapterNumber = 0;
 	
 	// Append each chapter to the webpage (DDT.cast.format() does most of the work here)
 	for (const chapter of DDT.chapters) {
-		chapterNumber ++;
-		// I believe that the following line is unnecessary since empty HTML elements do not take up space anyway.
-		// I will comment it out for now:
-		//HTMLFormat += "<h1 class=\"chapterHeading\" style=\"color: " + DDT.style.headingColor + "\">" + (DDT.formatHeadings) ? DDT.cast.format(chapter.name) : chapter.name + "</h1><h2 class=\"chapterSubHeading\" style=\"color: " + DDT.style.headingColor + "\">" + (DDT.formatHeadings) ? DDT.cast.format(chapter.subtitle) : chapter.subtitle + "</h2><br><p>" + DDT.cast.format(chapter.text) + "</p>"; // If the subtitle is blank, the second header will become an empty string which is not shown by browsers. If DDT.formatHeadings is true, then character references will be converted in chapter names. (That is the ternary in chapter.name and chapter.subtitle).
-		HTMLFormat += "<h1 class=\"chapterHeading\" id=\"chapter-" + chapterNumber + "\" style=\"color: " + DDT.style.headingColor + "\">" + chapter.name + "</h1><h2 class=\"chapterSubHeading\" style=\"color: " + DDT.style.headingColor + "\">" + chapter.subtitle + "</h2><br><p>" + DDT.cast.format(chapter.text) + "</p>"; // Same as above but without the ternary.
+		chapterNumber ++; // Increment the tracker (this starts at 1 since we do it before anything else)
+		HTMLFormat += "<h1 class=\"chapterHeading\" id=\"chapter-" + chapterNumber + "\" style=\"color: " + DDT.style.headingColor + "\">" + chapter.name + "</h1><h2 class=\"chapterSubHeading\" style=\"color: " + DDT.style.headingColor + "\">" + chapter.subtitle + "</h2><br><p>" + DDT.cast.format(chapter.text) + "</p>";
 	}
 	
 	// Add a final space to provide more breathing room on the webpage:
@@ -863,7 +913,7 @@ var convertDDTToHTML = function () {
 var toBool = function (value) {
 	// Use boolean evaluations to handle these two data types:
 	if (typeof(value) === "string") {
-		return (value.trim().casefold() === "true");
+		return (value.trim().toLowerCase() === "true");
 	}
 	else if (typeof(value) === "number") {
 		return (value === 1);
@@ -919,6 +969,7 @@ const dataTypes = [
 	"paragraphColor",
 	"webtitle",
 	"author",
+	"provideTableOfContents",
 	"divide",
 	"divideSize",
 	"divideColor",
@@ -1035,6 +1086,7 @@ var parseDDTLine = function (line, lineNumber = -1) {
 					DDT.global.webtitle = currentNode.webtitle;
 					DDT.global.author = (currentNode.author) ? currentNode.author : "Unknown Author"; // Default to "Unknown Author" if the DDTXT does not specify an author
 					DDT.global.summary = (currentNode.content) ? currentNode.content : "Document summary is not present."; // Default to "Document summary is not present." if the DDTXT does not specify a summary
+					DDT.global.provideTableOfContents = toBool((currentNode.provideTableOfContents) ? currentNode.provideTableOfContents : false); // Default to false (no Table of Contents provided)
 				}
 				currentNode = {}; // Clear stored node data
 				parseType = NONE;
@@ -1184,7 +1236,7 @@ var loadFileInput = function () {
 				document.getElementById("summary-content").innerHTML = generateHTMLSummaryText();
 				// Update the document statistics:
 				// Make the document statistics UI visible
-				document.getElementById("fixedUI").style.visibility = "visible";
+				document.getElementById("ui").style.visibility = "visible";
 				// Update the UI initially
 				updateScrollProgress();
 				return result;
@@ -1241,13 +1293,13 @@ var updateToggleButton = function () {
 var toggleStats = function () {
 	statsAreVisible = !statsAreVisible; // Toggle the boolean
 	if (statsAreVisible) {
-		document.getElementById("fixedUI").style.visibility = "hidden";
+		document.getElementById("ui").style.visibility = "hidden";
 		// Make sure the toggle button is always visible:
 		document.getElementById("ui-toggle").style.visibility = "visible";
 		document.getElementById("ui-toggle").style.backgroundColor = DDT.style.backgroundColor;
 	}
 	else {
-		document.getElementById("fixedUI").style.visibility = "visible";
+		document.getElementById("ui").style.visibility = "visible";
 	}
 	updateToggleButton(); // This function updates the text of the toggle button.
 }
