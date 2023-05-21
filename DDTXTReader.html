@@ -103,7 +103,7 @@ body {
 	font-weight: bold;
 }
 
-#ui-toggle {
+.ui-button {
 	font-size: 25px;
 	font-weight: bold;
 	padding-left: 10px;
@@ -145,6 +145,32 @@ body {
 
 #editor-ui {
 	width: 100%;
+	position: fixed;
+}
+
+#summary {
+	width: 120%;
+	height: 125%;
+	visibility: hidden;
+	position: fixed;
+	margin-left: -10%;
+	margin-top: -10%;
+	background-color: rgba(0, 0, 0, 50);
+}
+
+#summary-content {
+	font-size: 20px;
+	position: fixed;
+	width: 80%;
+	height: 60%;
+	/* Half of 100% - 80% is 10%. We add 10% to that to counteract the division being 120% of both dimensions. (20%)
+	Then, we have to subtract the padding of both sides of each dimension (2 x 2% = 4%), leaving us with 16% */
+	margin: 16%;
+	padding: 2%;
+	background-color: black;
+	color: white;
+	border: 2px ridge white;
+	overflow-y: scroll; /* Only scroll vertically */
 }
 
 .editor-style {
@@ -163,6 +189,9 @@ body {
 		display: none;
 	}
 	#editor {
+		display: none;
+	}
+	#summary {
 		display: none;
 	}
 	#DDT {
@@ -184,11 +213,19 @@ body {
 <tr id="documentInfo">
 
 <td id="ui-stats"></td>
-<td id="ui-toggle">Hide stats.</td>
+<td id="ui-toggle" class="ui-button">Hide stats.</td>
+<td id="ui-summary" class="ui-button">Summary</td>
 
 </tr>
 
 </table>
+
+</div>
+
+<!-- Summary box, hidden by default -->
+<div id="summary">
+
+<p id="summary-content"></p>
 
 </div>
 
@@ -414,6 +451,7 @@ var clearDDT = function () {
 			webtitle: "",
 			author: "Unknown Author",
 			summary: "There is no summary present.",
+			lastModified: null,
 		},
 		// This object holds character information
 		cast: {
@@ -605,6 +643,7 @@ var clearDDT = function () {
 						withinBrackets = !withinBrackets; // Toggle where we are upon either of these (this could break, but it'll work with appropiate syntax usage)
 					}
 					
+					// Format a reference
 					if (characterReferences.includes(text [spot])) {
 						// Remove all hashtags and skip the next character
 						if (text [spot - 1] === "#") {
@@ -618,6 +657,14 @@ var clearDDT = function () {
 							text = DDT.cast.convertReference(text, spot + 1, text [spot], withinDialogue = withinBrackets); // The +1 in the middle omits the reference character from the character code. withinDialogue tells the conversion function to count a colon as a new sentence.
 							charactersShifted += text.length - originalLength;
 						}
+					}
+					
+					// Special case: dollar sign used to skip the parser past a word (for example, links)
+					if (text [spot] === "$") {
+						const currentWord = text.substring(spot, text.length).split(" ") [0]; // Stop after the next space
+						currentChar += currentWord.length - 1; // Skip the parser that many characters, removing a character for the dollar sign that we are removing
+						// Remove the dollar sign
+						text = text.substring(0, spot) + text.substring(spot + 1, text.length);
 					}
 				}
 				
@@ -638,10 +685,9 @@ var clearDDT = function () {
 					}
 					else if (withinBrackets && text [spot] == "]") {
 						withinBrackets = false;
-						const dialog = text.substring(lastSpot + 1 + charactersShifted, spot).split(":"); // Pull out the dialog and split it into both parts
-						
+						const dialog = splitLineAtFirst(text.substring(lastSpot + 1 + charactersShifted, spot), ":"); // Pull out the dialog and split it into both parts, assuming any extra colons are part of the dialog.
 						// Syntax error handling
-						if (dialog.length !== 2) {
+						if (dialog.length < 2) {
 							console.error("DDTSyntaxError: Character dialog does not have a colon around \"" + dialog [0] + "\"");
 							return text;
 						}
@@ -655,12 +701,21 @@ var clearDDT = function () {
 						// Dialog
 						const spokenWords = dialog [1].trim();
 						
+						var htmlDialog;
+						
 						// Formal character name
-						const characterName = (characterCode [0] === "#") ? characterCode.substring(1, characterCode.length) : DDT.cast.getCharacterByCode(characterCode).name;
+						const characterName = (characterCode [0] === "#" || characterCode.toLowerCase() === "href") ? characterCode.substring(1, characterCode.length) : DDT.cast.getCharacterByCode(characterCode).name;
 						// If the name begins with a hashtag, that means that it has been casted in, and therefore does not exist. In this case, use the name provided, removing the hashtag at the beginning (substring).
 						
 						// Proper, formal HTML text:
-						const htmlDialog = "<h3 class=\"character-" + characterCode + "\">" + characterName + ": <nothing class=\"dialog-" + characterCode + "\">" + spokenWords + "</nothing></h3>";
+						// If the "dialog" is a link, don't format it. Simply return the string as a link that opens in a new tab be default:
+						// (links that open in the same tab annoy me)
+						if (characterCode.toLowerCase() === "href") {
+							htmlDialog = "<a target=\"_blank\" href=\"" + spokenWords + "\">" + spokenWords + "</a>";
+						}
+						else {
+							htmlDialog = "<h3 class=\"character-" + characterCode + "\">" + characterName + ": <nothing class=\"dialog-" + characterCode + "\">" + spokenWords + "</nothing></h3>";
+						}
 						
 						// Prepare the ends:
 						const previousText = text.substring(0, lastSpot + charactersShifted);
@@ -750,10 +805,23 @@ var updateBodyCSS = function () {
 	document.getElementById("editor").style.backgroundColor = DDT.style.backgroundColor;
 	// Update toggle button color
 	document.getElementById("ui-toggle").style.backgroundColor = DDT.style.backgroundColor;
+	// Summary toggle button color
+	document.getElementById("ui-summary").style.backgroundColor = DDT.style.backgroundColor;
+	// Summary content colors
+	const summaryContent = document.getElementById("summary-content");
+	summaryContent.style.backgroundColor = DDT.style.backgroundColor;
+	summaryContent.style.color = DDT.style.color;
+	summaryContent.style.border = "2px ridge " + DDT.style.color;
 	// Update webpage colors
 	const webpage = document.documentElement;
 	webpage.style.backgroundColor = DDT.style.backgroundColor;
 	webpage.style.color = DDT.style.color;
+};
+
+// Create literal HTML content for the summary box to use:
+var generateHTMLSummaryText = function () {
+	const lastModifiedDate = new Date(DDT.global.lastModified); // Convert the integer to a Date object
+	return DDT.cast.format(DDT.global.summary) + "<hr>by <em>" + DDT.global.author + "</em><hr>Last modifed on " + lastModifiedDate.toDateString() + ", " + lastModifiedDate.toTimeString() + "<hr>(Click anywhere to close this summary.)";
 };
 
 // Take the loaded DDT and convert each chapter's formatted DDTXT content to the literal HTML webpage
@@ -787,6 +855,7 @@ var convertDDTToHTML = function () {
 	
 	// Push HTML to the webpage:
 	DDHTMLText.innerHTML = HTMLFormat;
+	
 	updateBodyCSS(); // Update global CSS as defined in DDT document
 };
 
@@ -869,8 +938,8 @@ const dataTypes = [
 // Only split the string at the first instance of the splitting point, leaving the other instances connected
 var splitLineAtFirst = function (text, splitSignal) {
 	const spot = text.indexOf(splitSignal);
-	if (spot) { // If we can split
-		return [text.substring(0, spot), text.substring(spot + splitSignal.length, text.length - 1)]; // Return both parts
+	if (spot !== -1) { // If we can split (index is not -1, which would signal not found)
+		return [(spot === 0) ? "" : text.substring(0, spot), text.substring(spot + splitSignal.length, text.length)]; // Return both parts, returning an empty string before the split if there is nothing before the split
 	}
 	else {
 		return [text]; // Much like the String.split() function, always return a list, even on returning original input
@@ -1109,6 +1178,10 @@ var loadFileInput = function () {
 				document.getElementById("webpageTitle").innerHTML = DDT.global.webtitle + " (" + inputReference.files [0].name + ")";
 				// Save this filename for use by the editor:
 				DDT.global.filename = inputReference.files [0].name;
+				// Save the file's last modified time to the DDT object:
+				DDT.global.lastModified = inputReference.files [0].lastModified;
+				// Now that we know the last modified date, generate the DDTXT's summary:
+				document.getElementById("summary-content").innerHTML = generateHTMLSummaryText();
 				// Update the document statistics:
 				// Make the document statistics UI visible
 				document.getElementById("fixedUI").style.visibility = "visible";
@@ -1257,6 +1330,21 @@ var checkForKey = function (key) {
 	if (key.key === "e" && !currentlyEditing && stringifiedDDT !== "") {
 		toggleEditor();
 	}
+};
+
+// Summary box:
+
+var summaryIsOpen = false;
+const summaryReference = document.getElementById("summary");
+
+summaryReference.onclick = function () {
+	summaryIsOpen = false;
+	summaryReference.style.visibility = "hidden";
+};
+
+document.getElementById("ui-summary").onclick = function () {
+	summaryIsOpen = true;
+	summaryReference.style.visibility = "visible";
 };
 
 // The following function is currently broken:
