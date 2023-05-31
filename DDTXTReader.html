@@ -23,6 +23,7 @@
 <!--
 TODO: Fix usePluralVerbForm Character attribute usage.
 TODO: Fix or remove hardbaked text, as it currently provides more problems than benefits.
+TODO: Close editor when opening summary box
 -->
 
 <!-- HTML -->
@@ -517,6 +518,7 @@ var clearDDTXT = function () {
 			summary: "There is no summary present.",
 			provideTableOfContents: false,
 			lastModified: null,
+			filename: "untitled.ddtxt",
 		},
 		// This object holds character information
 		cast: {
@@ -916,7 +918,7 @@ var generateHTMLCharacterBiographies = function () {
 var generateHTMLSummaryText = function () {
 	const lastModifiedDate = new Date(DDTXT.global.lastModified); // Convert the integer to a Date object
 	const characterBios = generateHTMLCharacterBiographies();
-	return DDTXT.cast.format(DDTXT.global.summary) + "<hr>by <em>" + DDTXT.global.author + "</em><hr>Last modifed on " + lastModifiedDate.toDateString() + ", " + lastModifiedDate.toTimeString() + "<hr>(Click anywhere to close this summary.)" + characterBios + "<br><p style=\"text-align: center\">(Click anywhere to close this summary.)</p>"; // Return the entire summary box
+	return DDTXT.cast.format(DDTXT.global.summary) + "<hr>by <em>" + DDTXT.global.author + "</em><hr>Last modifed on " + lastModifiedDate.toDateString() + ", " + lastModifiedDate.toTimeString() + "<br>under " + DDTXT.global.filename + "<hr>(Click anywhere to close this summary.)" + characterBios + "<br><p style=\"text-align: center\">(Click anywhere to close this summary.)</p>"; // Return the entire summary box
 };
 
 // Create DDTXT content for the table of contents:
@@ -1247,10 +1249,10 @@ var parseDDTXT = function (text = stringifiedDDTXT) {
 	
 	if (lines [0] == DDTXTHeader) {
 		for (var currentLineIndex = 1; currentLineIndex < lines.length; currentLineIndex ++) { // Read each line
-			const line = lines [currentLineIndex].trim(); // Grab the line
+			const line = lines [currentLineIndex].trim(); // Grab the line and trim it
 			// If the line is not empty or beginning with a comment identifier, then parse it
 			if (!(line === "" || line.substring(0, 2) === "//")) {
-				parseDDTXTLine(line, currentLineIndex + 1);
+				parseDDTXTLine(line, currentLineIndex + 1); // currentLineIndex + 1 is the line number that would be displayed in the actual file
 			}
 		}
 		// Check for syntax errors:
@@ -1280,7 +1282,7 @@ var parseDDTXT = function (text = stringifiedDDTXT) {
 
 
 // Load the contents of the file and convert it to HTML DDTXT
-var loadFileInput = function () {
+var loadFileInput = function (isFile = false) {
 	// Load the file
 	const file = inputReference.files [0]; // Grab the first file (only one at once)
 	
@@ -1295,12 +1297,17 @@ var loadFileInput = function () {
 			function (result) {
 				parseDDTXT(text = result);
 				// After parsing (this clears DDTXT), save the filename (not a file path)
-				// Update the webpage title:
-				document.getElementById("webpageTitle").innerHTML = DDTXT.global.webtitle + " (" + inputReference.files [0].name + ")";
+				// Don't override file details unless we can access file details:
 				// Save this filename for use by the editor:
-				DDTXT.global.filename = inputReference.files [0].name;
+				if (isFile) {
+					DDTXT.global.filename = inputReference.files [0].name;
+				}
 				// Save the file's last modified time to the DDTXT object:
-				DDTXT.global.lastModified = inputReference.files [0].lastModified;
+				if (isFile) {
+					DDTXT.global.lastModified = inputReference.files [0].lastModified;
+				}
+				// Update the webpage title:
+				document.getElementById("webpageTitle").innerHTML = DDTXT.global.webtitle + " (" + DDTXT.global.filename + ")";
 				// Now that we know the last modified date, generate the DDTXT's summary:
 				document.getElementById("summary-content").innerHTML = generateHTMLSummaryText();
 				// Update the document statistics:
@@ -1317,7 +1324,7 @@ var loadFileInput = function () {
 // Load a new file's contents
 var updateFileInput = function () {
 	// Load and parse the file, assigning the data to the DDTXT object:
-	loadFileInput();
+	loadFileInput(isFile = true); // Override file details in the DDTXT object.
 };
 
 // Print (convert the webpage to a PDF) the DDTXT
@@ -1404,10 +1411,14 @@ var jumpToEditorTop = function () {
 document.getElementById("editor-top").onclick = jumpToEditorTop;
 
 // Refresh the contents of the editor to the reader (push changes forward to the left side of the screen)
-var refreshEditorToReader = function () {
+var refreshEditorToDDTXT = function () {
 	const editorContent = document.getElementById("editor-content").value;
 	const newDDTXT = editorContent.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
 	stringifiedDDTXT = newDDTXT;
+};
+
+var refreshEditorToReader = function () {
+	refreshEditorToDDTXT();
 	parseDDTXT(text = stringifiedDDTXT);
 };
 
@@ -1415,20 +1426,20 @@ document.getElementById("editor-refresh").onclick = refreshEditorToReader;
 
 // Export the contents of the editor textbox to a .ddtxt file
 var exportToDDTXT = function () {
-	// Refresh the DDTXT's contents
-	refreshEditorToReader();
+	refreshEditorToDDTXT(); // Make sure stringifiedDDTXT is current.
 	// Prepare the file data and exporting path
-	const exportFile = new Blob([stringifiedDDTXT]);
+	const exportFile = new Blob(
+		[stringifiedDDTXT], {
+			type: "text/ddtxt",
+		}
+	);
 	const exportFileInternalLink = document.createElement("a", "id=tempLink");
 	exportFileInternalLink.href = URL.createObjectURL(exportFile);
-	exportFileInternalLink.download = DDTXT.global.filename;
-	// If there's already a link present, remove it
-	const tempLink = document.getElementById("tempLink");
-	if (tempLink) {
-		tempLink.remove();
-	}
-	// Append the correct child
-	document.getElementById("editor-save").appendChild(exportFileInternalLink);
+	console.log(DDTXT.global);
+	exportFileInternalLink.download = String(DDTXT.global.filename);
+	exportFileInternalLink.click(); // Perform the functions that would happen if we could click on the link
+	// Clear the URL after this function is over
+	URL.revokeObjectURL(exportFileInternalLink.href);
 }
 
 document.getElementById("editor-save").onclick = exportToDDTXT;
@@ -1438,21 +1449,28 @@ var editorState = true;
 var currentlyEditing = false;
 
 // Open and close the editor:
-var toggleEditor = function () {
-	editorState = !editorState;
+var refreshEditorVisibility = function () {
 	editorElement = document.getElementById("editor");
+	// Only show when the summary is hidden
 	if (editorState) {
+		// It's open. Close it.
 		editorElement.style.flex = 0;
 		editorElement.style.visibility = "hidden";
 		editorElement.style.display = "none";
 	}
 	else {
+		// It's closed. Open it.
 		editorElement.style.flex = 1;
 		editorElement.style.visibility = "visible";
 		editorElement.style.display = "initial";
 	}
 	// Always reset DDTXT's flex weight to 1
 	document.getElementById("DDTXT").style.flex = 1;
+};
+
+var toggleEditor = function () {
+	editorState = !editorState;
+	refreshEditorVisibility();
 };
 
 // Connect the press of the E key to opening and closing the editor:
@@ -1471,12 +1489,16 @@ const summaryReference = document.getElementById("summary");
 summaryReference.onclick = function () {
 	summaryIsOpen = false;
 	summaryReference.style.visibility = "hidden";
+	refreshEditorVisibility();
 };
+
+// toggleEditor() updates the editor's visibility
 
 document.getElementById("ui-summary").onclick = function () {
 	summaryIsOpen = true;
 	summaryReference.style.visibility = "visible";
 	console.log(DDTXT.cast.getCharacterByCode("host").toString());
+	refreshEditorVisibility();
 };
 
 // The following function is currently broken:
