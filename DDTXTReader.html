@@ -154,6 +154,8 @@ body {
 	resize: both;
 	background-color: black;
 	color: white;
+	/* See scroll-behavior explanation below */
+	scroll-behavior: smooth;
 }
 
 #editor-ui {
@@ -209,6 +211,10 @@ html {
 
 .editor-style {
 	border: 2px solid white;
+	background-color: darkblue;
+}
+
+.editor-style-inner {
 	padding: 1%;
 	text-align: center;
 }
@@ -272,9 +278,10 @@ html {
 <div id="editor">
 	<table id="editor-ui">
 		<tr>
-			<td id="editor-save" class="editor-style">Export</td>
-			<td id="editor-refresh" class="editor-style">Refresh</td>
-			<td id="editor-bottom" class="editor-style">Jump to bottom</td>
+			<td id="editor-save" class="editor-style"><p class="editor-style-inner">Export</p></td>
+			<td id="editor-refresh" class="editor-style"><p class="editor-style-inner">Refresh</p></td>
+			<td id="editor-bottom" class="editor-style"><p class="editor-style-inner">Jump to Bottom</p></td>
+			<td id="editor-top" class="editor-style"><p class="editor-style-inner">Jump to Top</p></td>
 		</tr>
 		<tr>
 			<textarea id="editor-content" autocomplete="off" spellcheck="off"></textarea>
@@ -1233,7 +1240,7 @@ var performFinalDDTXTChecks = function () {
 var parseDDTXT = function (text = stringifiedDDTXT) {
 	stringifiedDDTXT = text; // In case we don't have the string yet, copy it to a more permanent location
 	document.getElementById("editor-content").innerHTML = stringifiedDDTXT;
-	//clearDDTXT(); // The object has already been cleared in loadFileInput() below
+	clearDDTXT(); // Clear the DDTXT again in case we are refreshing and not loading
 	
 	// Break the file into lines:
 	const lines = text.split("\n");
@@ -1377,14 +1384,24 @@ inputReference.addEventListener("change", updateFileInput);
 
 // Editor functions
 
-// Jump to the bottom of the editor
+// Jump to the bottom of the editor and document
 var jumpToEditorBottom = function () {
 	const editorElement = document.getElementById("editor-content");
 	const editorElementLength = editorElement.scrollHeight - (document.getElementById("footer").scrollHeight * 2);
-	document.defaultView.scrollTo(0, editorElementLength); // x: 0, y: editorElementLength
+	document.defaultView.scroll(0, editorElementLength); // x: 0, y: editorElementLength
+	editorElement.scroll(0, editorElementLength)
 };
 
 document.getElementById("editor-bottom").onclick = jumpToEditorBottom;
+
+// Jump to the top of the editor and document
+var jumpToEditorTop = function () {
+	// .scroll(0, 0) resets the scroll of the given element.
+	document.defaultView.scroll(0, 0);
+	document.getElementById("editor-content").scroll(0, 0);
+};
+
+document.getElementById("editor-top").onclick = jumpToEditorTop;
 
 // Refresh the contents of the editor to the reader (push changes forward to the left side of the screen)
 var refreshEditorToReader = function () {
