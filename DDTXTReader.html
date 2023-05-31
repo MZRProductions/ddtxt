@@ -21,7 +21,8 @@
 -->
 
 <!--
-TODO: Fix DDTXT title's position in stats.
+TODO: Fix usePluralVerbForm Character attribute usage.
+TODO: Fix or remove hardbaked text, as it currently provides more problems than benefits.
 -->
 
 <!-- HTML -->
@@ -103,9 +104,8 @@ body {
 
 #ui-stats {
 	flex: 0.7;
-	font-size: 22px;
-	font-weight: default;
-	height: 1%;
+	/*font-size: 22px;*/
+	margin-top: 1.5%;
 	text-align: center;
 }
 
@@ -243,7 +243,7 @@ html {
 <div id="ui">
 
 <!-- Left side -->
-<p id="ui-stats"></p>
+<div id="ui-stats"></div>
 
 <!-- Right side -->
 <table id="ui-buttons">
@@ -307,9 +307,6 @@ html {
 
 
 <script>
-
-// TODO: Fix usePluralVerbForm Character attribute usage.
-// TODO: Fix or remove hardbaked text, as it currently provides more problems than benefits.
 
 var stringifiedDDTXT = "";
 
@@ -931,7 +928,7 @@ var convertDDTXTToHTML = function () {
 	HTMLFormat = ""; // Clear the HTML formatted text
 	
 	// Append space before for the fixed UI at the top
-	HTMLFormat += "<br><br><br><br>";
+	HTMLFormat += "<br><br><br><br><br>";
 	
 	// Append the document header first
 	if (DDTXT.global.name !== "" || DDTXT.global.author !== "") { // If a title or author is defined, attach the DDTXT document header:
@@ -1347,7 +1344,7 @@ var updateScrollProgress = function () {
 	if (progressPercentage === "99.9") {
 		progressPercentage = "100.0";
 	}
-	documentStats.innerHTML = "<h3><em id=\"ui-name\">" + DDTXT.global.name + "</em> by " + DDTXT.global.author + " (" + progressPercentage + "% finished)</h3>";
+	documentStats.innerHTML = "<em id=\"ui-name\">" + DDTXT.global.name + "</em> by " + DDTXT.global.author + " (" + progressPercentage + "% finished)";
 };
 
 var updateToggleButton = function () {
