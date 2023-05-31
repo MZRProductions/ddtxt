@@ -22,7 +22,6 @@
 
 <!--
 TODO: Fix DDTXT title's position in stats.
-TODO: Move character CSS into <style> subnode of character node and move character style in the DDTXT {} object to a subobject of each new Character().
 -->
 
 <!-- HTML -->
@@ -188,6 +187,19 @@ body {
 	overflow-y: scroll; /* Only scroll vertically */
 }
 
+.summary-character {
+	display: flex;
+}
+
+.summary-bio {
+	flex: 1;
+}
+
+.summary-pronouns {
+	flex: 1;
+	padding: 1%;
+}
+
 /* I'm not sure if this (the scroll-behavior attribute) will be supported in older browsers,
 but it's supported in modern browsers and it should not adversely affect 
 reading on unsupported browsers */
@@ -326,6 +338,7 @@ const genericPronouns = {
 
 // Character class used to store character data in the main DDTXT object
 var Character = function (
+	// The following values are defaults:
 	code = "",
 	name = "Unnamed Character",
 	pronouns = genericPronouns,
@@ -346,18 +359,36 @@ var Character = function (
 	}
 	this.usePluralVerbForm = usePluralVerbForm;
 	this.bio = content;
-	this.color = color;
-	this.paragraphColor = paragraphColor;
-	this.backgroundColor = backgroundColor;
+	// Create an empty style subnode:
+	this.style = {};
+	// Move all CSS style values (colors) to the style subnode:
+	this.style.color = color;
+	this.style.paragraphColor = paragraphColor;
+	this.style.backgroundColor = backgroundColor;
 	
-	// Grab a style element
+	// Grab a style element for this character's dialog:
 	const CSSAccess = document.createElement("style");
 	CSSAccess.type = "text/css";
 	// Character tag:
-	CSSAccess.innerHTML += "\n.character-" + this.code + " {\n\tcolor: " + this.color + ";\n\tbackground-color: " + this.backgroundColor + ";\n\tfont-weight: bold;\n}";
+	CSSAccess.innerHTML += "\n.character-" + this.code + " {\n\tcolor: " + this.style.color + ";\n\tbackground-color: " + this.style.backgroundColor + ";\n\tfont-weight: bold;\n}";
 	// Character dialog:
-	CSSAccess.innerHTML += "\n.dialog-" + this.code + " {\n\tcolor: " + this.paragraphColor + ";\n\tbackground-color: " + this.backgroundColor + ";\n}";
+	CSSAccess.innerHTML += "\n.dialog-" + this.code + " {\n\tcolor: " + this.style.paragraphColor + ";\n\tbackground-color: " + this.style.backgroundColor + ";\n}";
+	// Push this style node to the internal head of the webpage: (Imagine pasting this generated text into this source file's CSS style node)
 	document.getElementsByTagName("head") [0].appendChild(CSSAccess);
+	
+	// Methods:
+	
+	// Generate a string table of the character's pronouns:
+	this.pronounsToString = function () {
+		return "Subject: " + this.pronouns.subject + "\nPossessive: " + this.pronouns.possessive + "\nReflexive: " + this.pronouns.reflexive + "\nObject: " + this.pronouns.object + "\nPresent Linking Verb: " + this.pronouns.present + "\nPresent Linking Verb (Contraction): " + this.pronouns.presentCompacted + "\nIs Instance of: " + this.pronouns.instance;
+	}
+	
+	// Print a character to the console:
+	this.toString = function () {
+		const header = "Character " + this.name + " AKA (" + this.code + ")\n";
+		const values = "\nusePluralVerbForm: " + this.usePluralVerbForm + "\nstyle.color: " + this.style.color + "\nstyle.paragraphColor: " + this.style.paragraphColor + "\nstyle.backgroundColor: " + this.style.backgroundColor;
+		return header + values + "\n\n--- Pronouns ---\n\n" + this.pronounsToString() + "\n\n--- Biography ---\n\n" + this.bio;
+	}
 };
 
 
@@ -864,10 +895,24 @@ var updateBodyCSS = function () {
 	webpage.style.color = DDTXT.style.color;
 };
 
+// Create literal HTML character biographies:
+var generateHTMLCharacterBiographies = function () {
+	tempString = "<h1 style=\"text-align:center\">Character Descriptions:</h1>";
+	// Make one for each character:
+	for (const characterCode in DDTXT.cast.characters) {
+		// Center the character's name and color it the character's color.
+		// In addition, put a border around the pronouns table according to the DDTXT's text/detail color.
+		const character = DDTXT.cast.getCharacterByCode(characterCode);
+		tempString += "<h2 style=\"text-align: center\" class=\"character-" + characterCode + "\">" + character.name + "</h2><div class=\"summary-character\"><p class=\"summary-bio\">" + character.bio + "</p><p style=\"border: 2px solid " + DDTXT.style.color + "\" class=\"summary-pronouns\">" + character.pronounsToString().replaceAll("\n", "<br>") + "</p></div>";
+	}
+	return tempString;
+};
+
 // Create literal HTML content for the summary box to use:
 var generateHTMLSummaryText = function () {
 	const lastModifiedDate = new Date(DDTXT.global.lastModified); // Convert the integer to a Date object
-	return DDTXT.cast.format(DDTXT.global.summary) + "<hr>by <em>" + DDTXT.global.author + "</em><hr>Last modifed on " + lastModifiedDate.toDateString() + ", " + lastModifiedDate.toTimeString() + "<hr>(Click anywhere to close this summary.)";
+	const characterBios = generateHTMLCharacterBiographies();
+	return DDTXT.cast.format(DDTXT.global.summary) + "<hr>by <em>" + DDTXT.global.author + "</em><hr>Last modifed on " + lastModifiedDate.toDateString() + ", " + lastModifiedDate.toTimeString() + "<hr>(Click anywhere to close this summary.)" + characterBios + "<br><p style=\"text-align: center\">(Click anywhere to close this summary.)</p>"; // Return the entire summary box
 };
 
 // Create DDTXT content for the table of contents:
@@ -1038,26 +1083,34 @@ var parseDDTXTLine = function (line, lineNumber = -1) {
 			// If we are in a sub type, go back to the main type:
 			else if (subParseType !== NONE) {
 				if (subParseType === STYLE) {
-					const defaults = DDTXT.style; // Grab the defaults, in case not all atributes are defined.
-					const attributeNames = [ // For iteration:
-						"color",
-						"backgroundColor",
-						"headingColor",
-						"titleColor",
-						"divide",
-						"divideColor",
-						"divideSize",
-						"break",
-					];
-					// Copy over any missing attributes to the current sub node:
-					for (var index = 0; index < attributeNames.length; index ++) {
-						const attribute = attributeNames [index];
-						if (!currentSubNode [attribute]) {
-							currentSubNode [attribute] = defaults [attribute];
+					// Global <style> subnode:
+					if (parseType === GLOBAL) {
+						const defaults = DDTXT.style; // Grab the defaults, in case not all atributes are defined.
+						const attributeNames = [ // For iteration:
+							"color",
+							"backgroundColor",
+							"headingColor",
+							"titleColor",
+							"divide",
+							"divideColor",
+							"divideSize",
+							"break",
+						];
+						// Copy over any missing attributes to the current sub node:
+						for (var index = 0; index < attributeNames.length; index ++) {
+							const attribute = attributeNames [index];
+							if (!currentSubNode [attribute]) {
+								currentSubNode [attribute] = defaults [attribute];
+							}
 						}
+						const styleCopy = currentSubNode; // Create a deep copy
+						DDTXT.style = styleCopy; // Move the data over to the DDTXT object
 					}
-					const styleCopy = currentSubNode; // Create a deep copy
-					DDTXT.style = styleCopy; // Move the data over to the DDTXT object
+					// Character <style> subnodes are handled fully upon ending the <character> node
+					if (parseType === CHARACTER) {
+						const styleCopy = currentSubNode; // Create a deep copy
+						currentNode.style = styleCopy; // Move the data to the currentNode object
+					}
 				}
 				if (subParseType === PRONOUNS) {
 					const pronounsCopy = currentSubNode; // Create a deep copy
@@ -1069,15 +1122,19 @@ var parseDDTXTLine = function (line, lineNumber = -1) {
 			else {
 				// Push stored character information to a new Character
 				if (parseType === CHARACTER) {
+					if (currentNode.style === undefined) { // If there is no style subnode, create an empty one
+						currentNode.style = {}; // Avoid looking inside of nothing, which causes errors
+					}
 					DDTXT.cast.characters [currentNode.code] = new Character (
+						// If these values are undefined the constructor method will use default values.
 						code = currentNode.code,
 						name = currentNode.name,
-						pronouns = currentNode.pronouns,
+						pronouns = currentNode.pronouns, // This is an object (string -> string dictionary)
 						usePluralVerbForm = toBool(currentNode.usePluralVerbForm),
 						bio = currentNode.content,
-						color = currentNode.color,
-						paragraphColor = currentNode.paragraphColor,
-						backgroundColor = currentNode.backgroundColor
+						color = currentNode.style.color,
+						paragraphColor = currentNode.style.paragraphColor,
+						backgroundColor = currentNode.style.backgroundColor
 					);
 				}
 				// Push stored chapter information to a new Chapter
@@ -1405,6 +1462,7 @@ summaryReference.onclick = function () {
 document.getElementById("ui-summary").onclick = function () {
 	summaryIsOpen = true;
 	summaryReference.style.visibility = "visible";
+	console.log(DDTXT.cast.getCharacterByCode("host").toString());
 };
 
 // The following function is currently broken:
@@ -1423,6 +1481,11 @@ document.getElementById("editor-content").addEventListener("keydown", () => {cur
 document.getElementById("editor-content").addEventListener("keyup", () => {currentlyEditing = false});
 //document.getElementById("editor-content").onclick = adjustEditorWidth; // Currently broken
 
+// Debugging 
+console.log("To see more about a character,\nuse the function tellMeAbout(<code>),\nwhere <code> is the character's code.");
+
+// I'll use () => {} function shorthand here:
+var tellMeAbout = (code) => { console.log(DDTXT.cast.getCharacterByCode(code).toString()); };
 
 </script>
 
