@@ -1435,7 +1435,6 @@ var exportToDDTXT = function () {
 	);
 	const exportFileInternalLink = document.createElement("a", "id=tempLink");
 	exportFileInternalLink.href = URL.createObjectURL(exportFile);
-	console.log(DDTXT.global);
 	exportFileInternalLink.download = String(DDTXT.global.filename);
 	exportFileInternalLink.click(); // Perform the functions that would happen if we could click on the link
 	// Clear the URL after this function is over
