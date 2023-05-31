@@ -6,7 +6,7 @@
 <global>
 
 name = DDTXT README
-author = Michael Rumpff (MZRPRoductions)
+author = Michael Rumpff (MZRProductions)
 // We are going to define a different table of contents
 provideTableOfContents = false
 
@@ -21,6 +21,12 @@ headingColor = orange
 
 </style>
 
+<text>
+
+This is the DDTXT version of the reader's README introduction. The plain text version can be found at README.txt.
+
+</text>
+
 </global>
 
 <character>
@@ -28,7 +34,13 @@ headingColor = orange
 code = MZRProductions
 // Name here is useful since you can't have a space in a character code.
 name = Michael Rumpff
-color = lightblue
+
+<style>
+
+color = rgb(0, 100, 255)
+paragraphColor = white
+
+</style>
 
 <pronouns>
 
@@ -41,13 +53,20 @@ presentCompacted = he's
 
 </pronouns>
 
+// Normally this would be a bio, but really this is just more contact information
+
+<text>
+
+Hello! Thank you for reading about me. I don't have much to say, but I hope that you enjoy the DDTXT language. Isn't the blue above a nice color? (My pronouns are over to the right.)
+
+</text>
+
 </character>
 
 <chapter>
-// This isn't missing, this is a way to remove the name and subtitle.
-// By not putting anything after the equal sign, the name and subtitle are set to nothing.
-name = 
-subtitle = 
+// To exclude a name or subtitle, use the keyword "none".
+name = none
+subtitle = none
 
 <text>
 
@@ -90,6 +109,7 @@ along with this program.  If not, see  #<[href: $https://www.gnu.org/licenses/ ]
 (divide)
 
 </text>
+
 </chapter>
 
 // TABLE OF CONTENTS
