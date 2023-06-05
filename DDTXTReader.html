@@ -909,7 +909,7 @@ var generateHTMLCharacterBiographies = function () {
 		// Center the character's name and color it the character's color.
 		// In addition, put a border around the pronouns table according to the DDTXT's text/detail color.
 		const character = DDTXT.cast.getCharacterByCode(characterCode);
-		tempString += "<h2 style=\"text-align: center\" class=\"character-" + characterCode + "\">" + character.name + "</h2><div class=\"summary-character\"><p class=\"summary-bio\">" + character.bio + "</p><p style=\"border: 2px solid " + DDTXT.style.color + "\" class=\"summary-pronouns\">" + character.pronounsToString().replaceAll("\n", "<br>") + "</p></div>";
+		tempString += "<h2 style=\"text-align: center\" class=\"character-" + characterCode + "\">" + character.name + "</h2><div class=\"summary-character\"><p class=\"summary-bio\">" + DDTXT.cast.format(character.bio) + "</p><p style=\"border: 2px solid " + DDTXT.style.color + "\" class=\"summary-pronouns\">" + character.pronounsToString().replaceAll("\n", "<br>") + "</p></div>";
 	}
 	return tempString;
 };
