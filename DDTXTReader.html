@@ -147,10 +147,10 @@ body {
 }
 
 #editor-content {
-	width: 48.5%;
-	max-width: 48.5%;
-	height: 78.5%;
-	max-height: 78.5%;
+	width: 48%;
+	max-width: 48%;
+	height: 70%;
+	max-height: 70%;
 	position: fixed;
 	resize: both;
 	background-color: black;
@@ -196,6 +196,7 @@ body {
 
 .summary-bio {
 	flex: 1;
+	padding: 1%;
 }
 
 .summary-pronouns {
@@ -229,9 +230,7 @@ html {
 	#ui {
 		display: none;
 	}
-	#editor {
-		display: none;
-	}
+	/* The editor is handled by JS */
 	#summary {
 		display: none;
 	}
@@ -279,13 +278,13 @@ html {
 <div id="editor">
 	<table id="editor-ui">
 		<tr>
-			<td id="editor-save" class="editor-style"><p class="editor-style-inner">Export</p></td>
-			<td id="editor-refresh" class="editor-style"><p class="editor-style-inner">Refresh</p></td>
+			<td id="editor-save" class="editor-style"><p class="editor-style-inner">Export DDTXT</p></td>
+			<td id="editor-refresh" class="editor-style"><p class="editor-style-inner">Refresh DDTXT</p></td>
 			<td id="editor-bottom" class="editor-style"><p class="editor-style-inner">Jump to Bottom</p></td>
 			<td id="editor-top" class="editor-style"><p class="editor-style-inner">Jump to Top</p></td>
 		</tr>
 		<tr>
-			<textarea id="editor-content" autocomplete="off" spellcheck="off"></textarea>
+			<td><textarea id="editor-content" autocomplete="off" spellcheck="off"></textarea></td>
 		</tr>
 	</table>
 </div>
@@ -414,6 +413,10 @@ var Chapter = function (
 const DDTXTHeader = "<!DOCTYPE DDTXT>";
 
 var DDTXT = {}; // Empty container (for now)
+
+// File information: (Saved upon loading a file)
+var sourceFileName = "untitled.ddtxt";
+var sourceFileTime = null;
 
 const characterReferences = [
 	"@", // Character's name: @test went to the store. => Test Character went to the store.
@@ -941,7 +944,7 @@ var convertDDTXTToHTML = function () {
 	
 	// Append the document header first
 	if (DDTXT.global.name !== "" || DDTXT.global.author !== "") { // If a title or author is defined, attach the DDTXT document header:
-		HTMLFormat += "<h1 id=\"documentHeading\" style=\"color: " + DDTXT.style.titleColor + "\">" + DDTXT.global.name + "</h1><h2 style=\"text-align: center; color: " + DDTXT.style.titleColor + "\">by " + DDTXT.global.author + "</h2><br>";
+		HTMLFormat += "<h1 id=\"documentHeading\" style=\"color: " + DDTXT.style.titleColor + "\">" + DDTXT.cast.format(DDTXT.global.name) + "</h1><h2 style=\"text-align: center; color: " + DDTXT.style.titleColor + "\">by " + DDTXT.global.author + "</h2><br>";
 	}
 	
 	// If there should be a table of contents, then generate that first:
@@ -956,7 +959,7 @@ var convertDDTXTToHTML = function () {
 	// Append each chapter to the webpage (DDTXT.cast.format() does most of the work here)
 	for (const chapter of DDTXT.chapters) {
 		chapterNumber ++; // Increment the tracker (this starts at 1 since we do it before anything else)
-		HTMLFormat += "<h1 class=\"chapterHeading\" id=\"chapter-" + chapterNumber + "\" style=\"color: " + DDTXT.style.headingColor + "\">" + chapter.name + "</h1><h2 class=\"chapterSubHeading\" style=\"color: " + DDTXT.style.headingColor + "\">" + chapter.subtitle + "</h2><br><p>" + DDTXT.cast.format(chapter.text) + "</p>";
+		HTMLFormat += "<h1 class=\"chapterHeading\" id=\"chapter-" + chapterNumber + "\" style=\"color: " + DDTXT.style.headingColor + "\">" + DDTXT.cast.format(chapter.name) + "</h1><h2 class=\"chapterSubHeading\" style=\"color: " + DDTXT.style.headingColor + "\">" + DDTXT.cast.format(chapter.subtitle) + "</h2><br><p>" + DDTXT.cast.format(chapter.text) + "</p>";
 	}
 	
 	// Add a final space to provide more breathing room on the webpage:
@@ -1300,12 +1303,16 @@ var loadFileInput = function (isFile = false) {
 				// Don't override file details unless we can access file details:
 				// Save this filename for use by the editor:
 				if (isFile) {
-					DDTXT.global.filename = inputReference.files [0].name;
+					sourceFileName = inputReference.files [0].name;
 				}
+				// Always use this saved value:
+				DDTXT.global.filename = sourceFileName;
 				// Save the file's last modified time to the DDTXT object:
 				if (isFile) {
-					DDTXT.global.lastModified = inputReference.files [0].lastModified;
+					sourceFileTime = inputReference.files [0].lastModified;
 				}
+				// Always use this saved value:
+				DDTXT.global.lastModified = sourceFileTime;
 				// Update the webpage title:
 				document.getElementById("webpageTitle").innerHTML = DDTXT.global.webtitle + " (" + DDTXT.global.filename + ")";
 				// Now that we know the last modified date, generate the DDTXT's summary:
@@ -1332,6 +1339,9 @@ var updateFileInput = function () {
 var printDDTXT = function () {
 	// Get footer reference
 	const footer = document.getElementById("footer");
+	
+	editorState = true;
+	refreshEditorVisibility();
 	
 	// Hide the footer
 	footer.visibility = "hidden";
@@ -1450,18 +1460,23 @@ var currentlyEditing = false;
 // Open and close the editor:
 var refreshEditorVisibility = function () {
 	editorElement = document.getElementById("editor");
+	footer = document.getElementById("footer");
 	// Only show when the summary is hidden
 	if (editorState) {
 		// It's open. Close it.
 		editorElement.style.flex = 0;
 		editorElement.style.visibility = "hidden";
 		editorElement.style.display = "none";
+		footer.style.marginLeft = "0%";
+		footer.style.width = "100%";
 	}
 	else {
 		// It's closed. Open it.
 		editorElement.style.flex = 1;
 		editorElement.style.visibility = "visible";
 		editorElement.style.display = "initial";
+		footer.style.marginLeft = "50%";
+		footer.style.width = "50%";
 	}
 	// Always reset DDTXT's flex weight to 1
 	document.getElementById("DDTXT").style.flex = 1;
