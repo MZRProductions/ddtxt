@@ -1240,6 +1240,9 @@ var performFinalDDTXTChecks = function () {
 	if (DDTXT.style.divideSize.substring(DDTXT.style.divideSize.length - 3, DDTXT.style.divideSize.length - 1) !== "px" && DDTXT.style.divideSize [DDTXT.style.divideSize.length - 1] !== "%") { // If the size does not specify pixels or percent, assume pixels:
 		DDTXT.style.divideSize += "px";
 	}
+	// Always copy this saved value to the file information inside the DDTXT {} object:
+	DDTXT.global.filename = sourceFileName;
+	DDTXT.global.lastModified = sourceFileTime;
 };
 
 var parseDDTXT = function (text = stringifiedDDTXT) {
@@ -1305,14 +1308,10 @@ var loadFileInput = function (isFile = false) {
 				if (isFile) {
 					sourceFileName = inputReference.files [0].name;
 				}
-				// Always use this saved value:
-				DDTXT.global.filename = sourceFileName;
 				// Save the file's last modified time to the DDTXT object:
 				if (isFile) {
 					sourceFileTime = inputReference.files [0].lastModified;
 				}
-				// Always use this saved value:
-				DDTXT.global.lastModified = sourceFileTime;
 				// Update the webpage title:
 				document.getElementById("webpageTitle").innerHTML = DDTXT.global.webtitle + " (" + DDTXT.global.filename + ")";
 				// Now that we know the last modified date, generate the DDTXT's summary:
@@ -1530,7 +1529,7 @@ document.getElementById("editor-content").addEventListener("keydown", () => {cur
 document.getElementById("editor-content").addEventListener("keyup", () => {currentlyEditing = false});
 //document.getElementById("editor-content").onclick = adjustEditorWidth; // Currently broken
 
-// Debugging 
+// Debugging information for users:
 console.log("To see more about a character,\nuse the function tellMeAbout(<code>),\nwhere <code> is the character's code.");
 
 // I'll use () => {} function shorthand here:
