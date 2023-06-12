@@ -502,8 +502,8 @@ var clearDDTXT = function () {
 	DDTXT = {
 		style: {
 			color: "black",
-			titleColor: "black",
-			headingColor: "black",
+			titleColor: "inherit",
+			headingColor: "inherit",
 			backgroundColor: "white",
 			divideSize: "50px",
 			divide: "~~~",
@@ -1288,7 +1288,7 @@ var parseDDTXT = function (text = stringifiedDDTXT) {
 
 
 // Load the contents of the file and convert it to HTML DDTXT
-var loadFileInput = function (isFile = false) {
+var loadFileInput = function () {
 	// Load the file
 	const file = inputReference.files [0]; // Grab the first file (only one at once)
 	
@@ -1303,15 +1303,10 @@ var loadFileInput = function (isFile = false) {
 			function (result) {
 				parseDDTXT(text = result);
 				// After parsing (this clears DDTXT), save the filename (not a file path)
-				// Don't override file details unless we can access file details:
 				// Save this filename for use by the editor:
-				if (isFile) {
-					sourceFileName = inputReference.files [0].name;
-				}
+				sourceFileName = inputReference.files [0].name;
 				// Save the file's last modified time to the DDTXT object:
-				if (isFile) {
-					sourceFileTime = inputReference.files [0].lastModified;
-				}
+				sourceFileTime = inputReference.files [0].lastModified;
 				// Update the webpage title:
 				document.getElementById("webpageTitle").innerHTML = DDTXT.global.webtitle + " (" + DDTXT.global.filename + ")";
 				// Now that we know the last modified date, generate the DDTXT's summary:
@@ -1330,7 +1325,7 @@ var loadFileInput = function (isFile = false) {
 // Load a new file's contents
 var updateFileInput = function () {
 	// Load and parse the file, assigning the data to the DDTXT object:
-	loadFileInput(isFile = true); // Override file details in the DDTXT object.
+	loadFileInput(); // (By doing this, override file details in the DDTXT object.)
 };
 
 // Print (convert the webpage to a PDF) the DDTXT
