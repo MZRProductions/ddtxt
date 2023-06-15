@@ -802,6 +802,7 @@ var clearDDTXT = function () {
 						}
 						// Regular dialogue:
 						else {
+							// Apparently, to add multiple classes to an HTML element, you only have to add a space between the classes.
 							htmlDialog = "<h3 class=\"dialogue character-" + characterCode + "\">" + characterName + ": <nothing class=\"dialog-" + characterCode + "\">" + spokenWords + "</nothing></h3>";
 						}
 						
@@ -1311,16 +1312,17 @@ var loadFileInput = function () {
 		// Reset the DDTXT before starting
 		clearDDTXT();
 		
+		// Save this filename for use by the editor:
+		sourceFileName = inputReference.files [0].name;
+		// Save the file's last modified time to the DDTXT object:
+		sourceFileTime = inputReference.files [0].lastModified;
+		
 		const readFile = inputReference.files [0].text();
 		
 		stringifiedResult = readFile.then(
 			function (result) {
 				parseDDTXT(text = result);
 				// After parsing (this clears DDTXT), save the filename (not a file path)
-				// Save this filename for use by the editor:
-				sourceFileName = inputReference.files [0].name;
-				// Save the file's last modified time to the DDTXT object:
-				sourceFileTime = inputReference.files [0].lastModified;
 				// Update the webpage title:
 				document.getElementById("webpageTitle").innerHTML = DDTXT.global.webtitle + " (" + DDTXT.global.filename + ")";
 				// Now that we know the last modified date, generate the DDTXT's summary:
