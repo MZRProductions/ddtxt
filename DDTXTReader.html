@@ -2,7 +2,7 @@
 
 <!--
 
-	Digital Dialogue Text Reader (and Parser)
+	 Digital Dialogue Text Reader (and Parser)
     Copyright (C) 2023 Michael Rumpff (MZRProductions)
 
     This program is free software: you can redistribute it and/or modify
@@ -79,6 +79,10 @@ body {
 
 .divide {
 	text-align: center;
+}
+
+.dialogue {
+   /* (Empty class to be used for organization) */
 }
 
 /* This container holds optional UI */
@@ -351,6 +355,7 @@ var Character = function (
 	color = "inherit",
 	paragraphColor = "inherit",
 	backgroundColor = "none",
+	dialoguePadding = 0, // In percents
 ) {
 	this.name = name;
 	this.code = code;
@@ -369,14 +374,15 @@ var Character = function (
 	this.style.color = color;
 	this.style.paragraphColor = paragraphColor;
 	this.style.backgroundColor = backgroundColor;
+	this.style.dialoguePadding = (typeof(dialoguePadding)) ? parseFloat(dialoguePadding) : dialoguePadding; // In case the input is a numerical string, parse it.
 	
 	// Grab a style element for this character's dialog:
 	const CSSAccess = document.createElement("style");
 	CSSAccess.type = "text/css";
 	// Character tag:
-	CSSAccess.innerHTML += "\n.character-" + this.code + " {\n\tcolor: " + this.style.color + ";\n\tbackground-color: " + this.style.backgroundColor + ";\n\tfont-weight: bold;\n}";
+	CSSAccess.innerHTML += "\n.character-" + this.code + " {\n\tcolor: " + this.style.color + ";\n\tbackground-color: " + this.style.backgroundColor + ";\n\tfont-weight: bold;\n\tpadding: " + dialoguePadding + "%;\n}";
 	// Character dialog:
-	CSSAccess.innerHTML += "\n.dialog-" + this.code + " {\n\tcolor: " + this.style.paragraphColor + ";\n\tbackground-color: " + this.style.backgroundColor + ";\n}";
+	CSSAccess.innerHTML += "\n.dialog-" + this.code + " {\n\tcolor: " + this.style.paragraphColor + ";\n\tbackground-color: " + this.style.backgroundColor + "\n\tpadding: " + dialoguePadding + "%;\n}";
 	// Push this style node to the internal head of the webpage: (Imagine pasting this generated text into this source file's CSS style node)
 	document.getElementsByTagName("head") [0].appendChild(CSSAccess);
 	
@@ -390,7 +396,7 @@ var Character = function (
 	// Print a character to the console:
 	this.toString = function () {
 		const header = "Character " + this.name + " AKA (" + this.code + ")\n";
-		const values = "\nusePluralVerbForm: " + this.usePluralVerbForm + "\nstyle.color: " + this.style.color + "\nstyle.paragraphColor: " + this.style.paragraphColor + "\nstyle.backgroundColor: " + this.style.backgroundColor;
+		const values = "\nusePluralVerbForm: " + this.usePluralVerbForm + "\nstyle.color: " + this.style.color + "\nstyle.paragraphColor: " + this.style.paragraphColor + "\nstyle.backgroundColor: " + this.style.backgroundColor + "\nstyle.padding: " + this.style.padding;
 		return header + values + "\n\n--- Pronouns ---\n\n" + this.pronounsToString() + "\n\n--- Biography ---\n\n" + this.bio;
 	}
 };
@@ -463,7 +469,7 @@ const newSentencePunctuation = [
 	"\n"
 ];
 
-// Characters that are considered to not be part of reference codes, even if they are directly connected to the code (@james). -> @james)
+// Characters that are considered to not be part of reference codes, even if they are directly connected to the code @james). -> @james
 const charactersNotAllowedInCodes = [
 	".",
 	",",
@@ -796,7 +802,7 @@ var clearDDTXT = function () {
 						}
 						// Regular dialogue:
 						else {
-							htmlDialog = "<h3 class=\"character-" + characterCode + "\">" + characterName + ": <nothing class=\"dialog-" + characterCode + "\">" + spokenWords + "</nothing></h3>";
+							htmlDialog = "<h3 class=\"dialogue character-" + characterCode + "\">" + characterName + ": <nothing class=\"dialog-" + characterCode + "\">" + spokenWords + "</nothing></h3>";
 						}
 						
 						// Prepare the ends:
@@ -870,7 +876,7 @@ var HTMLFormat = ""; // To be filled with the literal HTML version of the DDTXT
 // Reference to the HTML file input object
 const inputReference = document.getElementById("fileInput");
 
-// Apply the DDTXT's 
+// Apply the DDTXT's style to the webpage's CSS.
 var updateBodyCSS = function () {
 	const DDHTMLText = document.getElementById("DDTXT"); // Grab the body element
 	// Update DDTXT background color:
@@ -1029,6 +1035,7 @@ const dataTypes = [
 	"color",
 	"backgroundColor",
 	"paragraphColor",
+	"dialoguePadding",
 	"webtitle",
 	"author",
 	"provideTableOfContents",
@@ -1117,6 +1124,12 @@ var parseDDTXTLine = function (line, lineNumber = -1) {
 					}
 					// Character <style> subnodes are handled fully upon ending the <character> node
 					if (parseType === CHARACTER) {
+						// If dialogue padding has been specified and it ends with a percent sign, remove it and keep the number:
+						const paddingInput = currentSubNode.dialoguePadding;
+						if (paddingInput) {
+							//console.log((paddingInput [paddingInput.length - 1] === "%" ? paddingInput.substring(0, paddingInput.length - 1) : paddingInput);
+							currentSubNode.dialoguePadding = (paddingInput [paddingInput.length - 1] === "%") ? paddingInput.substring(0, paddingInput.length - 1) : paddingInput;
+						}
 						const styleCopy = currentSubNode; // Create a deep copy
 						currentNode.style = styleCopy; // Move the data to the currentNode object
 					}
@@ -1143,7 +1156,8 @@ var parseDDTXTLine = function (line, lineNumber = -1) {
 						bio = currentNode.content,
 						color = currentNode.style.color,
 						paragraphColor = currentNode.style.paragraphColor,
-						backgroundColor = currentNode.style.backgroundColor
+						backgroundColor = currentNode.style.backgroundColor,
+						dialoguePadding = currentNode.style.dialoguePadding
 					);
 				}
 				// Push stored chapter information to a new Chapter
