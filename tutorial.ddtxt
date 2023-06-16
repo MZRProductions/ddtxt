@@ -1,0 +1,671 @@
+<!DOCTYPE DDTXT>
+
+<global>
+
+name = DDTXT Writing Manual and Syntax Guide (for version 1.0)
+webtitle = DDTXT Manual
+author = MZRProductions (Michael Rumpff)
+provideTableOfContents = true
+
+<style>
+
+// You can use any color the same way that you would in CSS. Here, we are using the common color "white" as the main text color.
+color = white
+// You can also use the rgb() CSS function.
+// This is an RGB value: "rgb(RED, GREEN, BLUE)"
+headingColor = rgb(50, 200, 255)
+// You can also use the CSS keyword "inherit" to copy the value provided for the "color" slot (the main text color).
+// Most of the time, if you do not specify a value, the default will be the main text color.
+titleColor = inherit
+backgroundColor = rgb(20, 20, 20)
+
+// Setting up the document's divisions:
+// (You can use a horizontal border here by using the keyword "<hr>")
+divide = ---~~~---
+// This is in pixels, and will not grow or shrink according to screen size.
+divideSize = 35
+// The standard CSS colors defines both "gray" (American?) and "grey" as the same colors:
+divideColor = grey
+
+</style>
+
+// Document summary:
+<text>
+
+This guide should cover everything needed to start writing a DDTXT document from scratch and clarify the more technical subjects that could help in specific scenarios.
+
+</text>
+
+</global>
+
+// CHARACTER USED TO MAKE HIGHLIGHTED NOTES
+
+<character>
+
+code = note
+name = NOTE
+
+<style>
+
+// Main text color:
+color = red
+// Background color behind character quotes:
+backgroundColor = white
+// A different color to make the spoken words BUT NOT the character's name.
+// (This defaults to the main text color above.)
+paragraphColor = rgb(120, 0, 8)
+// Since there is a background to this dialogue, we should add some padding to make the edges less jarring.
+dialoguePadding = 1%
+
+// Text nodes inside of characters feed into their biography.
+<text>
+
+This character is used as a way to highlight important distinctions. By making the background color different and using a different text size, the words here are immediately noticeable.
+
+</text>
+
+// Since this isn't a real character, there is no need to specify pronouns.
+// If you attempted to use this character's pronouns (">note", for example),
+// you would get the default generic pronouns:
+// They, them, their, themselves, they are, they're, ect...
+
+</style>
+
+</character>
+
+// CHARACTER USED FOR HEADINGS
+
+<character>
+
+// I'm too lazy to use "MZRProductions" every time.
+code = me
+name = MZRProductions
+
+<pronouns>
+
+subject = he
+object = him
+possessive = his
+reflexive = himself
+present = he is
+// We have to specify both.
+presentCompacted = he's
+
+</pronouns>
+
+</character>
+
+<character>
+
+code = prop
+// (Short for property)
+name = New Document Property
+
+<style>
+
+color = rgb(10, 50, 20)
+backgroundColor = lightgreen
+dialoguePadding = 1%
+
+</style>
+
+</character>
+
+<character>
+
+code = text
+// I'm including the explanation phrase in the name so that we don't have to re-type it.
+name = Raw Document Example (Your file should look something like this)
+
+<style>
+
+color = white
+backgroundColor = darkblue
+dialoguePadding = 1%
+
+</style>
+
+</character>
+
+// EXAMPLE STORY CHARACTERS
+// (I don't care about the names here.)
+
+<character>
+
+code = example1
+name = Jimmy
+
+<pronouns>
+
+subject = she
+possessive = her
+// Yes, "her" is used for both "to her" and "her random object"
+object = her
+reflexive = herself
+// Here, the instance pronoun is being used to tell the role of the character in the story, which is the main use of it.
+instance = catapult
+present = she is
+presentCompacted = she's
+
+</pronouns>
+
+</character>
+
+<character>
+
+code = example2
+name = Timmy
+
+<pronouns>
+
+subject = they
+possessive = their
+object = them
+// I'll be honest, I don't know much about the word "themself," or if that word would be more fitting. I always opt for "themselves."
+reflexive = themselves
+// Here, the instance pronoun is being used to tell the role of the character in the story, which is the main use of it.
+instance = rubber ball
+present = they are
+presentCompacted = they're
+
+</pronouns>
+
+</character>
+
+<character>
+
+code = example3
+name = Bob
+
+<pronouns>
+
+subject = he
+possessive = his
+object = him
+// I'll be honest, I don't know much about the word "themself," or if that word would be more fitting. I always opt for "themselves."
+reflexive = himself
+// Here, the instance pronoun is being used to tell the role of the character in the story, which is the main use of it.
+instance = giant bowl
+present = he is
+presentCompacted = he's
+
+</pronouns>
+
+</character>
+
+// ONE TIME CHARACTERS FOR STYLING DEMONSTRATIONS:
+
+<character>
+
+code = hardToRead1
+name = Pro tip
+
+<style>
+
+color = rgb(40, 40, 40)
+
+</style>
+
+</character>
+
+<character>
+
+code = hardToRead2
+name = Red and Green
+
+<style>
+
+color = rgb(45, 160, 0)
+backgroundColor = brown
+dialoguePadding = 1%
+
+</style>
+
+</character>
+
+<character>
+
+code = hardToRead3
+name = COLOR EXPLOSION
+
+<style>
+
+color = magenta
+backgroundColor = rgb(0, 255, 0)
+paragraphColor = blue
+dialoguePadding = 1%
+
+</style>
+
+</character>
+
+// We are going to have to use "(break)"s a lot in-text. This isn't needed for most DDTXTs.
+// I'm only using it to make information more readable. 
+
+<chapter>
+
+name = Introduction
+// I'm using the keyword "none" to not display any subtitle.
+// You can use this for main names too.
+subtitle = none
+
+<text>
+
+The Digital Dialogue Text format, abbreviated as DDTXT, is a specific markup language that makes writing dialogue-heavy documents (such as scripts or casual stories) simpler by using frequent references that point to characters designed by the author. The DDTXT also excels in flexibility since readers can change the language used to refer to characters and make characters more or less personally relatable. Because DDTXTs are shorthand for very basic webpages, the format should be supported almost everywhere.
+
+// We use the keyword "(break)" to split paragraphs.
+// By default, this is equivalent to two HTML "<br>"s, but this can also be changed in the <global> node.
+(break)
+
+The DDTXT document is split into three main categories. There are sections where you write 
+// We can write a comment here and this sentence will remain whole.
+// The text inside of <text> nodes follows HTML standards, which means spacing is mostly ignored.
+// However, since the character before the split is not punctuation, there is no way of knowing that
+// there needs to be an extra space, so you will have to add a dollar sign to indicate that you meant the extra space.
+// Normally, spacing is completely ignored (in a similar manner to HTML text).
+$ the actual document, sections where set the document's properties, and sections where you organize the previous two kinds of information. It should be noted that the DDTXT in raw form reads similarly to fake XML, although the structuring of nodes is much more simplistic and limited. If you do not know anything about the XML, HTML, or CSS languages, you should be able to pick up the DDTXT format without learning about them.
+
+(break)
+
+This guide will begin on general instructions for creating a DDTXT document and then end with specific reference materials for advanced users. You can visit the advanced section by clicking the link here:
+
+[href: #chapter-6]
+
+// You can use a "(divide)" at any time to include a larger break with a fancy divider
+(divide)
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = Starting Your Own DDTXT
+subtitle = Basic rules:
+
+<text>
+
+// You can use "(break)"s in dialogue. I would only recommend doing this if you have changed the background color of the character's dialogue and need to do so in order to have some margins. (This should be avoided in main stories without good reason.)
+[note: (break) You should open a text editor and create a new file with the extension ".ddtxt" before continuing so that you can easily follow along. (break)]
+
+The first line of every raw DDTXT file (the text file that you see when you open the file in a text editor) must be the exact following, without the quotation marks:
+// You can use dollar signs to tell the DDTXT parser to not translate the following word.
+// (You must use a dollar sign after every space.)
+$"<!DOCTYPE $DDTXT>". This is just a precaution in case there are other file formats that use the .ddtxt filename extension.
+
+(break)
+
+Before we continue, I must explain rules that apply across the entire DDTXT document.
+(break)
+- Unless otherwise noted, individual actions must be on their own line.
+(break)
+- Author comments can be written in the raw DDTXT file by starting a line with two forward slashes ("//"). These never affect the finished DDTXT in any way.
+(break)
+- Capitalization often matters and failure to write phrases or keywords exactly as given may result in a broken DDTXT.
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = Setting Up Your DDTXT's Basic Elements
+subtitle = Setting global document properties
+
+<text>
+
+Document properties are what tell your browser specifically how to display your writing as a DDTXT. These properties are organized into chunks called "nodes," which is how I will refer to these from now on. Nodes are started by commands on a single line, which either open or close these chunks. In addition, there can be chunks within chunks (subnodes), but these will be clearly documented for ease of understanding.
+
+(break)
+
+Let's start by setting the document name. Making sure that the file starts with the exact line $"<!DOCTYPE $DDTXT>", create the global properties node by writing "<global>" on a line below. Now, on an even lower line, write "</global>" to close the node. Any line between these two endpoints will be interpreted as information relating to the entire document.
+
+(break)
+
+Now, you can set the document's name. To do this, create a new line inside the global properties node and write "name  #= My First DDTXT".
+
+[prop: name]
+
+If you save the file and open up the document in the DDTXT Reader, you should see a blank DDTXT titled "My First DDTXT". Every line setting a property of the document will follow the format 
+// We must comment out the reference character "=" here by putting a hashtag before it.
+"  #= value".
+
+(break)
+
+Now, you should credit yourself as the author so that people know that you wrote it. You can do this by writing a new line that starts with "author  #= " followed by your name.
+
+[prop: author]
+
+At this point, you should save you file and open it with the DDTXT Reader. (If it's easier for you, you should be able to open the DDTXT Reader twice and keep this Manual open.) The document should be named and should note you as the author. If something went wrong, don't worry. Simply look over this example and study it:
+
+[text:
+
+(break)
+
+$<!DOCTYPE $DDTXT>
+
+(break)
+<global>
+(break)
+
+name $= My First DDTXT
+(break)
+author $= MZRProductions (Michael Rumpff)
+
+(break)
+
+$</global> ]
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = Setting Up a Character!
+subtitle = Bringing life to your stories
+
+<text>
+
+Most stories will include characters of interest and feature interactions between them. For this, you must register each character through a character node. Much like the global node previously discussed, each character node begins with the line $"<character>" and ends with the line $"</character>".
+// Once again, we are using the dollar sign to have the parser skip over the words containing character references.
+
+[note: Unlike the document's global node, of which there should only be one, there must be a new character node for each new character.]
+
+The first thing to include in a character node is the designated word that you will use to refer to this character. This is done by setting the "code" property.
+
+[prop: code]
+
+Of course, as with setting any individual property, this is done by specifying the property you want to set followed by an equal sign and your desired value. This single word, or a phrase with no spaces, will be used in conjunction with references, which we will discuss later. Read about them here: [href: #chapter-5]. It is highly recommended that you keep your "code" keywords short since you will be typing them repeatedly!
+
+(break)
+
+The "code" property above only has its special meaning when used with a reference. This means that you can use a common word that you could repeat within the story without worrying about conflict. In addition, the "code" keyword that you use to refer to the character in-text can be different from the name that the reader sees when you reference the character. To set the name of the character, use the "name" property.
+
+[prop: name]
+
+The character's name can be multiple words, if you choose, unlike the code keyword.
+
+[text:
+
+(break)
+
+// We have to use hashtags and dollar signs to help the parser out here.
+
+$<character>
+
+(break)
+
+code  #= example
+(break)
+// You can see here that the code is one word, but the name is two words.
+name  #= Example Character
+(break)
+$</character> ]
+
+The next thing to think about are the character's pronouns, which will be pulled from as you write your document.
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = Character Pronouns
+subtitle = The building blocks of character interactions
+
+<text>
+
+In order to specify your character's pronouns, you must first create a pronouns subnode inside of a character node. Inside of the character node, make a new line with "<pronouns>" and another line below it with "</pronouns>". Hopefully creating nodes and subnodes is making more sense now. Each property below is an individual pronoun. You can choose to define any, all, or none of them. (If you do not define a pronoun, the gender neutral equivalent will be used.)
+
+(break)
+
+// This will be done properly with DDTXT characters so that you can see how references function.
+
+Let's invent a little story with three characters. The story is silly, but it illustrates many common pronouns interacting with characters.
+
+[note:
+
+(break)
+
+The first character is @example1, a ~example1.
+
+(break)
+
+The second character is a ~example2 named @example2.
+
+(break)
+
+The third character, @example3, is a ~example3 for catching a ~example2.]
+
+In case the specifics of writing with personal pronouns confuse you (understandably so), I will detail what each pronoun does. To learn more about using these pronouns with references, click here: [href: #chapter-5].
+
+[prop: subject]
+
+This is the word that indicated the character performing the action. In this story, @example1 is throwing @example2, so @example1 is the subject. This means that we should use +example1 subject word here, in this case "<example1."
+
+[prop: possessive]
+
+This is the word that describes someones possessive relation to something else. For example, since @example1 is a ~example1, we can assume that one of =example1 talents is throwing spherical objects. The talent of throwing belongs to >example1.
+
+[prop: object]
+
+This is the word that refers to the character that the action is happening to. Think "to them", "to her", or "to him" here. In the story above, @example2 is being thrown to @example3. @example3 is the direct receiver of this action, which means that
+// Here we are using reference shorthand. Since the previous reference involved the same character, we don't have to re-type the character's code keyword. The DDTXT Parser will assume that this is a reference to example3.
+< is the direct object.
+
+(break)
+
+@example2 is involved in this action too, but as an indirect object. @example2 is being used to perform the action in the first place. In the English language, both direct objects and indirect objects have the same pronoun form, so the important thing is that they are both objects.
+
+[prop: instance]
+
+This is more vague. This can be anything that you want, really. I would recommend making this the character's role in the story or something that the character would call themselves. For example, because @example2 is a ~example2, <example2 is easier to throw than @example3, a ~example3.
+
+(break)
+
+Hopefully you can see the flexibility of this property. The main thing is that writers make sure to not rely on this too much, but to use this pronoun as a tool to make new characters familiar enough that you don't need this anymore. It's up to you to figure this one out.
+
+[prop: reflexive]
+
+This word describes actions that a character is performing on or toward themselves. For example, when you are performing actions to take care of yourself and fulfill your needs, you are performing reflexive actions. Actions that directly reflect back to the subject are reflexive. Most often, these words will contain "self" or "selves".
+
+(divide)
+
+Here is a list of these three characters with all of their pronouns.
+
+// These are going to be long tables of pronouns.
+
+[note: @example1]
+
+Subject | <example1
+(break) Possessive | =example1
+(break) Object | (to) >example1
+(break) Instance | (is a) ~example1
+(break) Reflexive | *example1
+(break) Present Helping Verb | {example1
+(break) Present Helping Verb Contraction | }example1
+
+[note: @example2]
+
+Subject | <example2
+(break) Possessive | =example2
+(break) Object | (to) >example2
+(break) Instance | (is a) ~example2
+(break) Reflexive | *example2
+(break) Present Helping Verb | {example2
+(break) Present Helping Verb Contraction | }example2
+
+[note: @example3]
+
+Subject | <example3
+(break) Possessive | =example3
+(break) Object | (to) >example3
+(break) Instance | (is a) ~example3
+(break) Reflexive | *example3
+(break) Present Helping Verb | {example3
+(break) Present Helping Verb Contraction | }example3
+
+(divide)
+
+Here is an example of a character with name, code, and pronouns defined. (The pronouns listed here are the default pronouns that you would get for each if you didn't specify.)
+
+[text:
+
+(break)
+
+// We have to use hashtags and dollar signs to help the parser out here.
+
+$<character>
+
+(break)
+
+code  #= example
+(break)
+// (If you want to include comments in these weird example snippets, you can put a dollar sign before the comment slashes.)
+$// You can see here that the code is one word, but the name is two words.
+(break)
+name  #= Example Character
+(break)
+$<pronouns>
+(break)
+subject  #= they
+(break)
+possessive  #= their
+(break)
+object  #= them
+(break)
+reflexive  #= themselves
+(break)
+instance  #= person
+(break)
+present  #= they are
+(break)
+presentCompacted  #= they're
+(break)
+$</pronouns>
+(break)
+$</character> ]
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = The DDTXT Language
+subtitle = Learning to write with references
+
+<text>
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = Character Styling
+subtitle = Applying colors to characters
+
+<text>
+
+Before we discuss how to set your characters' styles, we should discuss good practices for color choices.
+
+[note: READABILITY IS IMPORTANT!]
+
+For example, read the next part about an important feature of styles:
+
+// This text is supposed to be almost invisible on the background. (Dark on dark)
+[hardToRead1: Text that is difficult to read is almost useless.]
+
+Did you read that? Accessibility to your readers is of the utmost importance! This next example is fairly readable to non-colorblind people reading from brighter screens, although this could become an issue for readers who struggle to distinguish these colors:
+
+[hardToRead2: Colors of medium readability can be the trickiest to diagnose and adjust. It's important to be able to determine when to increase the contrast of your document.]
+
+You should probably also try to avoid adding too many colors, as this will be annoying to your readers:
+
+[hardToRead3: I bet you can read this now!!]
+
+You can see that all the text in this document has a theme of light on dark or dark on light. This is very intentional. You need to be able to read how to make DDTXTs, right? Styling should never hinder the document; it should only complement it.
+
+(break)
+
+Really, this is all theory, so use your best judgement. Ideally, you should have other people try to read your document or perform some of the following tests.
+
+(break)
+
+- You can try zooming out in your browser (it might be buried in a miscellaneous actions drop down menu). If you can still read text without straining your eyes too much, then you should be safe.
+(break)
+- Turn your screen's brightness down temporarily. If the text is still fairly visible, then you're probably safe.
+(break)
+- If you have a way to easily screenshot your screen, take a screenshot of some dialogue in your document. Then, if possible, desaturate the picture with a "Black and White" filter or by turning the saturation down to 0%. If you can still read your text, then you're probably safe.
+
+(divide)
+
+It is time to discuss a new type of subnode. The style subnode tells your browser how to display dialogue spoken by your character. There are currently four different properties. Each of these properties, unless otherwise stated, uses CSS.
+
+(break)
+
+CSS, which stands for Cascading Style Sheets, is a well-established language for storing colors and styles for webpages and is essential to browsers. You can look up further CSS references online, although I'll discuss every part of CSS that apples to DDTXTs here.
+
+(break)
+
+CSS contains a plethora of predefined colors for you to use. These can be used by finding a CSS color word, such as "blue", and using that word as the value for the DDTXT property. The easiest way to see if a color has been predefined in CSS is to try a color word and reload the DDTXT.
+
+(break)
+
+You can find a list of CSS colors here: .
+
+(break)
+
+You can also choose an exact color using the RGB color system, which stands for Red, Green, and Blue. Color pickers allow you to select a color from an interactive color wheel and then read the corresponding RGB numbers. (You should be able to find online color pickers.) To use these numbers, start the value with "rgb(". Then write the numbers as a comma seperated list. Finally, close the parentheses. It should look something like this: "rgb(255, 127, 63)".
+
+(break)
+
+(This is for people who are already familiar with the RGB system.) By the way, a hexadecimal color is an RGB value combined to form six digits back to back. The first two are the red component, from 0 (00) to 255 (FF). The middle two are the green component, and the final two are the blue component. (Alpha / opacity would be represented by an additional two digits if the color is actually an RGBA color.)
+
+[note: If you would like to use the default value that the document would apply naturally, use the keyword "inherit". This results in the same default color that you would get by not specifying a color, but it could lets others know that you really meant to not specify a color. It's up to you.]
+
+(divide)
+
+Here are the properties that control dialogue display in your document.
+
+[prop: color]
+
+This is the color of the text that your character "speaks" in dialogue and the color of their name that appears next to their words. If not specified, this will default to the color of the chapter text throughout the rest of the document. For more information on the color of chapter text, go here: [href: #chapter-8]
+
+[prop: backgroundColor]
+
+You can choose to set a background color for your character's dialogue. I would recommend using colors of subtle difference to the main document, if any background color at all. If you do this, I would also recommend setting the dialogue's "padding". (See below.)
+
+[prop: paragraphColor]
+
+You can also choose to set the color of the character's spoken words a different color than the color of the character's name in the dialogue snippet. This should be a shade different from the character's main color, if different at all.
+
+[prop: dialoguePadding]
+
+[note: This property does not use CSS colors!]
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = Advanced Documentation
+
+// ISSUE: Move this temporary text into the chapter before the split.
+
+<text>
+
+(break)
+(break)
+(break)
+(divide)
+(break)
+(break)
+(break)
+
+</text>
+
+</chapter>
