@@ -20,7 +20,7 @@ titleColor = inherit
 backgroundColor = rgb(20, 20, 20)
 
 // Setting up the document's divisions:
-// (You can use a horizontal border here by using the keyword "<hr>")
+// (You can use a horizontal border here by using the keyword "(hr)")
 divide = ---~~~---
 // This is in pixels, and will not grow or shrink according to screen size.
 divideSize = 35
@@ -93,6 +93,12 @@ presentCompacted = he's
 
 </pronouns>
 
+<text>
+
+I hope you enjoy the DDTXT format and find it useful! This manual should cover enough to at least get you started. Thanks for reading my bio!
+
+</text>
+
 </character>
 
 <character>
@@ -109,6 +115,12 @@ dialoguePadding = 1%
 
 </style>
 
+<text>
+
+This styling is used to clearly show new properties as they are introduced.
+
+</text>
+
 </character>
 
 <character>
@@ -124,6 +136,12 @@ backgroundColor = darkblue
 dialoguePadding = 1%
 
 </style>
+
+<text>
+
+This styling is used to display functional examples and/or snippets of DDTXTs.
+
+</text>
 
 </character>
 
@@ -149,6 +167,12 @@ presentCompacted = she's
 
 </pronouns>
 
+<text>
+
+@example1 is the character throwing @example2 to @example3.
+
+</text>
+
 </character>
 
 <character>
@@ -169,6 +193,12 @@ present = they are
 presentCompacted = they're
 
 </pronouns>
+
+<text>
+
+@example2 is a ~example2 that gets thrown by @example1. Don't ask me why. I suppose you can change the character information to make something that makes more sense.
+
+</text>
 
 </character>
 
@@ -191,6 +221,12 @@ presentCompacted = he's
 
 </pronouns>
 
+<text>
+
+@example3 is a ~example3 used for catching @example2. Why? I don't know. Yes, it's all very weird, but this was the best way I could think of to demonstrate pronouns.
+
+</text>
+
 </character>
 
 // ONE TIME CHARACTERS FOR STYLING DEMONSTRATIONS:
@@ -206,6 +242,12 @@ color = rgb(40, 40, 40)
 
 </style>
 
+<text>
+
+Could you actually read the text without highlighting it in your browser?
+
+</text>
+
 </character>
 
 <character>
@@ -220,6 +262,12 @@ backgroundColor = brown
 dialoguePadding = 1%
 
 </style>
+
+<text>
+
+This character style is meant to be not great but not horrible.
+
+</text>
 
 </character>
 
@@ -237,6 +285,12 @@ dialoguePadding = 1%
 
 </style>
 
+<text>
+
+This character style is meant to be ugly and hard to look at.
+
+</text>
+
 </character>
 
 // We are going to have to use "(break)"s a lot in-text. This isn't needed for most DDTXTs.
@@ -250,6 +304,8 @@ name = Introduction
 subtitle = none
 
 <text>
+
+[me: Hello! Welcome to the DDTXT format!]
 
 The Digital Dialogue Text format, abbreviated as DDTXT, is a specific markup language that makes writing dialogue-heavy documents (such as scripts or casual stories) simpler by using frequent references that point to characters designed by the author. The DDTXT also excels in flexibility since readers can change the language used to refer to characters and make characters more or less personally relatable. Because DDTXTs are shorthand for very basic webpages, the format should be supported almost everywhere.
 
@@ -272,7 +328,10 @@ This guide will begin on general instructions for creating a DDTXT document and 
 [href: #chapter-6]
 
 // You can use a "(divide)" at any time to include a larger break with a fancy divider
+
 (divide)
+
+[me: I hope that you enjoy reading and writing DDTXTs.]
 
 </text>
 
@@ -285,8 +344,7 @@ subtitle = Basic rules:
 
 <text>
 
-// You can use "(break)"s in dialogue. I would only recommend doing this if you have changed the background color of the character's dialogue and need to do so in order to have some margins. (This should be avoided in main stories without good reason.)
-[note: (break) You should open a text editor and create a new file with the extension ".ddtxt" before continuing so that you can easily follow along. (break)]
+[note: You should open a text editor and create a new file with the file extension ".ddtxt" (for example, "test.ddtxt") before continuing so that you can easily follow along.]
 
 The first line of every raw DDTXT file (the text file that you see when you open the file in a text editor) must be the exact following, without the quotation marks:
 // You can use dollar signs to tell the DDTXT parser to not translate the following word.
@@ -318,7 +376,7 @@ Document properties are what tell your browser specifically how to display your 
 
 (break)
 
-Let's start by setting the document name. Making sure that the file starts with the exact line $"<!DOCTYPE $DDTXT>", create the global properties node by writing "<global>" on a line below. Now, on an even lower line, write "</global>" to close the node. Any line between these two endpoints will be interpreted as information relating to the entire document.
+Let's start by setting the document name. Making sure that the file starts with the exact line $"<!DOCTYPE $DDTXT>", create the global properties node by writing "<global>" on a line below. Now, on an even lower line, write "</global>" to close the node. Any line between these two endpoints will be interpreted as information relating to the entire document. Think of the properties within the global node of your document as applying "globally," that is everywhere within your document.
 
 (break)
 
@@ -337,6 +395,8 @@ Now, you should credit yourself as the author so that people know that you wrote
 [prop: author]
 
 At this point, you should save you file and open it with the DDTXT Reader. (If it's easier for you, you should be able to open the DDTXT Reader twice and keep this Manual open.) The document should be named and should note you as the author. If something went wrong, don't worry. Simply look over this example and study it:
+
+// You can use "(break)"s in dialogue. I would only recommend doing this if you have changed the background color of the character's dialogue and need to do so in order to have some margins. (This should be avoided in main stories without good reason.)
 
 [text:
 
@@ -416,7 +476,7 @@ subtitle = The building blocks of character interactions
 
 <text>
 
-In order to specify your character's pronouns, you must first create a pronouns subnode inside of a character node. Inside of the character node, make a new line with "<pronouns>" and another line below it with "</pronouns>". Hopefully creating nodes and subnodes is making more sense now. Each property below is an individual pronoun. You can choose to define any, all, or none of them. (If you do not define a pronoun, the gender neutral equivalent will be used.)
+In order to specify your character's pronouns, you must first create a pronouns subnode inside of a character node. Inside of the character node, make a new line with "<pronouns>" and another line below it with "</pronouns>". Hopefully creating nodes and subnodes is making more sense now. Each property below is an individual pronoun. You can choose to define any, all, or none of them. The values of all of these properties should be a word or phrase. (If you do not define a pronoun, the gender neutral equivalent will be used.)
 
 (break)
 
@@ -470,9 +530,21 @@ Hopefully you can see the flexibility of this property. The main thing is that w
 
 This word describes actions that a character is performing on or toward themselves. For example, when you are performing actions to take care of yourself and fulfill your needs, you are performing reflexive actions. Actions that directly reflect back to the subject are reflexive. Most often, these words will contain "self" or "selves".
 
+[prop: present]
+
+This isn't technically a pronoun, but it is used with the character's actual pronouns. This is the linking verb (to be) that would be used in passive voice and present progressive tenses. In simpler terms, this would be a "he is" or "they are". This can be used in combination with other verbs. For example, due to the fact that @example2, the ~example2, is flying through the air, {example2 preparing to land and bounce into the air again.
+
+[note: You do not need to use this if the "is" or "are" is directly after a character name, as that will always be "is."(break)"@example1 is" is fine as is, but "<example1 is" should be converted to "{example1"]
+
+Any time you have a subject followed by "is" or "are," you'll most likely want to convert this phrase to the character's present pronoun.
+
+[prop: presentCompacted]
+
+This is the contracted (abbreviated) form of the present verb form property above. This is a seperate property, although it can be created from the phrase above by replacing the first letter of the second word with an apostrophe (') and combining both new words into one word. For example, "they are" becomes "they're"; "she is" becomes "she's".
+
 (divide)
 
-Here is a list of these three characters with all of their pronouns.
+Here is a list of these three characters from the story with all of their pronouns.
 
 // These are going to be long tables of pronouns.
 
@@ -508,7 +580,7 @@ Subject | <example3
 
 (divide)
 
-Here is an example of a character with name, code, and pronouns defined. (The pronouns listed here are the default pronouns that you would get for each if you didn't specify.)
+Here is an example of a character with name, code, and pronouns defined. (The pronouns listed here are the default pronouns that you would get for each if you didn't specify them anyway.)
 
 [text:
 
@@ -557,6 +629,34 @@ name = The DDTXT Language
 subtitle = Learning to write with references
 
 <text>
+
+The DDTXT format can take some adjustments when thinking about how to write, but it will soon save you time as you can quickly expand upon your document. The DDTXT introduces character references that transform "hard baked" text into dynamic, changeable text. Text that is hard baked is rigid. It is written and stays the same. Dynamic text adapts to character pronouns and works to promote character relatability while keeping the true story elements intact. This allows readers to digest your writing more easily.
+
+(break)
+
+It will be difficult at first as you learn the DDTXT language, but you should avoid hard baking your text. Hard baking makes text less accessible to readers and ignores most of the intended function of the DDTXT format.
+
+(divide)
+
+All main document text is written within text subnodes. However, before you can write, you need to create a chapter node. This is a main node, not a subnode, and it should come after your character nodes and your global node. There are two main properties of chapter nodes other than the text subnode.
+
+[prop: name]
+
+This is the chapter title (or name). This appears at the top of the chapter, before any main chapter text.
+
+[prop: subtitle]
+
+This is the chapter's subtitle, which is shown beneath the chapter's title.
+
+[note: Both the chapter name and subtitle can be turned off by using the keyword "none" as the property value.]
+
+[note: The chapter title and subtitle will be colored according to the document's headingColor as defined in the style subnode of the document's global node.]
+
+For more information, please see the global style subnode. [href: #chapter-8].
+
+(divide)
+
+
 
 </text>
 
@@ -614,7 +714,7 @@ CSS contains a plethora of predefined colors for you to use. These can be used b
 
 (break)
 
-You can find a list of CSS colors here: .
+You can find a list of CSS colors here: [href: https://www.w3.org/wiki/CSS/Properties/color/keywords#Basic_Colors]. If this link becomes obsolete, you should be able to find other CSS resources online.
 
 (break)
 
@@ -622,9 +722,9 @@ You can also choose an exact color using the RGB color system, which stands for 
 
 (break)
 
-(This is for people who are already familiar with the RGB system.) By the way, a hexadecimal color is an RGB value combined to form six digits back to back. The first two are the red component, from 0 (00) to 255 (FF). The middle two are the green component, and the final two are the blue component. (Alpha / opacity would be represented by an additional two digits if the color is actually an RGBA color.)
+(This paragraph is for people who are already familiar with the RGB system and the idea of hexadecimal numbers.) By the way, a hexadecimal color is an RGB value combined to form six hexadecimal digits back to back. The first two are the red component, from 0 (00) to 255 (FF). The middle two are the green component, and the final two are the blue component. (Alpha / opacity would be represented by an additional two digits if the color is actually an RGBA color.) For example, the color "32, 127, 161" becomes "#207FA1".
 
-[note: If you would like to use the default value that the document would apply naturally, use the keyword "inherit". This results in the same default color that you would get by not specifying a color, but it could lets others know that you really meant to not specify a color. It's up to you.]
+[note: If you would like to use the default value that the document would apply naturally, use the CSS keyword "inherit". This results in the same default color that you would get by not specifying a color, but it could let others know that you really meant to not specify a color. It's up to you.]
 
 (divide)
 
@@ -636,7 +736,7 @@ This is the color of the text that your character "speaks" in dialogue and the c
 
 [prop: backgroundColor]
 
-You can choose to set a background color for your character's dialogue. I would recommend using colors of subtle difference to the main document, if any background color at all. If you do this, I would also recommend setting the dialogue's "padding". (See below.)
+You can choose to set a background color for your character's dialogue. I would recommend using colors of subtle difference to the main document, if any background color at all. If you do this, I would also recommend setting the character's dialoguePadding property. (See below.)
 
 [prop: paragraphColor]
 
@@ -645,6 +745,122 @@ You can also choose to set the color of the character's spoken words a different
 [prop: dialoguePadding]
 
 [note: This property does not use CSS colors!]
+
+This property adds an inner margin to dialogue boxes. This should only be used when the character's backgroundColor property is different from the document's main background color. The value of this property should be a percentage of the screen that you would like to pad the dialogue with. It is highly recommended to use small values like "1%" or "2%" at most.
+
+(divide)
+
+Here is an example of the style subnode of a character node.
+
+[text:
+(break)
+$ $<style>
+(break)
+color  #= black
+(break)
+backgroundColor  #= yellow
+(break)
+dialoguePadding  #= 1%
+(break)
+$ $</style>
+]
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = Global Document Styling
+subtitle = Creating a style for your entire document
+
+<text>
+
+The same ideas behind character styling apply to styling the rest of your document. Visibility and accessibility should be the focus of styling your document since this covers paragraph text, which is smaller than character dialogue. Just like in characters, document styling is done in a style subnode. Create a style subnode within the global node [href: #chapter-3], which you should have already made.
+
+(break)
+
+The values for color properties here should be CSS colors. [href: #chapter-7] Values in other forms will be highlighted.
+
+[prop: color]
+
+This is the main color of text throughout the document. Chapter text, headings, and character dialog will default to this color. This document has a color of "white", which means that all text, unless otherwise specified by character styles or heading styles, will be white.
+
+[prop: backgroundColor]
+
+This is the background color of the entire document. This should be a color that is readable behind all of the different colors of your document. This document has a backgroundColor of "black", meaning that the background color is black except for character dialogue that specifies otherwise.
+
+[prop: headingColor]
+
+This is the color of chapter titles and subtitles. This document has a headingColor of "rgb(50, 200, 255)", which means that chapter titles and subtitles have a lighter blue color.
+
+[prop: titleColor]
+
+This is the color of your document's title. In this document, the titleColor is "inherit", which pulls from the color property ("white"). This means that the title of this DDTXT is white.
+
+(divide)
+
+[prop: divide]
+
+[note: This property takes words or a phrase as input.]
+
+This is the text that is used as a division between sections upon being called through the in-text keyword "divide". This can be made up of any text characters, including spaces. The default value is "~~~", which uses aesthetically pleasing tildes to break apart your DDTXT. This document uses "---~~~---", which extends these tildes.
+
+[prop: divideColor]
+
+This is the color of the divisions in your DDTXT. This works like all of the other text color properties.
+
+[prop: divideSize]
+
+[note: The value should be a number directly followed by "px", which stands for pixels.]
+
+This is the font size of the divisions in your document. This number is in pixels. The default size of divisions is the same size as paragraph text. This document uses a division size of "35px", which makes divisions a similar size to character dialogue.
+
+(divide)
+
+Here is this document's global style subnode.
+
+[text:
+(break)
+$<style>
+(break)
+(break)
+$// You can use any color the same way that you would in CSS. Here, we are using the common color "white" as the main text color.
+(break)
+color  #= white
+(break)
+$// You can also use the rgb() CSS function.
+(break)
+$// This is an RGB value: "rgb(RED, GREEN, BLUE)"
+(break)
+headingColor  #= rgb(50, 200, 255)
+(break)
+$// You can also use the CSS keyword "inherit" to copy the value provided for the "color" slot (the main text color).
+(break)
+$// Most of the time, if you do not specify a value, the default will be the main text color.
+(break)
+titleColor  #= inherit
+(break)
+backgroundColor  #= rgb(20, 20, 20)
+(break)
+(break)
+$// Setting up the document's divisions:
+(break)
+$// (You can use a horizontal border here by using the keyword $"<hr>")
+(break)
+divide  #= $---~~~---
+(break)
+$// This is in pixels, and will not grow or shrink according to screen size.
+(break)
+divideSize  #= 35px
+(break)
+$// The standard CSS colors defines both "gray" (American?) and "grey" as the same colors:
+(break)
+divideColor  #= grey
+(break)
+(break)
+$</style>
+]
 
 </text>
 
