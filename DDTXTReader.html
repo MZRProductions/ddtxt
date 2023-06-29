@@ -479,7 +479,9 @@ const charactersNotAllowedInCodes = [
 	"(",
 	")",
 	"!",
-	"?"
+	"?",
+	"\"",
+	"\'",
 ];
 
 // Only keep the contents of a string BEFORE disallowed characters, assuming that the beginning of the string is fine.
@@ -737,6 +739,11 @@ var clearDDTXT = function () {
 				// Now that all references have been converted, any remaining <s and >s can be converted to the HTML friendly &lt; and &gt; respectively:
 				text = text.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 				
+				// Remove all extra dollar signs, keeping the dollar signs commented out by hashtags:
+				text = text.replaceAll("#$", "(dollar sign)");
+				text = text.replaceAll("$", "");
+				text = text.replaceAll("(dollar sign)", "$");
+				
 				// Same for quote marks, which should be converted to the more HTML friendly "&quot;":
 				
 				text = text.replaceAll("\"", "&quot;");
@@ -834,6 +841,10 @@ var clearDDTXT = function () {
 				// Em dash pass-through
 				
 				text = text.replaceAll("(em dash)", "—");
+				
+				// Horizontal rule pass-through
+				
+				text = text.replaceAll("(horizon)", "<hr>");
 				
 				// Final steps
 				
@@ -1128,7 +1139,6 @@ var parseDDTXTLine = function (line, lineNumber = -1) {
 						// If dialogue padding has been specified and it ends with a percent sign, remove it and keep the number:
 						const paddingInput = currentSubNode.dialoguePadding;
 						if (paddingInput) {
-							//console.log((paddingInput [paddingInput.length - 1] === "%" ? paddingInput.substring(0, paddingInput.length - 1) : paddingInput);
 							currentSubNode.dialoguePadding = (paddingInput [paddingInput.length - 1] === "%") ? paddingInput.substring(0, paddingInput.length - 1) : paddingInput;
 						}
 						const styleCopy = currentSubNode; // Create a deep copy
