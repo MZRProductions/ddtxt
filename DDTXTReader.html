@@ -846,6 +846,68 @@ var clearDDTXT = function () {
 				
 				text = text.replaceAll("(horizon)", "<hr>");
 				
+				// Special character commands:
+				
+				const replaceKeyword = [
+					// 0
+					"(at symbol)",
+					// 1
+					"(equal symbol)",
+					// 2
+					"(less than symbol)",
+					// 3
+					"(greater than symbol)",
+					// 4
+					"(asterisk symbol)",
+					// 5
+					"(tilde symbol)",
+					// 6
+					"(left curly brace)",
+					// 7
+					"(right curly brace)",
+					// 8
+					"(left bracket)",
+					// 9
+					"(right bracket)",
+					// 10
+					"(left parenthesis)",
+					// 11
+					"(right parenthesis)",
+				];
+				
+				const replaceWith = [
+					// 0
+					"@",
+					// 1
+					"=",
+					// 2
+					"<",
+					// 3
+					">",
+					// 4
+					"*",
+					// 5
+					"~",
+					// 6
+					"{",
+					// 7
+					"}",
+					// 8
+					"[",
+					// 9
+					"]",
+					// 10
+					"(",
+					// 11
+					")"
+				];
+				
+				// Use the above tables to replace the keywords with the symbols
+				
+				for (var currentSymbol = 0; currentSymbol < replaceKeyword.length; currentSymbol ++) {
+					text = text.replaceAll(replaceKeyword [currentSymbol], replaceWith [currentSymbol]);
+				}
+				
 				// Final steps
 				
 				if (withinBrackets) { // Check for weird syntax problems
@@ -1270,6 +1332,13 @@ var performFinalDDTXTChecks = function () {
 	DDTXT.global.lastModified = sourceFileTime;
 };
 
+var updateExternalText = function () {
+	// Update the webpage title:
+	document.getElementById("webpageTitle").innerHTML = DDTXT.global.webtitle + " (" + DDTXT.global.filename + ")";
+	// Now that we know the last modified date, generate the DDTXT's summary:
+	document.getElementById("summary-content").innerHTML = generateHTMLSummaryText();
+};
+
 var parseDDTXT = function (text = stringifiedDDTXT) {
 	stringifiedDDTXT = text; // In case we don't have the string yet, copy it to a more permanent location
 	document.getElementById("editor-content").innerHTML = stringifiedDDTXT;
@@ -1333,10 +1402,8 @@ var loadFileInput = function () {
 			function (result) {
 				parseDDTXT(text = result);
 				// After parsing (this clears DDTXT), save the filename (not a file path)
-				// Update the webpage title:
-				document.getElementById("webpageTitle").innerHTML = DDTXT.global.webtitle + " (" + DDTXT.global.filename + ")";
-				// Now that we know the last modified date, generate the DDTXT's summary:
-				document.getElementById("summary-content").innerHTML = generateHTMLSummaryText();
+				// Update the external document features:
+				updateExternalText();
 				// Update the document statistics:
 				// Make the document statistics UI visible
 				document.getElementById("ui").style.visibility = "visible";
@@ -1388,7 +1455,9 @@ var updateScrollProgress = function () {
 	if (progressPercentage === "99.9") {
 		progressPercentage = "100.0";
 	}
-	documentStats.innerHTML = "<em id=\"ui-name\">" + DDTXT.global.name + "</em> by " + DDTXT.global.author + " (" + progressPercentage + "% finished)";
+	// Prefer specified webtitle but default to full document name.
+	const nameToShow = (DDTXT.global.webtitle) ? DDTXT.global.webtitle : DDTXT.global.name;
+	documentStats.innerHTML = "<em id=\"ui-name\">" + nameToShow + "</em> by " + DDTXT.global.author + " (" + progressPercentage + "% finished)";
 };
 
 var updateToggleButton = function () {
@@ -1450,6 +1519,7 @@ var refreshEditorToDDTXT = function () {
 var refreshEditorToReader = function () {
 	refreshEditorToDDTXT();
 	parseDDTXT(text = stringifiedDDTXT);
+	updateExternalText();
 };
 
 document.getElementById("editor-refresh").onclick = refreshEditorToReader;
