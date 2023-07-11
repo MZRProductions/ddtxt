@@ -229,6 +229,23 @@ presentCompacted = he's
 
 </character>
 
+// IN-TEXT DDTXT COMMANDS:
+
+<character>
+
+code = command
+name = In-Text DDTXT Command
+
+<style>
+
+color = black
+backgroundColor = orange
+dialoguePadding = 1%
+
+</style>
+
+</character>
+
 // ONE TIME CHARACTERS FOR STYLING DEMONSTRATIONS:
 
 <character>
@@ -376,7 +393,7 @@ Document properties are what tell your browser specifically how to display your 
 
 (break)
 
-Let's start by setting the document name. Making sure that the file starts with the exact line $"<!DOCTYPE $DDTXT>", create the global properties node by writing "<global>" on a line below. Now, on an even lower line, write "</global>" to close the node. Any line between these two endpoints will be interpreted as information relating to the entire document. Think of the properties within the global node of your document as applying "globally," that is everywhere within your document.
+Let's start by setting the document name. Making sure that the file starts with the exact line $"<!DOCTYPE $DDTXT>", create the global properties node by writing $"<global>" on a line below. Now, on an even lower line, write $"</global>" to close the node. Any line between these two endpoints will be interpreted as information relating to the entire document. Think of the properties within the global node of your document as applying "globally," that is everywhere within your document.
 
 (break)
 
@@ -626,11 +643,11 @@ $</character> ]
 <chapter>
 
 name = The DDTXT Language
-subtitle = Learning to write with references
+subtitle = Preparing to write with references
 
 <text>
 
-The DDTXT format can take some adjustments when thinking about how to write, but it will soon save you time as you can quickly expand upon your document. The DDTXT introduces character references that transform "hard baked" text into dynamic, changeable text. Text that is hard baked is rigid. It is written and stays the same. Dynamic text adapts to character pronouns and works to promote character relatability while keeping the true story elements intact. This allows readers to digest your writing more easily.
+The DDTXT format can take some adjustments when thinking about how to write, but it will soon save you time as you can quickly expand upon your document. The DDTXT introduces character references that transform "hard baked" text into dynamic, changeable text. Text that is hard baked is rigid. It is written and stays the same. Dynamic text adapts to character pronouns and works to promote character relatablility while keeping the true story elements intact. This allows readers to digest your writing more easily.
 
 (break)
 
@@ -638,7 +655,7 @@ It will be difficult at first as you learn the DDTXT language, but you should av
 
 (divide)
 
-All main document text is written within text subnodes. However, before you can write, you need to create a chapter node. This is a main node, not a subnode, and it should come after your character nodes and your global node. There are two main properties of chapter nodes other than the text subnode.
+All main document text is written within text subnodes. However, before you can write, you need to create a chapter node. This is a main node, not a subnode, and it should come after your character nodes and your global node. There are two main properties of chapter nodes other than the text subnode. Both of these properties takes words as input.
 
 [prop: name]
 
@@ -656,7 +673,139 @@ For more information, please see the global style subnode. [href: #chapter-8].
 
 (divide)
 
+Now that you have an empty chapter, you can start writing by creating a text subnode. This will be a subnode of your chapter node.
 
+(break)
+
+Any text written within this subnode, excluding comments, is interpreted according to DDTXT format. It should be noted that spacing is only relevant between written text. This means that you can and should organize your raw DDTXT file for readability by other authors and/or editors.
+
+// Seriously. This file is already cluttered enough as it is. If you don't try at all, your file will be even more cluttered!
+
+(break)
+
+Empty space to the left or right will be omitted by default. You can write an entire paragraph on one line or make each sentence a new line. If you are having problems with spacing, you may need to insert spaces. For more information, see the DDTXT Commands Chapter. [href: #chapter-9].
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = Character Dialogue
+subtitle = Finally! (The whole point of the DDTXT)
+
+<text>
+
+The DDTXT should be dialogue heavy, as that is the entire point of using the DDTXT instead of standard HTML webpages or the straight to the point .txt file.
+
+[me: Hello! Look, it's dialogue!]
+
+To insert dialogue into your story, begin by writing a pair of square brackets. Anything inside of these brackets will be written as dialogue in your document. However, before you get writing, you need to specify who is talking! Each dialogue entry is actually split into two sections. The left side specifies the character and the right side holds the spoken words.
+
+(break)
+
+In order to specify the character speaking, you use the character's code. (From now on, I'll just say "character code.") This is the shorter, abbreviated version of the character's name that you setup before. [href: #chapter-4]
+
+(break)
+
+Now that you have the character code written inside the brackets, you need to split the dialogue into two parts with a colon (:). This allows your character code to be distinguished from the character's words. This colon can be spaced however you want as long as it is between the character code and the spoken words.
+
+(break)
+
+Now you just have to write the words that you have been wanting to write this whole time while you have been reading this chapter. The dialogue should now appear as a larger, bold line of text split from the rest of your text. If something went wrong, study this example.
+
+[text:
+(break)
+$<text>
+(break)
+Look! Here is some big text.
+(break)
+(left bracket)code: Hello World!(right bracket)
+(break)
+$</text>
+]
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = Character References
+subtitle = Using character information in your written work
+
+<text>
+
+You may have already discovered how difficult it is to write a story without using character names or pronouns. This chapter discusses the second most important part of the DDTXT, character references. These allow you to insert character information and pronouns directly into your document. These "references" all point back to the character node that you created earlier.
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = DDTXT In-Text Keywords
+subtitle = Special commands to use to format your DDTXT
+
+<text>
+
+There are some things that require special keywords, which perform specific actions. These commands will help tremendously. All of these commands must be written inside parentheses, however there is nothing special about these parentheses unless one of these keywords is used. (For example, this does not trigger any action.)
+
+// Look, here is one of these commands:
+
+(divide)
+
+[command: (left parenthesis)break(right parenthesis)]
+
+This will split your text apart. By default, this will leave space in between your text, but you can change this by setting the "break" property within the global style subnode. (You can also make this longer.)
+
+[command: (left parenthesis)divide(right parenthesis)]
+
+This will split your text and place a division decoration in your document. A division was used to split this section off from the introduction to this chapter.
+
+[command: (left parenthesis)horizon(right parenthesis)]
+
+This will insert a line across your document (a horizontal rule). This is equivalent to the HTML $"<hr>". This is what it looks like:
+
+(horizon)
+
+[command: (left parenthesis)em dash(right parenthesis)]
+
+// ISSUE: Resolve em dash character not being translated to ASCII / Unicode? correctly.
+
+This command places an em dash ((em dash)). This provides convenience since it can be difficult to type these.
+
+(divide)
+
+All of the following commands replace a character reference symbol or another symbol of DDTXT functionality that you can't use easily as a literal symbol. This makes it easy to write these symbols without using them functionally.
+
+[command: (left parenthesis)at symbol(right parenthesis) | $@]
+
+[command: (left parenthesis)equal symbol(right parenthesis) | $=]
+
+[command: (left parenthesis)less than symbol(right parenthesis) | $<]
+
+[command: (left parenthesis)greater than symbol(right parenthesis) | $>]
+
+[command: (left parenthesis)asterisk symbol(right parenthesis) | $*]
+
+[command: (left parenthesis)tilde symbol(right parenthesis) | $~]
+
+[command: (left parenthesis)left curly brace(right parenthesis) | ${]
+
+[command: (left parenthesis)right curly brace(right parenthesis) | $}]
+
+[command: (left parenthesis)left bracket(right parenthesis) | (left bracket)]
+// For the next line, we have to use the (right bracket) command to write it without ending the dialogue entry.
+[command: (left parenthesis)right bracket(right parenthesis) | (right bracket)]
+
+The following two are mostly useful for this section here, as they allow me to write these commands down without using them.
+
+[note: You can write parentheses normally without triggering a command as long as they aren't around any of these command keywords.]
+
+[command: (left parenthesis)left parenthesis(right parenthesis) | (]
+
+[command: (left parenthesis)right parenthesis(right parenthesis) | )]
 
 </text>
 
