@@ -1,0 +1,251 @@
+<!DOCTYPE DDTXT>
+
+// This document has been made as a sample of the capabilities of the DDTXT language.
+// For more information, please see the README in your installation of the DDTXT Reader.
+// If you do not have the reader, then you will not be able to read this document properly.
+
+<global>
+
+// You can use references in the document name and chapter names.
+name = +brandon and +james Summer Cookout
+// The webtitle appears in the top information bar.
+webtitle = Summer Cookout
+author = MZRProductions
+
+<style>
+
+backgroundColor = rgb(36, 18, 54)
+color = white
+headingColor = pink
+titleColor = lightblue
+
+</style>
+
+<text>
+
+@james and @brandon are spending some quality time together on a national holiday during the summer. However, they discover a strange realm where they gain magic powers. What happens when they realize that they must attend the neighbor's cookout? (Probably not much, but you won't know until you've read it.)
+
+</text>
+
+</global>
+
+// BRANDON
+
+<character>
+
+name = Brandon
+code = brandon
+
+<style>
+
+color = rgb(50, 155, 252)
+
+</style>
+
+<pronouns>
+
+subject = he
+possessive = his
+object = him
+reflexive = himself
+present = he is
+presentCompacted = he's
+
+</pronouns>
+
+<text>
+
+@brandon is a bit irritating due to = tremendous ego, which is partially fueled by = semi-celebrity status. < rushes into things with an enlarged confidence that ends up pissing people off. Despite all of this, < manages to fix the problems < creates and always protects @james no matter what.
+
+</text>
+
+</character>
+
+// JAMES
+
+<character>
+
+code = james
+name = James
+
+<style>
+
+color = rgb(247, 138, 59)
+
+</style>
+
+// Generic pronouns are used for James, so there's no need to have a pronouns subnode.
+
+<text>
+
+@james doesn't exactly care about the same values that @brandon relies on. Despite this, @brandon can see +james unique ways of handling complicated situations. Because @ is much calmer and more quiet than @brandon, @james can see the bigger picture more easily than <brandon can.
+
+</text>
+
+</character>
+
+<chapter>
+
+name = Introduction
+subtitle = none
+
+<text>
+
+@james walked over to the stove and grabbed the pot, moving it over to the other side of the stove, which was much cooler. @brandon was supposed to be coming, but < was slightly late. @james put out several bowls of snacks on the counter. After the bowls were arranged, @james put soda on the end. Finally, @james moved the pot of cheese dip to a wooden trivet.
+
+(break)
+
+There was a sound coming from the driveway. Within a few seconds, the doorbell rang. @james ran over to door and opened it to greet @brandon.
+
+[james: Hello!]
+
+[brandon: Hi, @james.]
+
+[james: The food is ready. Come inside!]
+
+@brandon walked inside and took = sunglasses off. The living room was pretty dark, even with the kitchen light coming through.
+
+[james: Let's open the curtains. It's too dark.]
+
+Opening the curtains up let sunbeams loose that rode the living room's dust down to the floor.
+
+[brandon: That's better. I brought a movie for us to watch.]
+
+[james: What is it?]
+
+[brandon: Exploding Car Action 2!]
+
+[james: Ah..]
+
+Fake excitement was never +james strength.
+
+[brandon: I also brought a frisbee for us to play with.]
+
+[james: Oh! That sounds like fun. It's such a nice day.]
+
+[brandon: Let's eat a snack, and then we can throw the frisbee back and forth for a bit.]
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = A Snack
+subtitle = (It's really that simple.)
+
+<text>
+
+They went to the kitchen where @james grabbed a couple plates.
+
+[james: I got the good pretzels. I know you really like those.]
+
+[brandon: They have a much better crunch.]
+
+@james got mostly chips and cheese dip, whereas @brandon got more pretzels than chips. However, they both got plenty of cheese dip. They both walked back to the living room so that they could eat their food.
+
+// Remember character reference shorthand:
+[: I'm so happy that you found this dip recipe.]
+
+[james: I am too.]
+
+The crunch of the chips with the warm, cheesy dip was wonderful. Combined with the comfortable sofa, it was superb.
+
+[brandon: (crunch)]
+
+[james: (burp)(em dash)Oh!]
+
+[brandon: Hah.]
+
+[: I bet that felt good.]
+
+[james: It did...]
+
+They were halfway finished with their snacks. @brandon had eaten most of = chips, leaving only pretzels.
+
+[brandon: They never have pretzels at work.]
+
+[james: At least you get snacks at work. (crunch)]
+
+[brandon: They never give me enough time to eat the snacks.]
+
+[: What's the point if I can't eat them? (munch)]
+
+[james: It's not like it's your money being wasted.]
+
+They were almost done now. @james was getting comfortable sitting on the sofa. @ shifted to avoid getting stuck to the sofa. @brandon had finished = pretzels and dip, so < set = plate down on the seat between them.
+
+[: You're done already? There's plenty more.]
+
+[brandon: I'll save it for later.]
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = Frisbee
+subtitle = (It postpones the movie...)
+
+<text>
+
+They got up (slowly) from the sofa and @james took both plates to the kitchen sink. @brandon spoke from the living room.
+
+[brandon: I'm going to go get the frisbee.]
+
+[james: Ok. I'll meet you outside.]
+
+@james walked out to the back porch through the back door in the dining room. The back porch was nice for the size of the house. The backyard was equally luxurious for the price of the house. It was a great find.
+
+(break)
+
+The house bordered a light forest and a creek that ran alongside much of the neighborhood. This was much of the reason @james moved here, although it meant that the house was at a greater risk of flooding. It was always something.
+
+(break)
+
+@brandon opened the door, lowering = sunglasses.
+
+[brandon: Here, take this. (throw)]
+
+< threw the frisbee to @james, who was only standing a few feet away. Upon inspecting the frisbee, @ saw that it was a similar shade of blue to +brandon hair color. It also had a design featuring the wavy spikes of hair that they all had. It was typical for +brandon to have silly egotistical merchandise made from = "personality." After all, = associates had to milk every bit of celebrity status < had.
+
+[james: What is this?]
+
+[brandon: They had too many left in the warehouse.]
+
+[: I have boxes of them in my garage.]
+
+
+
+</text>
+
+</chapter>
+
+// Brandon and James get their powers.
+
+// Brandon can slow down his experience of external time (based on the pace of his heartbeat) while keeping his body running at a normal speed. This disparity, or time dilation, makes him appear to speed up. However, this greatly exerts his energy exponentially based on said time disparity. (He can't keep it up forever.) I would also assume that other forces would become weaker (based on a lower passage of time) such as gravity, meaning that he could perhaps jump higher?
+
+// James can fly a bit (WIP)
+
+<chapter>
+
+name = Introduction II
+subtitle = none
+
+<text>
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = The Meaning of (Your) Life
+subtitle = Finally, an answer!
+
+<text>
+
+</text>
+
+</chapter>
