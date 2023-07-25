@@ -208,7 +208,10 @@ The house bordered a light forest and a creek that ran alongside much of the nei
 
 [brandon: Here, take this. (throw)]
 
-< threw the frisbee to @james, who was only standing a few feet away. Upon inspecting the frisbee, @ saw that it was a similar shade of blue to +brandon hair color. It also had a design featuring the wavy spikes of hair that they all had. It was typical for +brandon to have silly egotistical merchandise made from = "personality." After all, = associates had to milk every bit of celebrity status < had.
+< threw the frisbee to @james, who was only standing a few feet away. Upon inspecting the frisbee, @ saw that it was a similar shade of blue to +brandon hair color. It also had a design featuring the wavy spikes of hair that they all had.
+// They all have hair spikes coming out of the back of their heads.
+// Brandon has blue hair and James has yellowish-orange hair.
+$ It was typical for @brandon to have silly egotistical merchandise made from = "personality." After all, = associates had to milk every bit of celebrity status < had.
 
 [james: What is this?]
 
@@ -216,7 +219,49 @@ The house bordered a light forest and a creek that ran alongside much of the nei
 
 [: I have boxes of them in my garage.]
 
+[james: People buy this stuff?]
 
+[brandon: Of course they do! They love me.]
+
+@ had now backed up far enough for another throw. @james threw the frisbee to @brandon, going a bit too far to the left. The wind did not hinder much, apart from the occasional gust. @ threw back to the porch steps, which @james was gradually descending. (@ didn't want the frisbee to break the porch.)
+
+[james: Let's head to the back!]
+
+[brandon: OK.]
+
+=brandon voice was already quieter than normal due to the distance between them. @james threw the frisbee to the back of the yard, making @brandon chase after it.
+
+[brandon: Ah!]
+
+[james: (laugh)]
+
+As @james ran to catch up with >brandon, < threw it further back, making @james run too. Barely catching it, @ tried to curve the frisbee toward @brandon normally, but a wind gust sent the frisbee toward the forest.
+
+[brandon: I'll get it.]
+
+< started walking toward the runaway frisbee, but before the frisbee landed, there was a crackly, raspy sound and a blinding ripple of light coming from the frisbee's location.
+
+[brandon: Look!]
+
+[james: It's so beautiful.]
+
+There was an undulating, amorphous cloud of colorful light.
+
+[brandon: What the hell is that?]
+
+@james felt the urge to walk closer. @brandon ran back to bring @james closer. Within a few seconds, they were both standing close to the light.
+
+[james: What if it's radioactive?]
+
+[brandon: We'll be okay. I bet it's not THAT radioactive.]
+
+The light show was hypnotic and soothing. It made them want to come closer, and closer(em dash)and closer.
+
+[brandon: Let's go into it.]
+
+[james: It must be irresponsible, but it's so pretty.]
+
+[brandon: Let's go.]
 
 </text>
 
@@ -224,9 +269,9 @@ The house bordered a light forest and a creek that ran alongside much of the nei
 
 // Brandon and James get their powers.
 
-// Brandon can slow down his experience of external time (based on the pace of his heartbeat) while keeping his body running at a normal speed. This disparity, or time dilation, makes him appear to speed up. However, this greatly exerts his energy exponentially based on said time disparity. (He can't keep it up forever.) I would also assume that other forces would become weaker (based on a lower passage of time) such as gravity, meaning that he could perhaps jump higher?
+// Brandon can slow down his experience of external time (based on the pace of his heartbeat) while keeping his body running at a normal speed. This disparity, or time dilation, makes him appear to speed up. However, this greatly exerts his energy exponentially based on said time disparity. (He can't keep it up forever.) I would also assume that other, external forces would become weaker (based on a lower passage of time) such as gravity, meaning that he could perhaps jump higher?
 
-// James can fly a bit (WIP)
+// James grows wings and can fly. This power is inherently more externally visible and noticeable than Brandon's.
 
 <chapter>
 
@@ -234,6 +279,10 @@ name = Introduction II
 subtitle = none
 
 <text>
+
+Violent swells of colorful light and sound enveloped them as they were crudely forced through dimensions.
+
+[#Brandon and James: AAHH!]
 
 </text>
 
