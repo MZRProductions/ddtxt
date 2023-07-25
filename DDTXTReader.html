@@ -290,6 +290,7 @@ html {
 			<td id="editor-refresh" class="editor-style"><p class="editor-style-inner">Refresh DDTXT</p></td>
 			<td id="editor-bottom" class="editor-style"><p class="editor-style-inner">Jump to Bottom</p></td>
 			<td id="editor-top" class="editor-style"><p class="editor-style-inner">Jump to Top</p></td>
+			<td id="editor-close" class="editor-style"><p class="editor-style-inner">Close Editor</p></td>
 		</tr>
 		<tr>
 			<td><textarea id="editor-content" autocomplete="off" spellcheck="off"></textarea></td>
@@ -309,7 +310,7 @@ html {
 
 <label id="fileButton" for="fileInput">Read a DDTXT</label>
 
-<input id="fileInput" type="file" accept=".txt, .ddtxt"></input>
+<input id="fileInput" type="file" accept=".txt, .ddtxt"/>
 
 <p id="reloadText" onclick="loadFileInput()">Click me to reload the DDTXT file.</p>
 
@@ -1589,22 +1590,33 @@ var checkForKey = function (key) {
 	}
 };
 
+// Connect the "Close Editor" button to closing the editor:
+
+document.getElementById("editor-close").onclick = toggleEditor;
+
 // Summary box:
 
 var summaryIsOpen = false;
+// Hold the editor's state while in summary so that we can bring it back if needed:
+var tempEditorState;
 const summaryReference = document.getElementById("summary");
+
+// Main summary box:
 
 summaryReference.onclick = function () {
 	summaryIsOpen = false;
 	summaryReference.style.visibility = "hidden";
+	editorState = tempEditorState; // Use the saved state. (See below)
 	refreshEditorVisibility();
 };
 
-// toggleEditor() updates the editor's visibility
+// Summary button:
 
 document.getElementById("ui-summary").onclick = function () {
 	summaryIsOpen = true;
 	summaryReference.style.visibility = "visible";
+	tempEditorState = editorState; // Save the editor's state.
+	editorState = true; // Close the editor no matter what.
 	refreshEditorVisibility();
 };
 
