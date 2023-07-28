@@ -23,7 +23,6 @@
 <!--
 TODO: Fix usePluralVerbForm Character attribute usage.
 TODO: Fix or remove hardbaked text, as it currently provides more problems than benefits.
-TODO: Close editor when opening summary box
 -->
 
 <!-- HTML -->
@@ -212,9 +211,8 @@ body {
 	padding: 1%;
 }
 
-/* I'm not sure if this (the scroll-behavior attribute) will be supported in older browsers,
-but it's supported in modern browsers and it should not adversely affect 
-reading on unsupported browsers */
+/* I'm not sure if this (the scroll-behavior attribute) will be supported in older browsers, but it's supported in modern browsers and it should not adversely affect reading on unsupported browsers.
+(This makes scrolling gradual instead of linear.) */
 html {
 	scroll-behavior: smooth;
 }
@@ -710,17 +708,24 @@ var clearDDTXT = function () {
 					// Ascertain whether we are in HTML or not:
 					
 					// Ascertain whether we are in dialogue or not:
-					if (["[", "]"].includes(text [spot])) {
-						withinBrackets = !withinBrackets; // Toggle where we are upon either of these (this could break, but it'll work with appropiate syntax usage)
+					if (["[", "]"].includes(text [spot]) && text [spot - 1] !== "#") {
+						withinBrackets = !withinBrackets; // Toggle where we are upon either of these (this could break, but it'll work with appropiate bracket usage)
 					}
 					
-					// Format a reference
+					
+					// Format character references:
+					
+					
 					if (characterReferences.includes(text [spot])) {
-						// Remove all hashtags and skip the next character
+						// Example of input:
+						// 0 1 2 3 4 5
+						// 5 # + 8 # =
+						
+						// Remove all hashtags and skip the next character.
 						if (text [spot - 1] === "#") {
-							text = text.substring(0, spot - 2) + text.substring(spot, text.length);
-							charactersShifted --; // Remove a character from the seeker
-							// Skip the next character (since we already have it covered. This also allows us to use ## to include hashtags)
+							text = text.substring(0, spot - 1) + text.substring(spot, text.length);
+							charactersShifted --; // Remove a character from the seeker.
+							// Skip the next character (since we already have it covered).
 							currentChar ++;
 						}
 						else {
@@ -731,7 +736,7 @@ var clearDDTXT = function () {
 					}
 					
 					// Special case: dollar sign used to skip the parser past a word (for example, links)
-					if (text [spot] === "$") {
+					if (text [spot] === "$" && text [spot - 1] !== "#") {
 						const currentWord = text.substring(spot, text.length).split(" ") [0]; // Stop after the next space
 						// Skip the parser that many characters, removing a character for the dollar sign that we are removing
 						currentChar += currentWord.length;
@@ -744,10 +749,14 @@ var clearDDTXT = function () {
 				// Now that all references have been converted, any remaining <s and >s can be converted to the HTML friendly &lt; and &gt; respectively:
 				text = text.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 				
-				// Remove all extra dollar signs, keeping the dollar signs commented out by hashtags:
-				text = text.replaceAll("#$", "(dollar sign)");
-				text = text.replaceAll("$", "");
-				text = text.replaceAll("(dollar sign)", "$");
+				// Replace all double hashtags with a single hashtag, removing unused single hashtags.
+				// This is not covered above since the if clause is not triggered.
+				// (A commenting hashtag would be paradoxically confused with a double hashtag.)
+				
+				text = text.replaceAll("##", "(hashtag)");
+				text = text.replaceAll("#", "");
+				
+				// text = text.replaceAll("(hashtag)", "#"); Covered by DDTXT In-text commands below
 				
 				// Same for quote marks, which should be converted to the more HTML friendly "&quot;":
 				
@@ -761,11 +770,11 @@ var clearDDTXT = function () {
 				for (var currentChar = 0; currentChar + charactersShifted < text.length; currentChar ++) {
 					const spot = currentChar + charactersShifted;
 
-					if (!withinBrackets && text [spot] === "[") {
+					if (!withinBrackets && text [spot] === "[" && text [spot - 1] !== "#") {
 						withinBrackets = true;
 						lastSpot = currentChar; // Save this spot, EXCLUDING the shift that we add later
 					}
-					else if (withinBrackets && text [spot] == "]") {
+					else if (withinBrackets && text [spot] == "]" && text [spot - 1] !== "#") {
 						withinBrackets = false;
 						const dialog = splitLineAtFirst(text.substring(lastSpot + 1 + charactersShifted, spot), ":"); // Pull out the dialog and split it into both parts, assuming any extra colons are part of the dialog.
 						// Syntax error handling
@@ -878,6 +887,10 @@ var clearDDTXT = function () {
 					"(left parenthesis)",
 					// 11
 					"(right parenthesis)",
+					// 12
+					"(dollar sign)",
+					// 13
+					"(hashtag)"
 				];
 				
 				const replaceWith = [
@@ -904,7 +917,11 @@ var clearDDTXT = function () {
 					// 10
 					"(",
 					// 11
-					")"
+					")",
+					// 12
+					"$",
+					// 13
+					"#"
 				];
 				
 				// Use the above tables to replace the keywords with the symbols
