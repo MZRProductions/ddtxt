@@ -805,20 +805,28 @@ var clearDDTXT = function () {
 							var linkAddress = spokenWords;
 							var linkText = spokenWords;
 							var linkMode = "_blank"; // Open in a new tab
-							if (spokenWords [0] === "#") {
-								// Hashtags specify destinations within the document
-								if (spokenWords.substring(1, 9) === "chapter-" && (parseInt(spokenWords.substring(8, spokenWords.length)) !== NaN)) { // If the link is going to a chapter and there is a number after the hyphen/dash (-), then format the link text that the reader sees.
-									linkText = "(Go to Chapter " + spokenWords.split("-") [1] + ")";
+							
+							// By this point, all hashtags will be removed or converted to "(hashtag)", so we must check for that instead of the symbol.
+							
+							if (spokenWords.substring(0, 9) === "(hashtag)") {
+								// (Hashtags specify destinations within the document according to HTML standards.)
+								
+								// Replace the (hashtag) command with the symbol for use as a link:
+								linkAddress = "#" + linkAddress.substring(9, linkAddress.length);
+								
+								if (linkAddress.substring(1, 9) === "chapter-" && (parseInt(linkAddress.substring(8, linkAddress.length)) !== NaN)) { // If the link is going to a chapter and there is a number after the hyphen/dash (-), then format the link text that the reader sees.
+									linkText = "(Go to Chapter " + linkAddress.split("-") [1] + ")";
 								}
 								linkMode = "_self"; // Don't open a new tab since that doesn't have the DDTXT loaded
 								try {
-									document.getElementById(spokenWords);
+									document.getElementById(linkAddress);
 								}
 								catch {
-									console.log("DDTXTLinkError: There is no \"" +  + "\". Links to other chapters must be in the form chapter-X, where X is the chapter number with no leading zeroes. This is case sensitive (6 is fine, but 006 is not fine.)");
+									console.log("DDTXTLinkError: Link unreadable! Links to other chapters must be in the form chapter-X, where X is the chapter number with no leading zeroes. This is case sensitive (6 is fine, but 006 is not fine.)");
 								}
 							}
 							// Standard link using target mode, address, and text to display:
+							console.log(linkMode, linkAddress, linkText);
 							htmlDialog = "<a target=\"" + linkMode + "\" href=\"" + linkAddress + "\">" + linkText + "</a>";
 						}
 						// Regular dialogue:
@@ -884,13 +892,14 @@ var clearDDTXT = function () {
 					// 9
 					"(right bracket)",
 					// 10
-					"(left parenthesis)",
-					// 11
-					"(right parenthesis)",
-					// 12
 					"(dollar sign)",
+					// 11
+					"(hashtag)",
+					// (These two come last so that you can write commands without actually using them.)
+					// 12
+					"(left parenthesis)",
 					// 13
-					"(hashtag)"
+					"(right parenthesis)"
 				];
 				
 				const replaceWith = [
@@ -915,13 +924,13 @@ var clearDDTXT = function () {
 					// 9
 					"]",
 					// 10
-					"(",
-					// 11
-					")",
-					// 12
 					"$",
+					// 11
+					"#",
+					// 12
+					"(",
 					// 13
-					"#"
+					")"
 				];
 				
 				// Use the above tables to replace the keywords with the symbols
@@ -1026,11 +1035,11 @@ var generateHTMLSummaryText = function () {
 	return DDTXT.cast.format(DDTXT.global.summary) + "<hr>by <em>" + DDTXT.global.author + "</em><hr>Last modifed on " + lastModifiedDate.toDateString() + ", " + lastModifiedDate.toTimeString() + "<br>under " + DDTXT.global.filename + "<hr>(Click anywhere to close this summary.)" + characterBios + "<br><p style=\"text-align: center\">(Click anywhere to close this summary.)</p>"; // Return the entire summary box
 };
 
-// Create DDTXT content for the table of contents:
+// Create DDTXT content for the table of contents to be formatted upon convertDDTXTToHTML():
 var generateTableOfContents = function () {
 	var chapterText = "";
 	for (var currentChapter = 0; currentChapter < DDTXT.chapters.length; currentChapter ++) {
-		chapterText += "(Chapter " + (currentChapter + 1) + ") " + DDTXT.chapters [currentChapter].name + ": [href: #chapter-" + (currentChapter + 1) + "](break)";
+		chapterText += "(Chapter " + (currentChapter + 1) + ") " + DDTXT.chapters [currentChapter].name + ": [href: ##chapter-" + (currentChapter + 1) + "](break)";
 	}
 	return chapterText;
 };
