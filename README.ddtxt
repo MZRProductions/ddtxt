@@ -1,5 +1,7 @@
 <!DOCTYPE DDTXT>
 
+// GNU General Public License DISCLOSURE BELOW
+
 // This is a very basic DDTXT.
 // For more details on the DDTXT format, please see TUTORIAL.ddtxt.
 
@@ -93,12 +95,12 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 (break)
 GNU General Public License for more details.
-
+(break)
 You should have received a copy of the GNU General Public License
 (break)
 // We have to escape the < and > here because otherwise they will be seen as character references, which is incorrect. We do this by immediately placing a hashtag (#) before these two symbols.
-// The finished document will not show these hashtags used to escape the symbols, the brackets, or the "href" and the colon.
-along with this program.  If not, see  #<[href: $https://www.gnu.org/licenses/ ] #>.
+// The finished document will not show these hashtags used to escape the symbols, the brackets, or the "href" and the colon. We also need to leave a gap after the link address to clarify where the link stops and the bracket actually is.
+along with this program.  If not, see #<[href: $https://www.gnu.org/licenses/ ]#>.
 
 (divide)
 
@@ -125,13 +127,13 @@ subtitle = none
 
 (divide)
 
-Section 1: Opening and using the DDTXT Reader. [href: #chapter-2]
+Section 1: Opening and using the DDTXT Reader. [href: ##chapter-2]
 (break)
-Section 2: A brief description of each file included with the DDTXT Reader. [href: #chapter-3]
+Section 2: A brief description of each file included with the DDTXT Reader. [href: ##chapter-3]
 (break)
-Section 3: Using the DDTXT Reader's builtin editor. [href: #chapter-4]
+Section 3: Using the DDTXT Reader's builtin editor. [href: ##chapter-4]
 (break)
-Section 4: More about the license. [href: #chapter-5]
+Section 4: More about the license. [href: ##chapter-5]
 
 </text>
 
@@ -147,7 +149,7 @@ subtitle = Opening and using the DDTXT Reader.
 	The DDTXT Reader included here is a webpage saved locally as an HTML file. This file is named "DDTXTReader.html". Any browser can open this file, either by right-clicking the file and selecting your browser as the program to open it with, or by using a "file://"... URL in your browser. Of these options, opening the file with your browser from a file viewer is far simpler and recommended to avoid file path typos.
 	(break)
 	(break)
-	Once you have opened the file, you should see the DDTXT Reader appear as a webpage in your browser in a new tab. From here, please enter this tab and click on the large "Read a DDTXT" button. From here, simply open the file you want to read. If there are strange occurrences, you can always open the browser's console and read the text printed there. (Please look up how to open your browser's console if you are not sure. There is a good chance you can right-click the webpage and click "Inspect" or access developer tools there.)
+	Once you have opened the file, you should see the DDTXT Reader appear as a webpage in your browser in a new tab. From here, please enter this tab and click on the large "Read a DDTXT" button. From here, simply open the file you want to read. If there are strange occurrences, you can always open the browser's console and read the text printed there. (Please look up how to open your browser's console if you are not sure. There is a good chance you can right-click the webpage and click "Inspect" or another button to access developer tools there.)
 	(break)
 	(break)
 	You are currently reading this README as a DDTXT! Congratulations!
@@ -163,16 +165,34 @@ name = SECTION 2:
 subtitle = A brief description of each file included with the DDTXT Reader.
 <text>
 
-DDTXTReader.html  #~  The webpage that reads DDTXT files.
+DDTXTReader.html #~
+(break)
+The webpage that reads DDTXT files.
 (break)
 (break)
-LICENSE.txt  #~  The full GNU GENERAL PUBLIC LICENSE.
+LICENSE.txt #~
+(break)
+The full GNU GENERAL PUBLIC LICENSE.
 (break)
 (break)
-README.txt  #~  The basic README file that helps users get started.
+README.txt #~
+(break)
+The basic README file that helps users get started.
 (break)
 (break)
-README.ddtxt  #~  The same README as README.txt in DDTXT format. (You are here.)
+README.ddtxt #~
+(break)
+The same README as README.txt in DDTXT format. (You are here.)
+(break)
+(break)
+TUTORIAL.ddtxt #~
+(break)
+The author's manual for writing in the DDTXT language.
+(break)
+(break)
+DDTXTs #~
+(break)
+This is a folder of sample DDTXTs for you to read and/or experiment with. You do not have to place DDTXTs in this folder in order to read them.
 
 </text>
 
@@ -186,7 +206,7 @@ name = SECTION 3:
 subtitle = Using the DDTXT Reader's builtin editor.
 
 <text>
-	The DDTXT Reader has a very basic text editor built into the webpage. This editor can be accessed by pressing the E key at any point. A resizeable text box will appear to the left. You can edit the currently loaded document just like you would with any other text editor. When you would like to update the finished document with the changes you have made, simply click the "Refresh" button above the editor. The "Jump to bottom" button scrolls the entire webpage to the end of the DDTXT, so that you can see any new content you have written. The "Export" button allows you to save your changes locally to keep them safe. Of course, you can always use a regular text editor, but this is a way to make changes quickly.
+	The DDTXT Reader has a very basic text editor built into the webpage. This editor can be accessed by pressing the E key at any point. A resizeable text box will appear to the left. You can edit the currently loaded document just like you would with any other text editor. When you would like to update the finished document with the changes you have made, simply click the "Refresh DDTXT" button above the editor. The "Jump to Bottom" button scrolls the entire webpage to the end of the DDTXT, so that you can see any new content you have written. The "Jump to Top" button takes you to the beginning of the document. The "Export DDTXT" button allows you to save your changes locally to keep them safe. Of course, you can always use a regular text editor, but this is a way to make changes quickly. There is a "Close Editor" button which acts the same as clicking out of the editor and then pressing E.
 	(break)
 	(break)
 	Since you are reading this document in the DDTXT Reader, you can press E to view the editor right now.
