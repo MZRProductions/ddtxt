@@ -1,5 +1,32 @@
 <!DOCTYPE DDTXT>
 
+
+
+
+// Digital Dialogue Text Reader (and Parser)
+// Copyright (C) 2023 Michael Rumpff (MZRProductions)
+
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+// See the
+GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+
+
+
+// This document looks chopped up and messy in raw form because there is so much specific formatting. For a more realistic DDTXT, please see example.ddtxt or another sample DDTXT included with the DDTXT Reader.
+
+
+
 <global>
 
 name = DDTXT Writing Manual and Syntax Guide (for version 1.0)
@@ -151,7 +178,7 @@ This styling is used to display functional examples and/or snippets of DDTXTs.
 <character>
 
 code = example1
-name = Jimmy
+name = Elizabeth
 
 <pronouns>
 
@@ -240,6 +267,21 @@ name = In-Text DDTXT Command
 
 color = black
 backgroundColor = orange
+dialoguePadding = 1%
+
+</style>
+
+</character>
+
+<character>
+
+code = ref
+name = Reference Symbol
+
+<style>
+
+color = white
+backgroundColor = magenta
 dialoguePadding = 1%
 
 </style>
@@ -342,7 +384,7 @@ $ the actual document, sections where set the document's properties, and section
 
 This guide will begin on general instructions for creating a DDTXT document and then end with specific reference materials for advanced users. You can visit the advanced section by clicking the link here:
 
-[href: #chapter-6]
+[href: ##chapter-6]
 
 // You can use a "(divide)" at any time to include a larger break with a fancy divider
 
@@ -361,22 +403,23 @@ subtitle = Basic rules:
 
 <text>
 
-[note: You should open a text editor and create a new file with the file extension ".ddtxt" (for example, "test.ddtxt") before continuing so that you can easily follow along.]
+[note: You should open a text editor (like Notepad) and create a new file with the file extension ".ddtxt" (for example, "test.ddtxt") before continuing so that you can easily follow along.]
 
 The first line of every raw DDTXT file (the text file that you see when you open the file in a text editor) must be the exact following, without the quotation marks:
 // You can use dollar signs to tell the DDTXT parser to not translate the following word.
 // (You must use a dollar sign after every space.)
-$"<!DOCTYPE $DDTXT>". This is just a precaution in case there are other file formats that use the .ddtxt filename extension.
+$"<!DOCTYPE $DDTXT>". This is required as a precaution so that if there are other file formats that use the .ddtxt filename extension the DDTXT Reader doesn't read other file types.
 
 (break)
 
 Before we continue, I must explain rules that apply across the entire DDTXT document.
 (break)
-- Unless otherwise noted, individual actions must be on their own line.
+// Em dashes have a bit more presence than a single hyphen.
+(em dash) Unless otherwise noted, individual actions must be on their own line.
 (break)
-- Author comments can be written in the raw DDTXT file by starting a line with two forward slashes ("//"). These never affect the finished DDTXT in any way.
+(em dash) Author comments can be written in the raw DDTXT file by starting a line with two forward slashes ("//"). These never affect the finished DDTXT in any way.
 (break)
-- Capitalization often matters and failure to write phrases or keywords exactly as given may result in a broken DDTXT.
+(em dash) Capitalization often matters and failure to write phrases or keywords exactly as given may result in document properties not being set correctly.
 
 </text>
 
@@ -453,7 +496,7 @@ The first thing to include in a character node is the designated word that you w
 
 [prop: code]
 
-Of course, as with setting any individual property, this is done by specifying the property you want to set followed by an equal sign and your desired value. This single word, or a phrase with no spaces, will be used in conjunction with references, which we will discuss later. Read about them here: [href: #chapter-5]. It is highly recommended that you keep your "code" keywords short since you will be typing them repeatedly!
+Of course, as with setting any individual property, this is done by specifying the property you want to set followed by an equal sign and your desired value. This single word, or a phrase with no spaces, will be used in conjunction with references, which we will discuss later. Read about them here: [href: ##chapter-5]. It is highly recommended that you keep your "code" keywords short since you will be typing them repeatedly!
 
 (break)
 
@@ -515,7 +558,7 @@ The second character is a ~example2 named @example2.
 
 The third character, @example3, is a ~example3 for catching a ~example2.]
 
-In case the specifics of writing with personal pronouns confuse you (understandably so), I will detail what each pronoun does. To learn more about using these pronouns with references, click here: [href: #chapter-5].
+In case the specifics of writing with personal pronouns confuse you (understandably so), I will detail what each pronoun does. To learn more about using these pronouns with references, click here: [href: ##chapter-5].
 
 [prop: subject]
 
@@ -551,7 +594,9 @@ This word describes actions that a character is performing on or toward themselv
 
 This isn't technically a pronoun, but it is used with the character's actual pronouns. This is the linking verb (to be) that would be used in passive voice and present progressive tenses. In simpler terms, this would be a "he is" or "they are". This can be used in combination with other verbs. For example, due to the fact that @example2, the ~example2, is flying through the air, {example2 preparing to land and bounce into the air again.
 
-[note: You do not need to use this if the "is" or "are" is directly after a character name, as that will always be "is."(break)"@example1 is" is fine as is, but "<example1 is" should be converted to "{example1"]
+[note: You do not need to use this if the verb directly follows a character name, as this situation always calls for the verb "is."]
+
+// "@example1 is" is fine as is, but "<example1 is" should be converted to "{example1".
 
 Any time you have a subject followed by "is" or "are," you'll most likely want to convert this phrase to the character's present pronoun.
 
@@ -609,28 +654,28 @@ $<character>
 
 (break)
 
-code  #= example
+code #= example
 (break)
-// (If you want to include comments in these weird example snippets, you can put a dollar sign before the comment slashes.)
-$// You can see here that the code is one word, but the name is two words.
+// (If you want to include comments in these weird example snippets, you can put a hashtag before the comment slashes.) Notice how since this comment does not have a hashtag it's a real comment. Sorry if this confused you.
+#// You can see here that the code is one word, but the name is two words.
 (break)
-name  #= Example Character
+name #= Example Character
 (break)
 $<pronouns>
 (break)
-subject  #= they
+subject #= they
 (break)
-possessive  #= their
+possessive #= their
 (break)
-object  #= them
+object #= them
 (break)
-reflexive  #= themselves
+reflexive #= themselves
 (break)
-instance  #= person
+instance #= person
 (break)
-present  #= they are
+present #= they are
 (break)
-presentCompacted  #= they're
+presentCompacted #= they're
 (break)
 $</pronouns>
 (break)
@@ -669,7 +714,7 @@ This is the chapter's subtitle, which is shown beneath the chapter's title.
 
 [note: The chapter title and subtitle will be colored according to the document's headingColor as defined in the style subnode of the document's global node.]
 
-For more information, please see the global style subnode. [href: #chapter-8].
+For more information, please see the global style subnode. [href: ##chapter-8].
 
 (divide)
 
@@ -683,7 +728,7 @@ Any text written within this subnode, excluding comments, is interpreted accordi
 
 (break)
 
-Empty space to the left or right will be omitted by default. You can write an entire paragraph on one line or make each sentence a new line. If you are having problems with spacing, you may need to insert spaces. For more information, see the DDTXT Commands Chapter. [href: #chapter-9].
+Empty space to the left or right will be omitted by default. You can write an entire paragraph on one line or make each sentence a new line. If you are having problems with spacing, you may need to insert spaces. For more information, see the DDTXT Commands Chapter. [href: ##chapter-9].
 
 </text>
 
@@ -704,7 +749,7 @@ To insert dialogue into your story, begin by writing a pair of square brackets. 
 
 (break)
 
-In order to specify the character speaking, you use the character's code. (From now on, I'll just say "character code.") This is the shorter, abbreviated version of the character's name that you setup before. [href: #chapter-4]
+In order to specify the character speaking, you use the character's code. (From now on, I'll just say "character code.") This is the shorter, abbreviated version of the character's name that you setup before. [href: ##chapter-4]
 
 (break)
 
@@ -737,6 +782,140 @@ subtitle = Using character information in your written work
 <text>
 
 You may have already discovered how difficult it is to write a story without using character names or pronouns. This chapter discusses the second most important part of the DDTXT, character references. These allow you to insert character information and pronouns directly into your document. These "references" all point back to the character node that you created earlier.
+
+(break)
+
+The DDTXT language requires you to make your writing abstract. Instead of writing character information directly, you place references, which pull from the character node (and pronouns subnode) that you made earlier. These references can be used anywhere that the DDTXT language is used. They will require you to think about language differently, but you should get the hang of it quickly. Let's take a look at this example drawing on the "story" from Chapter 5 [href: ##chapter-5].
+
+[note: "To answer your question, HER name is ELIZABETH. SHE IS a CATAPULT."]
+
+All of the CAPITALIZED words are character information that needs to be converted to character references for a character with the code "example1":
+
+// If you are reading this in the editor (you are) than ignore the dollar signs. They are just so that reader can read it correctly.
+[note: To answer your question, $=example1 name is $@example1. ${example1 a $~example1.]
+
+(When this text gets converted to the finished version by the parser, it looks like this).
+
+[note: To answer your question, =example1 name is @example1. {example1 a ~example1.]
+
+These words that start with special symbols are character references and the symbols are "reference symbols." You are probably confused by the abstract language, but I will go over each type of reference symbol and give you plenty of usage examples.
+
+(divide)
+
+[ref: #@]
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = Using Reference Symbols Literally
+subtitle = ## and #$
+
+<text>
+
+This concept is applied to more complicated situations, although you shouldn't have to worry about this too much. Sometimes you will want to use symbols reserved for character references as the actual symbol and not the reference function. This process of using these symbols literally will be referred to as "literalizing" (this is not a real word).
+
+(break)
+
+(For programmers, this is similar to programming with escape characters within strings or commenting out program comments.)
+
+(break)
+
+Consider the following example of formatted text.
+
+[note: "5 #+ 3 #= 8"]
+
+The above text will be interpreted as two character references. Since there is no character code given, it will be interpreted as codeless shorthand, which defaults to the last used character. Two pronouns will be plugged in here and this addition problem will be turned into something unintelligible like this.
+
+[note: 5 +example2 3 =example1 8]
+
+To fix this, we will use the hashtag (##) symbol. This "literalizes" (again, not a real word) the symbols, causing them to be treated as normal text and not character references. This means that the problem can now be read. These hashtags will be invisible in your final document.
+
+(break)
+
+To use a hashtag, simply place the hashtag directly before the reference symbol that you want to literalize. 
+
+// This is really fun to write in raw form:
+[text: 5 ###+ 3 ###= 8]
+[note: 5 #+ 3 #= 8]
+
+To use readable hashtags in your document, simply use two hashtags back-to-back.
+
+[text: I love hashtags! ####]
+
+[note: I love hashtags! ##]
+
+(divide)
+
+Now consider this example. Let's say that you want to use a lot of symbols at once.
+
+[note: $"~<=*+~+*=>~"]
+
+In order to see all of these properly in your DDTXT, you would have to use a lot of hashtags.
+
+// Lots of fun had here:
+[text: ###~###<###=###*###+###~###+###*###=###>###~]
+
+Instead of breaking your number 3 / hashtag key,
+// (seriously)
+$ use the dollar sign symbol. (I am not sure if this will be accessible internationally.) The dollar sign tells the parser to skip past the following word entirely.
+
+[note: Commands can still be triggered within these words! This is not an intentional feature, although it does not get in the way, so it will likely stay that way.]
+
+Consider this horrible example again.
+
+// I just copied/pasted this, not typing that again.
+[note: "###~###<###=###*###+###~###+###*###=###>###~"]
+
+Using a dollar sign instead, this becomes much simpler.
+
+// You can also use the dollar sign where you would use a hashtag, although its longer stretch is wasted.
+// In addition, this will literalize characters further on in the same word, which might not be what you want.
+[text: $$~<=*+~+*=>~]
+
+To literalize a dollar sign, you can use a hashtag directly before the dollar sign just like you would any other symbol.
+
+[text: ###$]
+
+[note: #$]
+
+(divide)
+
+You might have noticed that your sentences lack spaces if you split them apart between regular words and not punctuation. Consider this example.
+
+[text:
+(break)
+This sentence
+(break)
+gets glued together!
+]
+This text in a text subnode would get translated to the following.
+
+[note: This sentencegets glued together.]
+
+You could just write the sentence on a single line, but the whole point of the DDTXT is flexibility. This becomes especially important if you are trying to write author comments in the middle of sentences for
+// (Distracting comment)
+$ clarification and editing.
+
+(break)
+
+The DDTXT parser (and HTML parser) remove extra space, which means that just adding an extra space at the beginning of the line will not do anything.
+
+(break)
+
+To correctly add the space back in between "sentence" and "gets," you can add a dollar sign or a hashtag followed by the extra space(s) you need.
+
+[text: 
+(break)
+This sentence
+(break)
+#$ gets glued together.]
+
+[note: This sentence gets glued together.]
+
+This works since the hashtag and dollar sign are both designed to be working invisibly behind the scenes. Because they are both removed unless literalized, they tell the DDTXT parser to include the extra space and then are removed from the finished document.
 
 </text>
 
@@ -771,29 +950,27 @@ This will insert a line across your document (a horizontal rule). This is equiva
 
 [command: (left parenthesis)em dash(right parenthesis)]
 
-// ISSUE: Resolve em dash character not being translated to ASCII / Unicode? correctly.
-
 This command places an em dash ((em dash)). This provides convenience since it can be difficult to type these.
 
 (divide)
 
 All of the following commands replace a character reference symbol or another symbol of DDTXT functionality that you can't use easily as a literal symbol. This makes it easy to write these symbols without using them functionally.
 
-[command: (left parenthesis)at symbol(right parenthesis) | $@]
+[command: (left parenthesis)at symbol(right parenthesis) | #@]
 
-[command: (left parenthesis)equal symbol(right parenthesis) | $=]
+[command: (left parenthesis)equal symbol(right parenthesis) | #=]
 
-[command: (left parenthesis)less than symbol(right parenthesis) | $<]
+[command: (left parenthesis)less than symbol(right parenthesis) | #<]
 
-[command: (left parenthesis)greater than symbol(right parenthesis) | $>]
+[command: (left parenthesis)greater than symbol(right parenthesis) | #>]
 
-[command: (left parenthesis)asterisk symbol(right parenthesis) | $*]
+[command: (left parenthesis)asterisk symbol(right parenthesis) | #*]
 
-[command: (left parenthesis)tilde symbol(right parenthesis) | $~]
+[command: (left parenthesis)tilde symbol(right parenthesis) | #~]
 
-[command: (left parenthesis)left curly brace(right parenthesis) | ${]
+[command: (left parenthesis)left curly brace(right parenthesis) | #{]
 
-[command: (left parenthesis)right curly brace(right parenthesis) | $}]
+[command: (left parenthesis)right curly brace(right parenthesis) | #}]
 
 [command: (left parenthesis)left bracket(right parenthesis) | (left bracket)]
 // For the next line, we have to use the (right bracket) command to write it without ending the dialogue entry.
@@ -806,6 +983,90 @@ The following two are mostly useful for this section here, as they allow me to w
 [command: (left parenthesis)left parenthesis(right parenthesis) | (]
 
 [command: (left parenthesis)right parenthesis(right parenthesis) | )]
+
+The following two can be used to write both of the symbols (## and #$) used to comment out other symbols.
+
+[command: (left parenthesis)hashtag(right parenthesis) | ## (You can also write "####".)]
+
+[command: (left parenthesis)dollar sign(right parenthesis) | #$ (You can also write "###$".)]
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = Other Uses of the DDTXT Language
+subtitle = +example3 name can be used in chapter headings
+
+<text>
+
+The primary use of formatted DDTXT text is in the text subnodes of chapter nodes. However, these character references and in-text DDTXT commands can be used in other parts of your document.
+
+(divide)
+
+Besides chapter nodes, there are two ways to use text subnodes.
+
+(break)
+
+You can put text subnodes in character nodes. Anything you write inside of these text subnodes will contribute to that character's biography, visible in the document's summary box. You can view these biographies at any time by clicking the "Show stats." button in the DDTXT Reader (if the "Summary" button is not already visible) and then clicking "Summary".
+
+[note: The (left parenthesis)horizon(right parenthesis) command and the (left parenthesis)divide(right parenthesis) command currently do not work in biographies, although this might change in the future.]
+
+You can also put text subnodes in the document's global node. This text contributes to the document's main summary, which appears at the top of the summary box. 
+
+(divide)
+
+The DDTXT text formatting tools can also be used in chapter titles, subtitles, and the name of your entire document. This chapter's subtitle has character references in it. The main difference between these inputs and a text subnode is that you can only use the line that the property is on. Line spacing matters here.
+
+[note: Some features like the (left parenthesis)break(right parenthesis) command, the (left parenthesis)divide(right parenthesis) command, and character dialogue will not work as expected due to the nature of HTML headings.
+(break)
+I do not intend to change this as these features are not necessary for chapter titles, subtitles, and document names.]
+
+Look at this chapter node. This is WRONG. If you do this, you will get errors.
+
+[note: 
+(break)
+$<chapter>
+(break)
+name #= The Adventures of #@example,
+(break)
+where something happens!
+(break)
+subtitle #= #+example origin story
+(break)
+$</chapter>
+]
+
+The above example must be changed to this. If your view of this document is squished horizontally, I will emphasize that this is all one line, although for you it might look like multiple lines.
+
+[text: 
+(break)
+$<chapter>
+(break)
+name #= The Adventures of #@example, where something happens!
+(break)
+subtitle #= #+example origin story
+(break)
+$</chapter>
+]
+
+The same principle applies to the document name. Here is what that looks like.
+
+[text:
+(break)
+$<global>
+(break)
+#// Character's Exciting Day!
+(break)
+name #= #+example Exciting Day!
+(break)
+#// The author field is normal text. You can't use formatted text here.
+(break)
+author #= Carol #& Michelle 
+(break)
+$</global>
+]
 
 </text>
 
@@ -871,7 +1132,7 @@ You can also choose an exact color using the RGB color system, which stands for 
 
 (break)
 
-(This paragraph is for people who are already familiar with the RGB system and the idea of hexadecimal numbers.) By the way, a hexadecimal color is an RGB value combined to form six hexadecimal digits back to back. The first two are the red component, from 0 (00) to 255 (FF). The middle two are the green component, and the final two are the blue component. (Alpha / opacity would be represented by an additional two digits if the color is actually an RGBA color.) For example, the color "32, 127, 161" becomes "#207FA1".
+(This paragraph is for people who are already familiar with the RGB system and the idea of hexadecimal numbers.) By the way, a hexadecimal color is an RGB value combined to form six hexadecimal digits back to back. The first two are the red component, from 0 (00) to 255 (FF). The middle two are the green component, and the final two are the blue component. (Alpha / opacity would be represented by an additional two digits if the color is actually an RGBA color.) For example, the color "32, 127, 161" becomes "##207FA1". (Hex colors usually are written with a hashtag at the beginning.)
 
 [note: If you would like to use the default value that the document would apply naturally, use the CSS keyword "inherit". This results in the same default color that you would get by not specifying a color, but it could let others know that you really meant to not specify a color. It's up to you.]
 
@@ -881,7 +1142,7 @@ Here are the properties that control dialogue display in your document.
 
 [prop: color]
 
-This is the color of the text that your character "speaks" in dialogue and the color of their name that appears next to their words. If not specified, this will default to the color of the chapter text throughout the rest of the document. For more information on the color of chapter text, go here: [href: #chapter-8]
+This is the color of the text that your character speaks in dialogue and the color of their name that appears next to their words. If not specified, this will default to the color of the chapter text throughout the rest of the document. For more information on the color of chapter text, go here: [href: ##chapter-8]
 
 [prop: backgroundColor]
 
@@ -903,15 +1164,15 @@ Here is an example of the style subnode of a character node.
 
 [text:
 (break)
-$ $<style>
+$<style>
 (break)
-color  #= black
+color #= black
 (break)
-backgroundColor  #= yellow
+backgroundColor #= yellow
 (break)
-dialoguePadding  #= 1%
+dialoguePadding #= 1%
 (break)
-$ $</style>
+$</style>
 ]
 
 </text>
@@ -925,11 +1186,11 @@ subtitle = Creating a style for your entire document
 
 <text>
 
-The same ideas behind character styling apply to styling the rest of your document. Visibility and accessibility should be the focus of styling your document since this covers paragraph text, which is smaller than character dialogue. Just like in characters, document styling is done in a style subnode. Create a style subnode within the global node [href: #chapter-3], which you should have already made.
+The same ideas behind character styling apply to styling the rest of your document. Visibility and accessibility should be the focus of styling your document since this covers paragraph text, which is smaller than character dialogue. Just like in characters, document styling is done in a style subnode. Create a style subnode within the global node [href: ##chapter-3], which you should have already made.
 
 (break)
 
-The values for color properties here should be CSS colors. [href: #chapter-7] Values in other forms will be highlighted.
+The values for color properties here should be CSS colors. [href: ##chapter-7] Values in other forms will be highlighted.
 
 [prop: color]
 
@@ -953,7 +1214,7 @@ This is the color of your document's title. In this document, the titleColor is 
 
 [note: This property takes words or a phrase as input.]
 
-This is the text that is used as a division between sections upon being called through the in-text keyword "divide". This can be made up of any text characters, including spaces. The default value is "~~~", which uses aesthetically pleasing tildes to break apart your DDTXT. This document uses "---~~~---", which extends these tildes.
+This is the text that is used as a division between sections upon being called through the in-text keyword "divide". This can be made up of any text characters, including spaces. The default value is $"~~~", which uses aesthetically pleasing tildes to break apart your DDTXT. This document uses $"---~~~---", which extends these tildes.
 
 [prop: divideColor]
 
@@ -974,38 +1235,38 @@ Here is this document's global style subnode.
 $<style>
 (break)
 (break)
-$// You can use any color the same way that you would in CSS. Here, we are using the common color "white" as the main text color.
+#// You can use any color the same way that you would in CSS. Here, we are using the common color "white" as the main text color.
 (break)
-color  #= white
+color #= white
 (break)
-$// You can also use the rgb() CSS function.
+#// You can also use the rgb() CSS function.
 (break)
-$// This is an RGB value: "rgb(RED, GREEN, BLUE)"
+#// This is an RGB value: "rgb(RED, GREEN, BLUE)"
 (break)
-headingColor  #= rgb(50, 200, 255)
+headingColor #= rgb(50, 200, 255)
 (break)
-$// You can also use the CSS keyword "inherit" to copy the value provided for the "color" slot (the main text color).
+#// You can also use the CSS keyword "inherit" to copy the value provided for the "color" slot (the main text color).
 (break)
-$// Most of the time, if you do not specify a value, the default will be the main text color.
+#// Most of the time, if you do not specify a value, the default will be the main text color.
 (break)
-titleColor  #= inherit
+titleColor #= inherit
 (break)
-backgroundColor  #= rgb(20, 20, 20)
+backgroundColor #= rgb(20, 20, 20)
 (break)
 (break)
-$// Setting up the document's divisions:
+#// Setting up the document's divisions:
 (break)
-$// (You can use a horizontal border here by using the keyword $"<hr>")
+#// (You can use a horizontal border here by using the keyword $"<hr>")
 (break)
-divide  #= $---~~~---
+divide #= $---~~~---
 (break)
-$// This is in pixels, and will not grow or shrink according to screen size.
+#// This is in pixels, and will not grow or shrink according to screen size.
 (break)
-divideSize  #= 35px
+divideSize #= 35px
 (break)
-$// The standard CSS colors defines both "gray" (American?) and "grey" as the same colors:
+#// The standard CSS colors defines both "gray" (American?) and "grey" as the same colors:
 (break)
-divideColor  #= grey
+divideColor #= grey
 (break)
 (break)
 $</style>
