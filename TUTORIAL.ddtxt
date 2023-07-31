@@ -211,7 +211,7 @@ name = Timmy
 subject = they
 possessive = their
 object = them
-// I'll be honest, I don't know much about the word "themself," or if that word would be more fitting. I always opt for "themselves."
+// I'll be honest, I don't know much about the word "themself," or if that word would be more fitting. Personally, I always opt for "themselves."
 reflexive = themselves
 // Here, the instance pronoun is being used to tell the role of the character in the story, which is the main use of it.
 instance = rubber ball
@@ -238,7 +238,6 @@ name = Bob
 subject = he
 possessive = his
 object = him
-// I'll be honest, I don't know much about the word "themself," or if that word would be more fitting. I always opt for "themselves."
 reflexive = himself
 // Here, the instance pronoun is being used to tell the role of the character in the story, which is the main use of it.
 instance = giant bowl
@@ -250,6 +249,44 @@ presentCompacted = he's
 <text>
 
 @example3 is a ~example3 used for catching @example2. Why? I don't know. Yes, it's all very weird, but this was the best way I could think of to demonstrate pronouns.
+
+</text>
+
+</character>
+
+<character>
+
+code = example4
+name = Gary
+
+<pronouns>
+
+subject = he
+possessive = his
+object = him
+reflexive = himself
+instance = person
+present = he is
+presentCompacted = he's
+
+</pronouns>
+
+<text>
+
+@example4 is a character used for sample passages for learning to read DDTXT character references.
+
+</text>
+
+</character>
+
+<character>
+
+code = example5
+name = Zach
+
+<text>
+
+@example5 is also a character used for sample passages for learning to read DDTXT character references.
 
 </text>
 
@@ -287,12 +324,27 @@ dialoguePadding = 1%
 
 </character>
 
+<character>
+
+code = translated
+name = Final Document
+
+<style>
+
+color = white
+backgroundColor = green
+dialoguePadding = 1%
+
+</style>
+
+</character>
+
 // ONE TIME CHARACTERS FOR STYLING DEMONSTRATIONS:
 
 <character>
 
 code = hardToRead1
-name = Pro tip
+name = Pro Tip
 
 <style>
 
@@ -541,7 +593,7 @@ In order to specify your character's pronouns, you must first create a pronouns 
 
 // This will be done properly with DDTXT characters so that you can see how references function.
 
-Let's invent a little story with three characters. The story is silly, but it illustrates many common pronouns interacting with characters.
+Let's invent a little story with three characters. The story is random, but it illustrates many common pronouns interacting with characters.
 
 [note:
 
@@ -799,9 +851,192 @@ All of the CAPITALIZED words are character information that needs to be converte
 
 These words that start with special symbols are character references and the symbols are "reference symbols." You are probably confused by the abstract language, but I will go over each type of reference symbol and give you plenty of usage examples.
 
+(break)
+
+To make a character reference, simply choose one of the following reference symbols and then write the character code of the character you want to refer to, without putting a space between. It might help to check back on the purpose of the character pronouns you created earlier: [href: ##chapter-5].
+
 (divide)
 
+(horizon)
+
 [ref: #@]
+
+This is the reference symbol used to grab a character's name. This name will be the name that you assigned to the character in the character node.
+
+[text: #@example went to the store.]
+
+[translated: @example1 went to the store.]
+
+(horizon)
+
+[ref: #=]
+
+This is the reference symbol used to describe things belonging to the character. This is an adjective that comes before the object described. (This is the "possessive" pronoun that you set when making the character.)
+
+[text: Those are #=example words.]
+
+[translated: Those are =example3 words.]
+
+(horizon)
+
+[ref: #<]
+
+This reference symbol grabs the character's subject pronoun. This is the pronoun that refers to the person performing an action. (This is the "subject" pronoun that you set when making the character.)
+
+(break)
+
+Let's take the example from earlier, but let's substitute a subject pronoun for the character's name, @example1.
+
+[text: #<example went to the store.]
+
+[translated: <example1 went to the store.]
+
+(horizon)
+
+[ref: #>]
+
+This reference symbol grabs the character's object pronoun. This is the pronoun that refers to actions happening to or toward someone. In technical terms, this is used for direct and indirect pronouns. (This is the "object" pronoun that you set when making the character.)
+
+[text: #<example1 went to the store to buy food for #>example2.]
+
+[translated: <example1 went to the store to buy food for >example2.]
+
+(horizon)
+
+[ref: #*]
+
+This reference symbol is used for reflexive actions that characters perform to themselves (feeding yourself, cleaning yourself, ect...). (This is the "reflexive" pronoun that you set up when making the character.)
+
+[text: #<example was glad she could cook for #*example.]
+
+[translated: <example1 was glad she could cook for *example1.]
+
+(horizon)
+
+[ref: #~]
+
+This reference symbol is used for describing what the character generally is. This is a trickier concept, as explained previously [href: ##chapter-5]. (This is the "instance" pronoun that you set up when making the character.)
+
+[text: This is #@example, who is a #~example.]
+
+[translated: This is @example3, who is a ~example3.]
+
+(horizon)
+
+[ref: #{]
+
+This reference symbol places a present "passive verb" (She is, he is, they're, ect...). You can use a "#<" and an "is", however this can break with the subject pronoun "they." (This is the "present" pronoun that you set up when making the character.)
+
+[text: You know how #{example...]
+
+[note: These are all made using the same reference symbol with different characters.]
+
+[translated: You know how {example1.]
+
+[translated: You know how {example3.]
+
+[translated: You know how {example2.]
+
+(horizon)
+
+[ref: #}]
+
+This reference is the same as the previous type except it is the condensed contraction version. (She's, he's, they're, ect...) (This is the "presentCompacted" pronoun that you set up when making the character.)
+
+[text: #}example going to the store right now.]
+
+[translated: I know that }example3 going to the store right now.]
+
+[translated: I know that }example2 going to the store right now.]
+
+[translated: I know that }example1 going to the store right now.]
+
+(horizon)
+
+[ref: #+]
+
+This reference grabs the character name and adds the apostrophe and an "s" ('s) to turn the name into a possessive adjective. This is functionally identical to the possessive pronoun (accessed with the = symbol), however it is more specific.
+
+[text: It was #+example idea.]
+
+[translated: It was +example3 idea.]
+
+(horizon)
+
+You are probably still confused about this more abstract language, but I strongly suggest that you learn to translate the following passages. When you think that you understand the passages' meaning, highlight the mostly invisible (I used a character style from an upcoming chapter) translated passage underneath to check your answer.
+
+[note: Here are the two characters featured in these passages.]
+
+[note: @example4]
+
+Subject | <example4
+(break) Possessive | =example4
+(break) Object | (to) >example4
+(break) Instance | (is a) ~example4
+(break) Reflexive | *example4
+(break) Present Helping Verb | {example4
+(break) Present Helping Verb Contraction | }example4
+
+[note: @example5]
+
+Subject | <example5
+(break) Possessive | =example5
+(break) Object | (to) >example5
+(break) Instance | (is a) ~example5
+(break) Reflexive | *example5
+(break) Present Helping Verb | {example5
+(break) Present Helping Verb Contraction | }example5
+
+(divide)
+
+[text: #@example4 had to do #=example4 chores. There were lots of dishes in the sink and #<example4 knew that it would only get worse.]
+
+[hardToRead1: @example4 had to do =example4 chores. There were lots of dishes in the sink and <example4 knew that it would only get worse.]
+
+(divide)
+
+[text: #@example5 wanted to go to an amusement park, but #<example5 realized that there wasn't enough money in #=example5 bank account. #@example4 offered to loan #>example5 money to go before the season ended, but #@example5 didn't like to borrow money from friends. In #+example5 experience, it usually ended badly.]
+
+[hardToRead1: @example5 wanted to go to an amusement park, but <example5 realized that there wasn't enough money in =example5 bank account. @example4 offered to loan >example5 money to go before the season ended, but @example5 didn't like to borrow money from friends. In +example5 experience, it usually ended badly.]
+
+(divide)
+
+Hopefully this helped you to learn how to use character references. Even if you're still struggling, you'll pick it up in time.
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = Character Reference Shorthand
+subtitle = (I might also refer to this as "notation.")
+
+<text>
+
+There is a built-in shorthand system that you can use to save you typing time.
+
+(break)
+
+Once you have specified a character code in an initial character reference, you can opt to only write the reference symbol. The DDTXT parser will interpret the lone symbol as a character reference to the last used character. To use a different character in a reference, simply use a different character code when you want to change characters.
+
+[note: The character code used to identify the speaker of dialogue does not count toward this notation.]
+
+(divide)
+
+Here is an example passage that greatly utilizes shorthand.
+
+[text: #@example4 woke up and looked out of #= window. #< got out of bed and walked downstairs to make #* breakfast. It was difficult for #> to eat in the morning because #< had very little appetite during these hours. #< was much more of a lunch kind of #~.]
+
+[translated: @example4 woke up and looked out of = window. < got out of bed and walked downstairs to make * breakfast. It was difficult for > to eat in the morning because < had very little appetite during these hours. < was much more of a lunch kind of ~.]
+
+(divide)
+
+[note: Times to NOT use shorthand notation:
+(break)(em dash) When there are many different characters doing things at once
+(break)(em dash) When you are still unfamiliar with character references
+(break)(em dash) When you want to emphasize which character you really mean of two or more characters with the same pronouns
+]
 
 </text>
 
@@ -828,7 +1063,7 @@ Consider the following example of formatted text.
 
 The above text will be interpreted as two character references. Since there is no character code given, it will be interpreted as codeless shorthand, which defaults to the last used character. Two pronouns will be plugged in here and this addition problem will be turned into something unintelligible like this.
 
-[note: 5 +example2 3 =example1 8]
+[translated: 5 +example2 3 =example1 8]
 
 To fix this, we will use the hashtag (##) symbol. This "literalizes" (again, not a real word) the symbols, causing them to be treated as normal text and not character references. This means that the problem can now be read. These hashtags will be invisible in your final document.
 
@@ -838,19 +1073,19 @@ To use a hashtag, simply place the hashtag directly before the reference symbol 
 
 // This is really fun to write in raw form:
 [text: 5 ###+ 3 ###= 8]
-[note: 5 #+ 3 #= 8]
+[translated: 5 #+ 3 #= 8]
 
 To use readable hashtags in your document, simply use two hashtags back-to-back.
 
 [text: I love hashtags! ####]
 
-[note: I love hashtags! ##]
+[translated: I love hashtags! ##]
 
 (divide)
 
 Now consider this example. Let's say that you want to use a lot of symbols at once.
 
-[note: $"~<=*+~+*=>~"]
+[translated: $~<=*+~+*=>~]
 
 In order to see all of these properly in your DDTXT, you would have to use a lot of hashtags.
 
@@ -861,7 +1096,11 @@ Instead of breaking your number 3 / hashtag key,
 // (seriously)
 $ use the dollar sign symbol. (I am not sure if this will be accessible internationally.) The dollar sign tells the parser to skip past the following word entirely.
 
-[note: Commands can still be triggered within these words! This is not an intentional feature, although it does not get in the way, so it will likely stay that way.]
+[note: In-Text DDTXT Commands can still be triggered within these words! This is not an intentional feature, although it does not get in the way, so it will likely stay that way.]
+
+(You can learn about DDTXT In-Text Commands more in the next chapter [href: ##chapter-10].)
+
+(break)
 
 Consider this horrible example again.
 
@@ -878,7 +1117,7 @@ To literalize a dollar sign, you can use a hashtag directly before the dollar si
 
 [text: ###$]
 
-[note: #$]
+[translated: #$]
 
 (divide)
 
@@ -892,7 +1131,7 @@ gets glued together!
 ]
 This text in a text subnode would get translated to the following.
 
-[note: This sentencegets glued together.]
+[translated: This sentencegets glued together.]
 
 You could just write the sentence on a single line, but the whole point of the DDTXT is flexibility. This becomes especially important if you are trying to write author comments in the middle of sentences for
 // (Distracting comment)
@@ -912,7 +1151,7 @@ This sentence
 (break)
 #$ gets glued together.]
 
-[note: This sentence gets glued together.]
+[translated: This sentence gets glued together.]
 
 This works since the hashtag and dollar sign are both designed to be working invisibly behind the scenes. Because they are both removed unless literalized, they tell the DDTXT parser to include the extra space and then are removed from the finished document.
 
