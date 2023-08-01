@@ -521,7 +521,7 @@ $<!DOCTYPE $DDTXT>
 
 name $= My First DDTXT
 (break)
-author $= MZRProductions (Michael Rumpff)
+author $= My Name Here
 
 (break)
 
@@ -587,7 +587,7 @@ subtitle = The building blocks of character interactions
 
 <text>
 
-In order to specify your character's pronouns, you must first create a pronouns subnode inside of a character node. Inside of the character node, make a new line with "<pronouns>" and another line below it with "</pronouns>". Hopefully creating nodes and subnodes is making more sense now. Each property below is an individual pronoun. You can choose to define any, all, or none of them. The values of all of these properties should be a word or phrase. (If you do not define a pronoun, the gender neutral equivalent will be used.)
+In order to specify your character's pronouns, you must first create a pronouns subnode inside of a character node. Inside of the character node, make a new line with $"<pronouns>" and another line below it with $"</pronouns>". Hopefully creating nodes and subnodes is making more sense now. Each property below is an individual pronoun. You can choose to define any, all, or none of them. The values of all of these properties should be a word or phrase. (If you do not define a pronoun, the gender neutral equivalent will be used.)
 
 (break)
 
@@ -1516,11 +1516,32 @@ $</style>
 
 <chapter>
 
-name = Advanced Documentation
-
-// ISSUE: Move this temporary text into the chapter before the split.
+name = The Editor
+subtitle = Tweaking your document on the fly
 
 <text>
+
+There is one last important thing to discuss. The DDTXT Reader includes a built-in text editor that can be used the same way as an external text editor, albeit without syntax color highlighting. This editor can be accessed at any time by pressing "E". The editor will appear on the left side of the screen, leaving the right side of the screen for the finished document.
+
+(break)
+
+This editor currently has five buttons.
+
+(break)(em dash) Export DDTXT
+(break)
+This button will download the adjusted document to your common "Downloads" folder.
+(break)(em dash) Refresh DDTXT
+(break)
+This button will apply any changes made to the finished, translated document. You can easily check your modifications by pressing this button.
+(break)(em dash) Jump to Bottom
+(break)
+This button will scroll the editor and the finished document to the end. This way, you can easily append more content to the document without scrolling all the way down.
+(break)(em dash) Jump to Top
+(break)
+This button will scroll the editor and the finished document back to the beginning. This way, you can easily access initial global and character nodes without scrolling all the way to the top.
+(break)(em dash) Close Editor
+(break)
+This button closes the editor, leaving you to read the finished, translated document. You can trigger this same action by clicking off of the textbox and pressing "E" again.
 
 (break)
 (break)
@@ -1529,6 +1550,282 @@ name = Advanced Documentation
 (break)
 (break)
 (break)
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = Advanced Documentation
+subtitle = (break)Full Properties Documentation: [href: ##chapter-17](break)Current Limits of the DDTXT: [href: ##chapter-18](break)DDTXT Errors: [href: ##chapter-19]
+
+</chapter>
+
+<chapter>
+
+name = Full Properties Documentation
+subtitle = Avoiding assignment errors
+
+<text>
+
+By now, you should know that there are three types of main, top-level nodes. (By the way, $<nodes> and $<subnodes> will be signified with a pair of greater than and less than symbols $(<>) from now on.) The types are the $<global> node, the $<character> node, and the $<chapter> node. If you misplace property assignments, the values will either be ignored or used for the wrong purpose.
+
+(break)
+
+Furthermore, DDTXTs are not like XML files. You can only have two layers of nodes at any time and they must follow one of these.
+
+(break)
+
+The following is a complete list of all document properties and where they should be placed. These tables are in the following format:
+[note: Property #= Type of input | Description of purpose | Default value]
+(divide)
+
+[note: $<global> node]
+
+$<global> have two kinds of $<subnodes>: $<style> and $<text>. The main $<global> node itself has four properties. Original explanation: [href: ##chapter-3]
+(break)
+name #= word(s) | Full document name | Untitled DDTXT
+(break)
+author #= word(s) | Document author(s) | Unknown Author
+(break)
+webtitle #= | Abbreviated document name shown in tab and top statistics bar | Full document name
+(break)
+provideTableOfContents #= true/false | "true" generates a table of contents based on chapter names and order. This manual has this set to "true". | "false"
+
+(break)
+
+(horizon)
+
+[note: $<global> $<style> subnode]
+
+The $<global> $<style> subnode has the following properties. Original explanation: [href: ##chapter-14].
+(break)
+color #= CSS color | Main text color | "black"
+(break)
+backgroundColor #= CSS color | Background color | "white"
+(break)
+headingColor #= CSS color | Color of chapter titles and subtitles | "inherit" ("black")
+(break)
+titleColor #= CSS color | Color of document title | "inherit" ("black")
+(break)
+divide #= word(s) | Text used for document divisions. Use (left parenthesis)break) or (left parenthesis)horizon) to add extra space or borders. | $"~~~"
+(break)
+divideColor #= CSS color | Color of division text | "inherit" ("black")
+(break)
+divideSize #= Npx, where "N" is a number | Size, in pixels, of font used for division text | "50px"
+(break)
+break #= $"<br>", repeated as many times as you need to get the spacing you want | What amount of space to insert in (left parenthesis)break)s. The default is $"<br><br>". $"<br>" would result in a new line with no space in between. | $"<br><br>"
+
+(break)
+
+(horizon)
+
+[note: $<global> $<text> subnode]
+
+The $<global> $<text> subnode contributes formatted DDTXT text to the document summary. There are no properties here. Original explanation: [href: ##chapter-6]. DDTXT Language: [href: ##chapter-7], [href: ##chapter-8], [href: ##chapter-9], [href: ##chapter-10], [href: ##chapter-11].
+
+(divide)
+
+[note: $<character> node]
+
+The $<character> node has three types of $<subnodes>, $<style>, $<pronouns>, and $<text>. The main $<character> node itself has two properties. Original explanation: [href: ##chapter-4]
+
+(break)
+code #= single word | Word used to refer to this character in in-text references | NO DEFAULT; THIS IS MANDATORY
+(break)
+name #= Word(s) | How the reader sees characters in the finished, translated document | NO DEFAULT; THIS IS MANDATORY
+
+(break)
+
+(horizon)
+
+[note: $<character> $<style> subnode]
+
+Original explanation: [href: ##chapter-13].
+
+(break)
+color #= CSS color | Color of character's dialogue | "inherit" ("black")
+(break)
+paragraphColor #= CSS color | If specified, color of spoken words in dialogue, leaving only the name and colon to be the original color | Character color or "inherit" ("black")
+(break)
+backgroundColor #= CSS color | If specified, the color of the background behind the character's dialogue | None (document background color: "white")
+(break)
+dialoguePadding #= N%, where N is a number | The amount of padding (space between the dialogue and the text around it) to include. The amount should be no bigger than "2%". | "0%" or no padding
+
+(break)
+
+(horizon)
+
+[note: $<character> $<pronouns> subnode]
+
+This subnode sets the character's pronouns. Original explanation: [href: ##chapter-5]
+
+(break)
+subject #= word(s) | Subject pronoun | "they"
+(break)
+possessive #= word(s) | Possessive pronoun adjective | "their"
+(break)
+object #= word(s) | Direct and indirect object pronoun | "them"
+(break)
+reflexive #= word(s) | Reflexive pronoun | "themselves"
+(break)
+instance #= word(s) | What the character is an example or instance of | "person"
+(break)
+present #= word(s) | The subject pronoun combined with an "is" or "are" (for "they") | "they are"
+(break)
+presentCompacted #= word(s) | Contraction form of above | "they're"
+
+(break)
+
+(horizon)
+
+[note: $<character> $<text> subnode]
+
+The $<character> $<text> subnode contributes to the character's bio, which is shown in the document's summary box. There are no properties here. Original explanation: [href: ##chapter-6]. DDTXT Language: [href: ##chapter-7], [href: ##chapter-8], [href: ##chapter-9], [href: ##chapter-10], [href: ##chapter-11].
+
+(divide)
+
+[note: $<chapter> node]
+
+The $<chapter> node has one type of subnode: the $<text> subnode. The main $<chapter> node itself has two properties. Both of these properties can be formatted with character references: [href: ##chapter-12].
+
+(break)
+name #= Name of chapter (DDTXT formatted) | This name appears in the bigger of the two headers and in the table of contents, when turned on. | "Untitled Chapter"
+(break)
+subtitle #= Subtitle of chapter (DDTXT formatted) | This subtitle appears in the smaller of the two headers, below the main chapter name. This subtitle does not appear in the table of contents. | "none" (no subtitle)
+
+(break)
+
+(horizon)
+
+[note: $<chapter> $<text> subnode.]
+
+The $<chapter> $<text> subnode contributes to the chapter's text, which is directly placed in your document. The chapters are placed in your document by order of placement in the raw DDTXT file. There are no properties here. Original explanation: [href: ##chapter-6]. DDTXT Language: [href: ##chapter-7], [href: ##chapter-8], [href: ##chapter-9], [href: ##chapter-10], [href: ##chapter-11].
+
+</text>
+
+</chapter>
+
+<character>
+
+code = ejemplo6
+name = Miguel
+
+<pronouns>
+
+subject = él
+// Por usar solamenta la letra "o", podemos incluir esta letra en los adjetivos personales del papel "ejemplo6".
+possessive = o
+object = a él
+reflexive = le
+instance = una persona
+
+</pronouns>
+
+</character>
+
+<character>
+
+code = ejemplo7
+name = Olivia
+
+<pronouns>
+
+subject = ella
+// Por usar solamenta la letra "a", podemos incluir esta letra en los adjetivos personales del papel "ejemplo7".
+possessive = a
+object = a ella
+reflexive = le
+instance = una persona
+
+</pronouns>
+
+</character>
+
+<chapter>
+
+name = Current Limits of the DDTXT
+subtitle = (and working around them)
+
+<text>
+
+The biggest problem with the DDTXT is poor localization and usefulness to languages other than English. For example, in Spanish, the DDTXT currently does not have anyway to change adjectives describing characters, which means that documents will break easily unless clever usage is applied.
+
+(horizon)
+
+// Accentos: á, é, í, ó, ú, ñ
+
+Por ejemplo, cuando se escribe DDTXTs en español, el languaje DDTXT no puede cambiar los adjetivos personales. Por eso, los documentos DDTXT les rompen fácilmente.
+
+(break)
+
+Una solución es poner las referencias posesivas inmediatamente dentro de los adjetivos porque el languaje DDTXT puede leer las referencias dentro de estas palabras adjetivas:
+
+[text: "#@ejemplo es aburrid#=example." $--> "#@ejemplo es aburrid#="]
+
+[translated: @ejemplo6 es aburrid=ejemplo6.]
+
+[translated: @ejemplo7 es aburrid=ejemplo7.]
+
+Para poner referencias posesivas dentro de las palabras, se necesita hacer el pronombre posesivo solamenta una letra (o, a, etc...). No sé que esta accion sea dura, pero es mejor que nada.
+
+(horizon)
+
+Hopefully authors will be able to come up with ways to apply DDTXT references and tools to other languages, but I recognize that there will likely be problems using tools originally made for English. Other than this, the DDTXT language currently has some mostly minor problems.
+
+(break)
+
+For example, you may occasionally find that a character reference's translation is in lowercase when it really shouldn't be. This is due to guesswork as to what the start of a sentence really is. There are lots of scenarios that informally call for a new "sentence", grammatically correct or not. (Sometimes you want to write phrases independently or split sentences in different ways.) However, this is difficult to gauge, so at some point you may run across something like this.
+
+[text: #@example1 ran out of groceries. (#<example1 went to the store.)]
+
+[translated: @example1 ran out of groceries. (<example1 went to the store.)]
+
+Even though the phrase in parentheses is a new sentence, the second reference is not capitalized because parentheses are often used for information inside of sentences. This example combines these two sentences to get rid of this problem.
+
+[translated: @example1 ran out of groceries (so < went to the store).]
+
+However, let's say that you really want to emphasize this passage as two separate sentences. If you have to you can add a word before the reference. This will make both sentences complete.
+
+[translated: @ ran out of groceries. (So, < went to the store).]
+
+As we write with this language more, we'll discover more issues to fix or work around, which means that there will most likely be more added as time passes.
+
+</text>
+
+</chapter>
+
+<character>
+
+code = error
+name = DDTXT Error
+
+<style>
+
+color = rgb(255, 230, 220)
+backgroundColor = red
+dialoguePadding = 1%
+paragraphColor = white
+
+</style>
+
+</character>
+
+<chapter>
+
+name = DDTXT Errors
+subtitle = What each error means
+
+<text>
+
+[error: OH NO! EVERYTHING'S GOING TO EXPLODE! AAAHHH!!!]
+
+No, most errors keep the rest of your document intact, although they should still be avoided. Some of them can be tricky to diagnose, especially if it has something to do with node organization. This chapter will go over every kind of error and the possible problems that could cause the error. Solving these errors won't always be easy, but it should be doable.
+
+(divide)
+
+
 
 </text>
 
