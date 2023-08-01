@@ -740,6 +740,18 @@ var clearDDTXT = function () {
 					// Special case: dollar sign used to skip the parser past a word (for example, links)
 					if (text [spot] === "$" && text [spot - 1] !== "#") {
 						const currentWord = text.substring(spot, text.length).split(" ") [0]; // Stop after the next space
+						
+						// Convert any hashtags to literalized hashtags so they are not removed
+						for (var currentWordChar = 1; currentWordChar < currentWord.length; currentWordChar ++) {
+							// We start at 1 because 0 is the dollar sign
+							if (text [spot + currentWordChar] === "#") {
+								text = text.substring(0, spot + currentWordChar) + "#" + text.substring(spot + currentWordChar, text.length);
+								charactersShifted ++; // Shift the index forward
+								currentWordChar ++; // Shift the text seeker one forward for the added character
+								currentChar ++; // and one forward becuase we know what the next character is
+							}
+						}
+						
 						// Skip the parser that many characters, removing a character for the dollar sign that we are removing
 						currentChar += currentWord.length;
 						charactersShifted --;
@@ -1400,7 +1412,7 @@ var parseDDTXT = function (text = stringifiedDDTXT) {
 		performFinalDDTXTChecks();
 	}
 	else {
-		console.error("Current file is not a DDTXT! (The first line must be \"" + DDTXTHeader + "\" exactly.)");
+		console.error("DDTXTFileError: Current file is not a DDTXT! (The first line must be \"" + DDTXTHeader + "\" exactly.)");
 	}
 	
 	// Print the object to the console. Some web consoles allow for interactive viewing of this information, which allows authors to make sure everything is correct.
