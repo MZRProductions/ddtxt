@@ -23,6 +23,8 @@
 <!--
 TODO: Fix usePluralVerbForm Character attribute usage.
 TODO: Fix or remove hardbaked text, as it currently provides more problems than benefits.
+TODO: Fix #$ resulting in empty space
+TODO: Fix the $ not literalizing hashtags in the word
 -->
 
 <!-- HTML -->
@@ -521,7 +523,7 @@ var clearDDTXT = function () {
 			divideColor: "inherit",
 			break: "<br><br>",
 		},
-		errorContextLength: 30, // How much text errors should provide follwing an error (so that people can read where the error happened)
+		errorContextLength: 50, // How much text errors should provide follwing an error (so that people can read where the error happened)
 		addMissingSpaces: true, // Whether or not the DDTXT parser should append needed spaces after most punctuation.
 		// NOTE: (addMissingSpaces = true) is a good idea because it maintains consistency no matter how the DDTXT is spaced out.
 		formatHeadings: false, // Convert references in chapter headings. If you disable this, chapter headings will be hard baked.
@@ -857,7 +859,7 @@ var clearDDTXT = function () {
 				
 				// Break line pass-through
 				
-				text = text.replaceAll("(break)", DDTXT.style.break); // Replace all breaks with the actual HTML <br>, which is impossible due to the greater/less than symbols.
+				text = text.replaceAll("(break)", DDTXT.style.break); // Replace all breaks with the actual HTML <br>, which is impossible in the DDTXT without using this command.
 				
 				// Em dash pass-through
 				
@@ -1069,7 +1071,7 @@ var convertDDTXTToHTML = function () {
 	// Append each chapter to the webpage (DDTXT.cast.format() does most of the work here)
 	for (const chapter of DDTXT.chapters) {
 		chapterNumber ++; // Increment the tracker (this starts at 1 since we do it before anything else)
-		HTMLFormat += "<h1 class=\"chapterHeading\" id=\"chapter-" + chapterNumber + "\" style=\"color: " + DDTXT.style.headingColor + "\">" + DDTXT.cast.format(chapter.name) + "</h1><h2 class=\"chapterSubHeading\" style=\"color: " + DDTXT.style.headingColor + "\">" + DDTXT.cast.format(chapter.subtitle) + "</h2><br><p>" + DDTXT.cast.format(chapter.text) + "</p>";
+		HTMLFormat += "<br><h1 class=\"chapterHeading\" id=\"chapter-" + chapterNumber + "\" style=\"color: " + DDTXT.style.headingColor + "\">" + DDTXT.cast.format(chapter.name) + "</h1><h2 class=\"chapterSubHeading\" style=\"color: " + DDTXT.style.headingColor + "\">" + DDTXT.cast.format(chapter.subtitle) + "</h2><br><p>" + DDTXT.cast.format(chapter.text) + "</p>";
 	}
 	
 	// Add a final space to provide more breathing room on the webpage:
@@ -1187,7 +1189,7 @@ var parseDDTXTLine = function (line, lineNumber = -1) {
 			subParseType = NONE;
 		}
 		else if (line [0] !== "<") { // Line is not a tag, therefore it is assignment information not going anywhere:
-			console.error("DDTXTLevelError: Misplaced information at the top level at line " + ((lineNumber === -1) ? "UNKNOWN" : lineNumber) + ": \"" + line + "\"");
+			console.error("DDTXTNodeError: Misplaced information at the top level at line " + ((lineNumber === -1) ? "UNKNOWN" : lineNumber) + ": \"" + line + "\"");
 		}
 	}
 	// Check for breaking:
@@ -1387,13 +1389,13 @@ var parseDDTXT = function (text = stringifiedDDTXT) {
 		}
 		// Check for syntax errors:
 		if (subParseType !== NONE) {
-			console.error("DDTXTSyntaxError: File ends without closing off a " + subParseTypes [subParseType] + " subnode!");
+			console.error("DDTXTNodeError: File ends without closing off a " + subParseTypes [subParseType] + " subnode!");
 		}
 		if (parseType !== NONE) {
-			console.error("DDTXTSyntaxError: File ends without closing off a " + parseTypes [parseType + 1] + " node!");
+			console.error("DDTXTNodeError: File ends without closing off a " + parseTypes [parseType + 1] + " node!");
 		}
 		if (textMode !== NONE) {
-			console.error("DDTXTSyntaxError: File ends without closing off a hardbaked segment of a text node!");
+			console.error("DDTXTNodeError: File ends without closing off a hardbaked segment of a text node!");
 		}
 		performFinalDDTXTChecks();
 	}
