@@ -435,7 +435,7 @@ $ the actual document, sections where set the document's properties, and section
 
 This guide will begin on general instructions for creating a DDTXT document and then end with specific reference materials for advanced users. You can visit the advanced section by clicking the link here:
 
-[href: ##chapter-6]
+[href: ##chapter-17]
 
 // You can use a "(divide)" at any time to include a larger break with a fancy divider
 
@@ -547,7 +547,7 @@ The first thing to include in a character node is the designated word that you w
 
 [prop: code]
 
-Of course, as with setting any individual property, this is done by specifying the property you want to set followed by an equal sign and your desired value. This single word, or a phrase with no spaces, will be used in conjunction with references, which we will discuss later. Read about them here: [href: ##chapter-5]. It is highly recommended that you keep your "code" keywords short since you will be typing them repeatedly!
+Of course, as with setting any individual property, this is done by specifying the property you want to set followed by an equal sign and your desired value. This single word, or a phrase with no spaces, will be used in conjunction with character references, which we will discuss later. Read about them here: [href: ##chapter-8]. It is highly recommended that you keep your "code" keywords short since you will be typing them repeatedly!
 
 (break)
 
@@ -609,7 +609,7 @@ The second character is a ~example2 named @example2.
 
 The third character, @example3, is a ~example3 for catching a ~example2.]
 
-In case the specifics of writing with personal pronouns confuse you (understandably so), I will detail what each pronoun does. To learn more about using these pronouns with references, click here: [href: ##chapter-5].
+In case the specifics of writing with personal pronouns confuse you (understandably so), I will detail what each pronoun does. To learn more about using these pronouns with character references, click here: [href: ##chapter-8].
 
 [prop: subject]
 
@@ -765,7 +765,7 @@ This is the chapter's subtitle, which is shown beneath the chapter's title.
 
 [note: The chapter title and subtitle will be colored according to the document's headingColor as defined in the style subnode of the document's global node.]
 
-For more information, please see the global style subnode. [href: ##chapter-8].
+For more information, please see the global style subnode. [href: ##chapter-15].
 
 (divide)
 
@@ -779,7 +779,7 @@ Any text written within this subnode, excluding comments, is interpreted accordi
 
 (break)
 
-Empty space to the left or right will be omitted by default. You can write an entire paragraph on one line or make each sentence a new line. If you are having problems with spacing, you may need to insert spaces. For more information, see the DDTXT Commands Chapter. [href: ##chapter-9].
+Empty space to the left or right will be omitted by default. You can write an entire paragraph on one line or make each sentence a new line, but the text will be aggregated into a single paragraph. If you are having problems with spacing, you may need to insert line breaks. For more information, see the DDTXT Commands Chapter. [href: ##chapter-11].
 
 </text>
 
@@ -1098,7 +1098,7 @@ $ use the dollar sign symbol. (I am not sure if this will be accessible internat
 
 [note: In-Text DDTXT Commands can still be triggered within these words! This is not an intentional feature, although it does not get in the way, so it will likely stay that way.]
 
-(You can learn about DDTXT In-Text Commands more in the next chapter [href: ##chapter-10].)
+(You can learn about DDTXT In-Text Commands more in the next chapter [href: ##chapter-11].)
 
 (break)
 
@@ -1312,6 +1312,39 @@ $</global>
 
 <chapter>
 
+name = DDTXT Hyperlinks
+subtitle = A tool to be used occasionally (no link spamming)
+
+<text>
+
+You can opt to include one of more of two kinds of links in your DDTXTs. To create a link, simply create a dialog entry with the character code "href". The link address will be the spoken words that write after the colon.
+
+[text: (left bracket)href: LINK (right bracket)]
+
+The link address can, of course, be to an external website. If you do this, you will likely want to place a dollar sign directly before the link to have the parser skip over any DDTXT symbols that might naturally occur within the link. It is also good practice to leave a space after the link to signify when the link stops and the end bracket is placed. These links will show the full address. Because of the nature of hashtags in the DDTXT language, you will need to convert all single hashtags to double hashtags so as to not lose them.
+
+[text: (left bracket)href: #$https://www.w3.org/wiki/CSS/Properties/color/keywords(hashtag)Basic_Colors (right bracket)]
+
+However, you can also include links to other parts of your document. This is especially useful for tutorials (like this DDTXT), where it's useful to refer to recursively interconnected chapters. To do this, start the link address with two hashtags $(##). Then, write "chapter-" followed by the chapter number you want the link to go to. This number will be the order that the chapters appear in the finished document, from 1 to however many chapters you have. (If you have the table of contents enabled, you can use the numbers provided for each chapter there.)
+
+[text: (left bracket)href: ####chapter-1(right bracket)]
+
+The above link takes you to the beginning of the document.
+
+(break)
+
+The reason that we use two hashtags is that links to objects within a webpage start out with ## in HTML. However, since the DDTXT parser attributes a special meaning to a single hashtag, we must specify that we want the literal symbol and not the function.
+
+[note: Since both kinds of DDTXT links are built inside of dialog brackets, you cannot embed links in character dialogue.]
+
+[note: ALWAYS TEST YOUR LINKS!]
+
+</text>
+
+</chapter>
+
+<chapter>
+
 name = Character Styling
 subtitle = Applying colors to characters
 
@@ -1362,7 +1395,7 @@ CSS contains a plethora of predefined colors for you to use. These can be used b
 
 (break)
 
-You can find a list of CSS colors here: [href: https://www.w3.org/wiki/CSS/Properties/color/keywords#Basic_Colors]. If this link becomes obsolete, you should be able to find other CSS resources online.
+You can find a list of CSS colors here: [href: https://www.w3.org/wiki/CSS/Properties/color/keywords##Basic_Colors]. If this link becomes obsolete, you should be able to find other CSS resources online.
 
 (break)
 
@@ -1380,7 +1413,7 @@ Here are the properties that control dialogue display in your document.
 
 [prop: color]
 
-This is the color of the text that your character speaks in dialogue and the color of their name that appears next to their words. If not specified, this will default to the color of the chapter text throughout the rest of the document. For more information on the color of chapter text, go here: [href: ##chapter-8]
+This is the color of the text that your character speaks in dialogue and the color of their name that appears next to their words. If not specified, this will default to the main color of text throughout the rest of the document. For more information on the color of text, visit the $<global> $<style> subnode documentation here: [href: ##chapter-18]
 
 [prop: backgroundColor]
 
@@ -1424,11 +1457,11 @@ subtitle = Creating a style for your entire document
 
 <text>
 
-The same ideas behind character styling apply to styling the rest of your document. Visibility and accessibility should be the focus of styling your document since this covers paragraph text, which is smaller than character dialogue. Just like in characters, document styling is done in a style subnode. Create a style subnode within the global node [href: ##chapter-3], which you should have already made.
+The same ideas behind character styling apply to styling the rest of your document. Visibility and accessibility should be the focus of styling your document since this covers paragraph text, which is smaller than character dialogue. Just like in characters, document styling is done in a style subnode. To set global styling properties, create a style subnode within the global node [href: ##chapter-3], which you should have already made.
 
 (break)
 
-The values for color properties here should be CSS colors. [href: ##chapter-7] Values in other forms will be highlighted.
+The values for color properties here should be CSS colors. [href: ##chapter-14] Values in other forms will be noted and emphasized.
 
 [prop: color]
 
@@ -1558,7 +1591,7 @@ This button closes the editor, leaving you to read the finished, translated docu
 <chapter>
 
 name = Advanced Documentation
-subtitle = (break)Full Properties Documentation: [href: ##chapter-17](break)Current Limits of the DDTXT: [href: ##chapter-18](break)DDTXT Errors: [href: ##chapter-19]
+subtitle = (break)Full Properties Documentation: [href: ##chapter-18](break)Current Limits of the DDTXT: [href: ##chapter-19](break)DDTXT Errors: [href: ##chapter-20]
 
 </chapter>
 
@@ -1821,11 +1854,192 @@ subtitle = What each error means
 
 [error: OH NO! EVERYTHING'S GOING TO EXPLODE! AAAHHH!!!]
 
-No, most errors keep the rest of your document intact, although they should still be avoided. Some of them can be tricky to diagnose, especially if it has something to do with node organization. This chapter will go over every kind of error and the possible problems that could cause the error. Solving these errors won't always be easy, but it should be doable.
+No, most errors keep the rest of your document intact, although they should still be avoided. Some of them can be tricky to diagnose, especially if it has something to do with node organization. This chapter will go over every kind of error and the possible problems that could cause the error. Solving these errors won't always be easy, but it will always be manageable.
 
 (divide)
 
+The first concept to go over is the programming idea of narrowing down the possible causes of an error. Let's say that you have recently written a new chapter and you have not yet tested its translation (by which I mean reading the finished document). When you open the document up, you find that there is an unexpected result within your document. Maybe a color is wrong or there is a reference that does not work.
 
+(break)
+
+The most egregious errors will show up in your browser's console. You can probably open up your console from one of the buttons that appears upon right-clicking the webpage. It will likely look confusing at first, but look for text mentioning "To see more about a character (...) $tellMeAbout(<code>)". This should be "printed" (which means written when talking about consoles) at the top of the console's output. You can then scroll through the console to find errors.
+
+[note: Nothing gets taken away from the console! This means that old errors will still show up! You can clear the console by refreshing the page or you can look for the most recently printed document information by scrolling to the bottom.]
+
+Whatever the problem is, if you know that the error was not present before and you know exactly what you have added, then through logical reasoning (and/or a programmer's mentality), you should be immediately checking your recent addition. As long as you know exactly what you have added, you can put a mental box around it. Better yet, you can temporarily move your added text, either by cutting and pasting or by commenting out each line of the entire addition with "//"s. If the errors go away, then you know that you have isolated the error. (This is great news!)
+
+(break)
+
+(There should be decent error context to help you through the type of error and how to fix it, although due to the fact that line position in the raw document file and the translated file do not necessarily correlate, it is harder for the DDTXT Reader to pinpoint the exact location.)
+
+[note: Regardless, if the error goes to the console, pay attention to the type of error, as that will help tremendously when looking for it.]
+
+Now that you have a much smaller box containing the error, you can begin to look for the specific cause and fix the error. There are many ways to go about this, although if the isolated text is small enough, I recommend simply reading the passage carefully beginning to end. Often times, this is enough.
+
+(break)
+
+If you're still struggling to find the problem, try some of the following actions:
+(break)(em dash) Move the boundaries of the isolation "box". If you move text from the isolation box into your functional document, eventually you'll reach a point where the document breaks. This point is the cause of your error.
+(break)(em dash) Temporarily change a character's pronouns to aggressive, all-caps words like "TEMP" and see how it affects your document. If the problem is with a reference, you should be able to see where a word did not get swapped.
+(break)(em dash) Double check $<character> or $<global> properties. There is a small chance that there was a problem all along that you have just now unearthed.
+(break)(em dash) (Have another DDTXT author with fresh eyes look over your document.)
+
+(divide)
+
+When errors appear in the console, their type will appear as one word ending with "Error".
+
+(horizon)
+
+[error: DDTXTReferenceError]
+
+There are two possible causes of the DDTXTReferenceError. Both of these causes will result in something like this:
+
+[translated: Unnamed Character was glad to be @example1.]
+
+[text: #@exmple was glad to be #@example.]
+
+The above example features a typo initially that is fixed by the second reference. This require a simple typo fix. The other cause is a little more subtle.
+
+[text: #@ was glad to be #@.]
+
+If you place this shorthand after a previous character reference, this work perfectly fine. However, if you place this before any explicit character references (which specify the character code), then you will get the following error message.
+
+[note: DDTXTReferenceError: There was an attempt to use shorthand with no previous character to go by! Please reference a character at least once before using this shorthand.]
+
+This is unlikely to happen, although it is still possible. Just make sure to only use shorthand after you've specified a character code.
+
+(horizon)
+
+[error: DDTXTSyntaxError]
+
+This error has two possible causes, both relating to character dialogue.
+
+(break)
+
+This first example might cause your document to look something like this.
+
+[translated: (left bracket)example Wow! I love dialogue.(right bracket)]
+
+If you haven't caught it yet, this is caused by the lack of a colon, which tells the DDTXT parser where the character code stops and the dialogue begins. To fix this, simply find the dialog entry and add a colon.
+
+[text: (left bracket)example Wow! I love dialogue.(right bracket) $--> (left bracket)example: Wow! I love dialogue.(right bracket)]
+
+The second cause will be trickier to diagnose and fix. If you ever accidentally leave a starting or closing bracket off of your dialog (which is very easy to do when you're writing quickly), this error will be more vague, telling you to close off your dialog properly.
+
+[note: DDTXTSyntaxError: Character dialog has not been closed off around...]
+
+If this happens to you, look at all of the dialogue entries in your isolated text and make sure they all have a left AND right bracket.
+
+(horizon)
+
+[error: DDTXTLinkError]
+
+This error is caused by a badly formatted link. It might be helpful to look over the link chapter again: [href: ##chapter-13]. Intra-document links (links to other chapters) might be giving you trouble. If so, make sure that you have written two hashtags before the "chapter-X" and make sure that the chapter number has no leading zeros (001) and that the chapter number is correct.
+
+[note: DDTXTLinkError: Link unreadable! Links to other chapters must be in the form chapter-X, where X is the chapter number with no leading zeroes. This is case sensitive (6 is fine, but 006 is not fine.)]
+
+(horizon)
+
+[error: DDTXTNodeError]
+
+This error means that you have misplaced property information. This is pretty serious, and your document will not likely load fully. To fix this, count node beginnings and ends. For every $<node> or $<subnode> beginning (without a forward slash), count one higher. For every $</node> or $</subnode> end (with a forward slash), remove one from your count. Doing this from document beginning to end, you should finish with zero.
+
+(break)
+
+If your number is positive, then that means that you did not close one or more nodes properly. If your number is negative, then that means that you closed nodes without first opening them. Counting in this way should help you find where you need to seal the node gap.
+
+(break)
+
+(Note to programmers: You can also do this with parentheses in programming languages, which will save you time unless your text highlighting shows you problems like this.)
+
+(horizon)
+
+[error: DDTXTAssignmentError]
+
+This error means that you made a typo when assigning a value to a property and you have forgotten to include the equal sign (#=). To fix this, simply look through the lines setting up your document properties and make sure that they all follow the "property #= value" formula.
+
+(horizon)
+
+[error: DDTXTFileError]
+
+This error means that the DDTXT Reader rejected the file. The most likely cause of this is the first line of your document not being $"<!DOCTYPE $DDTXT>" exactly. This will also likely be the error you get if you somehow try to load a completely different file type.
+
+(horizon)
+
+(divide)
+
+The next passage has two problems that DDTXT Errors won't alert you to.
+
+[text:
+(break)
+// If you ever have to write out commands in a DDTXT, you can use a parenthesis command for the left side and leave the right side as a symbol. Because only exact matches count, this will appear the same way "(left parenthesis)break(right parenthesis)" would.
+(left parenthesis)break)
+(break)
+The R.O.Y.G.B.I.V. colors are the following:
+(break)
+(left parenthesis)break)
+(break)
+Red, Ornage
+(break)
+(break(
+(break)
+Yellow, Green
+(break)
+(left parenthesis)break)
+(break)
+Indigo, and Violet!]
+
+Can you find the problems? The two problems are semi-hidden below in the answer key. When you have found both problems, highlight the answer key.
+
+[hardToRead1:(break)1: One of the (left parenthesis)break)s is misspelled, which means that the DDTXT parser will ignore the phrase, assuming that it is part of the normal writing.(break)2: The word "Orange" is misspelled as "Ornage".]
+
+The only real solution to problems like this is solid proofreading, which will likely mean multiple passes through. (Un)fortunately, the best proofreading is done by a reader with fresh, unfamiliar eyes, which means that you should ideally get someone else to read your documents.
+// Speaking of solid proofreading, I hope that I found all of my typos.
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = General Advice
+subtitle = Thanks for reading this whole tutorial!
+
+<text>
+
+I've explained a lot throughout this document, from rigid requirements to loose guidelines. Hopefully you now feel ready to write your own DDTXTs!
+
+(break)
+
+Here are some general tips to leave you with:
+(break)(em dash) If you are getting stuck with an intricate, detailed problem, either move on for now or give up and find a work around.
+(break)(em dash) If you write in linear order, have a writing notes section at the beginning of your document. When you have ideas, write them in author comments here so that you can come back to these ideas later.
+(break)(em dash) If you unsure of a word's spelling or meaning, write it in ALL CAPS or put a comment starting with the word "ISSUE" above it.
+
+[text:
+#// ISSUE: I'm not sure what this means.
+(break)
+#@example felt benign to the world.
+]
+
+Then, later on, you can change the word:
+
+[translated: @example4 felt invisible to the world.]
+
+(em dash) Refresh your final document frequently. If you have problems, this will reduce the amount of added text you have to be suspicious of.
+(break)(em dash) Pay attention to storytelling in shows, movies, and books. The more tropes you recognizes, the more you can use them or break from them.
+(break)(em dash) If you don't know how something in DDTXTs works, experiment with it and you should find out.
+
+(break)
+
+For more reference material, please look through the sample DDTXTs provided with the Reader, especially example.ddtxt. example.ddtxt was made to serve as a complete reference for writing a DDTXT. It may even be helpful for you to have multiple copies of the Reader open at once. You could have example.ddtxt open while writing your own document and leave this tutorial open as documentation.
+
+(break)
+(break)
+
+[me: Whatever you choose to do, I wish you luck! Have fun writing!]
+
+(break)
 
 </text>
 
