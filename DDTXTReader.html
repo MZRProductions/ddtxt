@@ -88,6 +88,10 @@ body {
    /* (Empty class to be used for organization) */
 }
 
+#footerHolder {
+	background-color: inherit;
+}
+
 /* This container holds optional UI */
 #ui {
 	visibility: hidden;
@@ -136,6 +140,7 @@ body {
 /* This container holds the reader and the editor: */
 #mainPage {
 	display: flex;
+	background-color: inherit;
 }
 
 /* This container holds the contents of the DDTXT */
@@ -160,6 +165,7 @@ body {
 	max-height: 70%;
 	position: fixed;
 	resize: both;
+	/* The editor is always white text on a black background */
 	background-color: black;
 	color: white;
 	/* See scroll-behavior explanation below */
@@ -179,7 +185,7 @@ body {
 	position: fixed;
 	margin-left: -10%;
 	margin-top: -10%;
-	background-color: rgba(0, 0, 0, 50);
+	background-color: black;
 }
 
 #summary-content {
@@ -252,12 +258,15 @@ html {
 </head>
 
 <!-- Fixed UI at top of page -->
+
 <div id="ui">
 
 <!-- Left side -->
+
 <div id="ui-stats"></div>
 
 <!-- Right side -->
+
 <table id="ui-buttons">
 
 <tr id="documentInfo">
@@ -272,6 +281,7 @@ html {
 </div>
 
 <!-- Summary box, hidden by default -->
+
 <div id="summary">
 
 <p id="summary-content"></p>
@@ -281,6 +291,7 @@ html {
 <div id="mainPage">
 
 <!-- DDTXT editor -->
+
 <div id="editor">
 	<table id="editor-ui">
 		<tr>
@@ -297,11 +308,15 @@ html {
 </div>
 
 <!-- DDTXT content -->
+
 <div id="DDTXT"></div>
 
 </div>
 
 <!-- Universal footer not dependent on content -->
+
+<div id="footerHolder">
+
 <div id="footer">
 
 <br>
@@ -315,6 +330,8 @@ html {
 <p id="printText" onclick="printDDTXT()">Click me to save this DDTXT as a PDF or print it out!<br>(You may have to enable background graphics to get the correct background color.)</p>
 
 </div>
+
+</div> <!-- footerHolder used for flex display -->
 
 
 <!-- JS -->
@@ -1003,6 +1020,7 @@ var updateBodyCSS = function () {
 	const footer = document.getElementById("footer");
 	footer.style.backgroundColor = DDTXT.style.backgroundColor;
 	footer.style.color = DDTXT.style.color;
+	document.getElementById("footerHolder").style.backgroundColor = DDTXT.style.backgroundColor;
 	// Update UI colors
 	const header = document.getElementById("ui");
 	header.style.backgroundColor = DDTXT.style.backgroundColor;
@@ -1021,9 +1039,9 @@ var updateBodyCSS = function () {
 	summaryContent.style.color = DDTXT.style.color;
 	summaryContent.style.border = "2px ridge " + DDTXT.style.color;
 	// Update webpage colors
-	const webpage = document.documentElement;
-	webpage.style.backgroundColor = DDTXT.style.backgroundColor;
-	webpage.style.color = DDTXT.style.color;
+	document.getElementById("mainPage").style.backgroundColor = DDTXT.style.backgroundColor;
+	document.documentElement.style.backgroundColor = DDTXT.style.backgroundColor;
+	document.documentElement.style.color = DDTXT.style.color;
 };
 
 // Create literal HTML character biographies:
