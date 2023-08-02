@@ -2,29 +2,27 @@
 
 <!--
 
-	 Digital Dialogue Text Reader (and Parser)
-    Copyright (C) 2023 Michael Rumpff (MZRProductions)
+	Digital Dialogue Text Reader (and Parser)
+	Copyright (C) 2023 Michael Rumpff (MZRProductions)
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 -->
 
 <!--
 TODO: Fix usePluralVerbForm Character attribute usage.
 TODO: Fix or remove hardbaked text, as it currently provides more problems than benefits.
-TODO: Fix #$ resulting in empty space
-TODO: Fix the $ not literalizing hashtags in the word
 -->
 
 <!-- HTML -->
@@ -1453,7 +1451,7 @@ var loadFileInput = function () {
 				document.getElementById("ui").style.visibility = "visible";
 				// Update the UI initially
 				updateScrollProgress();
-				return result;
+				return result; // Pass the raw DDTXT upward
 			}
 		);
 	}
@@ -1492,13 +1490,13 @@ var statsAreVisible = false;
 
 // Update the percentage:
 var updateScrollProgress = function () {
-	const DDTXTElement = document.getElementById("DDTXT");
-	const DDTXTContentLength = DDTXTElement.scrollHeight - (document.getElementById("footer").scrollHeight * 2);
-	var progressPercentage = (100 * document.defaultView.scrollY / DDTXTContentLength).toFixed(1); // This rounds the percentage to a single decimal position
-	// Round up from 99.9 to 100.0 percent:
-	if (progressPercentage === "99.9") {
-		progressPercentage = "100.0";
+	var progressPercentage = ((document.documentElement.scrollTop - 1) / (document.documentElement.scrollHeight - document.defaultView.innerHeight) * 100).toFixed(1);
+	
+	// Disallow negative percentages:
+	if (progressPercentage [0] === "-") { // The number is a string, so if it's negative, the first text character will be a hyphen
+		progressPercentage = "0.0";
 	}
+	
 	// Prefer specified webtitle but default to full document name.
 	const nameToShow = (DDTXT.global.webtitle) ? DDTXT.global.webtitle : DDTXT.global.name;
 	documentStats.innerHTML = "<em id=\"ui-name\">" + nameToShow + "</em> by " + DDTXT.global.author + " (" + progressPercentage + "% finished)";
