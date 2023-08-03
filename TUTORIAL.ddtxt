@@ -417,7 +417,7 @@ subtitle = none
 
 [me: Hello! Welcome to the DDTXT format!]
 
-The Digital Dialogue Text format, abbreviated as DDTXT, is a specific markup language that makes writing dialogue-heavy documents (such as scripts or casual stories) simpler by using frequent references that point to characters designed by the author. The DDTXT also excels in flexibility since readers can change the language used to refer to characters and make characters more or less personally relatable. Because DDTXTs are shorthand for very basic webpages, the format should be supported almost everywhere.
+The Digital Dialogue Text format, abbreviated as DDTXT, is a markup language that makes writing dialogue-heavy documents (such as scripts or casual stories) simpler by using frequent character references that point to characters designed by the author. The DDTXT also excels in flexibility since readers can change the language used to refer to characters and make characters seem more or less personally relatable. Because DDTXTs are natively contained in very basic webpages, the format should be supported almost everywhere.
 
 // We use the keyword "(break)" to split paragraphs.
 // By default, this is equivalent to two HTML "<br>"s, but this can also be changed in the <global> node.
@@ -459,7 +459,7 @@ subtitle = Basic rules:
 The first line of every raw DDTXT file (the text file that you see when you open the file in a text editor) must be the exact following, without the quotation marks:
 // You can use dollar signs to tell the DDTXT parser to not translate the following word.
 // (You must use a dollar sign after every space.)
-$"<!DOCTYPE $DDTXT>". This is required as a precaution so that if there are other file formats that use the .ddtxt filename extension the DDTXT Reader doesn't read other file types.
+$"<!DOCTYPE $DDTXT>". This is required as a precaution so that if there are other file formats that use the .ddtxt filename extension, the DDTXT Reader doesn't read other file types.
 
 (break)
 
@@ -468,7 +468,7 @@ Before we continue, I must explain rules that apply across the entire DDTXT docu
 // Em dashes have a bit more presence than a single hyphen.
 (em dash) Unless otherwise noted, individual actions must be on their own line.
 (break)
-(em dash) Author comments can be written in the raw DDTXT file by starting a line with two forward slashes ("//"). These never affect the finished DDTXT in any way.
+(em dash) Author comments can be written in the raw DDTXT file by starting a line with two forward slashes ("//"). These never affect the finished DDTXT in any way, and should be used frequently to explain the author's thoughts and intentions.
 (break)
 (em dash) Capitalization often matters and failure to write phrases or keywords exactly as given may result in document properties not being set correctly.
 
@@ -495,17 +495,19 @@ Now, you can set the document's name. To do this, create a new line inside the g
 
 [prop: name]
 
-If you save the file and open up the document in the DDTXT Reader, you should see a blank DDTXT titled "My First DDTXT". Every line setting a property of the document will follow the format 
+If you save the file and open up the document in the DDTXT Reader, you should see a blank DDTXT titled "My First DDTXT". Every line setting a property of the document will follow the following format. [note: property
 // We must comment out the reference character "=" here by putting a hashtag before it.
-"  #= value".
+$ #= value]
+
+In this example, "property" represents any one of the properties we are going to discuss in this tutorial, and "value" represents what you are setting the property to.
 
 (break)
 
-Now, you should credit yourself as the author so that people know that you wrote it. You can do this by writing a new line that starts with "author  #= " followed by your name.
+Now, you should credit yourself as the author so that people know that you wrote it. You can do this by writing a new line that starts with "author #= " followed by your name.
 
 [prop: author]
 
-At this point, you should save you file and open it with the DDTXT Reader. (If it's easier for you, you should be able to open the DDTXT Reader twice and keep this Manual open.) The document should be named and should note you as the author. If something went wrong, don't worry. Simply look over this example and study it:
+At this point, you should save your file and open it with the DDTXT Reader. (If it's easier for you, you should be able to open the DDTXT Reader in two different tabs and keep this Manual open.) The document should be now be named and should note you as the author. If something went wrong, don't worry. Simply look over this example and study it:
 
 // You can use "(break)"s in dialogue. I would only recommend doing this if you have changed the background color of the character's dialogue and need to do so in order to have some margins. (This should be avoided in main stories without good reason.)
 
@@ -538,7 +540,7 @@ subtitle = Bringing life to your stories
 
 <text>
 
-Most stories will include characters of interest and feature interactions between them. For this, you must register each character through a character node. Much like the global node previously discussed, each character node begins with the line $"<character>" and ends with the line $"</character>".
+Most stories will include characters of interest and feature interactions between them. In order to use characters in your document, you must register each character through a character node. Much like the global node previously discussed, each character node begins with the line $"<character>" and ends with the line $"</character>".
 // Once again, we are using the dollar sign to have the parser skip over the words containing character references.
 
 [note: Unlike the document's global node, of which there should only be one, there must be a new character node for each new character.]
@@ -547,7 +549,7 @@ The first thing to include in a character node is the designated word that you w
 
 [prop: code]
 
-Of course, as with setting any individual property, this is done by specifying the property you want to set followed by an equal sign and your desired value. This single word, or a phrase with no spaces, will be used in conjunction with character references, which we will discuss later. Read about them here: [href: ##chapter-8]. It is highly recommended that you keep your "code" keywords short since you will be typing them repeatedly!
+Of course, as with setting any individual property, this is done by specifying the property you want to set followed and the writing an equal sign and your desired value. This single word, or a camelCase phrase with no spaces (likeThis), will be used in conjunction with character references, which we will discuss later. Read about them here: [href: ##chapter-8]. It is highly recommended that you keep your "code" keywords short since you will be typing them repeatedly!
 
 (break)
 
@@ -567,10 +569,10 @@ $<character>
 
 (break)
 
-code  #= example
+code #= example
 (break)
 // You can see here that the code is one word, but the name is two words.
-name  #= Example Character
+name #= Example Character
 (break)
 $</character> ]
 
@@ -587,17 +589,23 @@ subtitle = The building blocks of character interactions
 
 <text>
 
-In order to specify your character's pronouns, you must first create a pronouns subnode inside of a character node. Inside of the character node, make a new line with $"<pronouns>" and another line below it with $"</pronouns>". Hopefully creating nodes and subnodes is making more sense now. Each property below is an individual pronoun. You can choose to define any, all, or none of them. The values of all of these properties should be a word or phrase. (If you do not define a pronoun, the gender neutral equivalent will be used.)
+In order to specify your character's pronouns, you must first create a pronouns subnode inside of a character node.
+
+(break)
+
+Inside of the character node, make a new line with $"<pronouns>" and another line below it with $"</pronouns>". Hopefully creating nodes and subnodes is making more sense now. Each property below sets an individual pronoun. You can choose to define any, all, or none of them. The values of all of these properties should be a word or phrase. (If you do not define a pronoun, the gender neutral equivalent will be used. These gender neutral pronouns are listed at the end of this chapter.)
 
 (break)
 
 // This will be done properly with DDTXT characters so that you can see how references function.
 
-Let's invent a little story with three characters. The story is random, but it illustrates many common pronouns interacting with characters.
+Let's invent a little story with three characters. The story is random, but it illustrates many common pronouns and their specific interactions with character actions.
 
 [note:
 
 (break)
+
+// This story is dependent on the character information of example1, example2, example3.
 
 The first character is @example1, a ~example1.
 
@@ -613,17 +621,17 @@ In case the specifics of writing with personal pronouns confuse you (understanda
 
 [prop: subject]
 
-This is the word that indicated the character performing the action. In this story, @example1 is throwing @example2, so @example1 is the subject. This means that we should use +example1 subject word here, in this case "<example1."
+This is a word that indicates the character performing the action. In this story, @example1 is throwing @example2, so @example1 is the subject. This means that we should use +example1 subject word here, in this case "<example1."
 
 [prop: possessive]
 
-This is the word that describes someones possessive relation to something else. For example, since @example1 is a ~example1, we can assume that one of =example1 talents is throwing spherical objects. The talent of throwing belongs to >example1.
+This is a word that describes someone's possessive relation to something else. For example, since @example1 is a ~example1, we can assume that one of "=example1" talents is throwing spherical objects. The talent of throwing belongs to ">example1."
 
 [prop: object]
 
-This is the word that refers to the character that the action is happening to. Think "to them", "to her", or "to him" here. In the story above, @example2 is being thrown to @example3. @example3 is the direct receiver of this action, which means that
+This is a word that refers to the character that the action is happening to. Think "to them", "to her", or "to him" here. In the story above, @example2 is being thrown to @example3. @example3 is the direct receiver of this action, which means that
 // Here we are using reference shorthand. Since the previous reference involved the same character, we don't have to re-type the character's code keyword. The DDTXT Parser will assume that this is a reference to example3.
-< is the direct object.
+$ < is the direct object.
 
 (break)
 
@@ -631,7 +639,7 @@ This is the word that refers to the character that the action is happening to. T
 
 [prop: instance]
 
-This is more vague. This can be anything that you want, really. I would recommend making this the character's role in the story or something that the character would call themselves. For example, because @example2 is a ~example2, <example2 is easier to throw than @example3, a ~example3.
+The purpose of this property, which technically isn't a pronoun, is more vague. This can be anything that you want, really. I would recommend making this the character's role in the story or something that the character would call themselves. For example, because @example2 is a "~example2," <example2 is easier to throw than @example3, a "~example3."
 
 (break)
 
@@ -639,13 +647,13 @@ Hopefully you can see the flexibility of this property. The main thing is that w
 
 [prop: reflexive]
 
-This word describes actions that a character is performing on or toward themselves. For example, when you are performing actions to take care of yourself and fulfill your needs, you are performing reflexive actions. Actions that directly reflect back to the subject are reflexive. Most often, these words will contain "self" or "selves".
+This word describes actions that a character is performing on or toward themselves. For example, when you are performing actions to take care of "yourself" and fulfill your needs, you are performing reflexive actions. Actions that directly reflect back to the subject are reflexive. Most often, these words will contain "self" or "selves".
 
 [prop: present]
 
-This isn't technically a pronoun, but it is used with the character's actual pronouns. This is the linking verb (to be) that would be used in passive voice and present progressive tenses. In simpler terms, this would be a "he is" or "they are". This can be used in combination with other verbs. For example, due to the fact that @example2, the ~example2, is flying through the air, {example2 preparing to land and bounce into the air again.
+This isn't technically a pronoun either, but it is used with the character's actual pronouns. This is the linking verb (to be) that would be used in passive voice and present progressive tenses. In simpler terms, this would be a "he is" or "they are". This can be used in combination with other verbs. For example, due to the fact that @example2, the ~example2, is flying through the air, {example2 preparing to land and bounce into the air again.
 
-[note: You do not need to use this if the verb directly follows a character name, as this situation always calls for the verb "is."]
+[note: You do not need to use this if the verb directly follows a character name, as this situation always calls for the verb "is." An example of this is the phrase "@example3 is."]
 
 // "@example1 is" is fine as is, but "<example1 is" should be converted to "{example1".
 
@@ -653,7 +661,7 @@ Any time you have a subject followed by "is" or "are," you'll most likely want t
 
 [prop: presentCompacted]
 
-This is the contracted (abbreviated) form of the present verb form property above. This is a seperate property, although it can be created from the phrase above by replacing the first letter of the second word with an apostrophe (') and combining both new words into one word. For example, "they are" becomes "they're"; "she is" becomes "she's".
+This is the contracted (abbreviated) form of the present verb form property above. This is a seperate property, although it can be created from the phrase used for the above property by replacing the first letter of the second word with an apostrophe (') and combining both new words into one word. For example, "they are" becomes "they're"; "she is" becomes "she's".
 
 (divide)
 
@@ -693,7 +701,7 @@ Subject | <example3
 
 (divide)
 
-Here is an example of a character with name, code, and pronouns defined. (The pronouns listed here are the default pronouns that you would get for each if you didn't specify them anyway.)
+Here is an example of a character with the name property, the code property, and pronouns subnode defined. (The pronouns listed here are the default pronouns that you would get for each property if you didn't specify them anyway.)
 
 [text:
 
@@ -727,10 +735,11 @@ instance #= person
 present #= they are
 (break)
 presentCompacted #= they're
+// The next few lines got kind of strange, but this combination seems to work well.
 (break)
 $</pronouns>
-(break)
-$</character> ]
+(break) #
+#</character#> ]
 
 </text>
 
@@ -743,7 +752,7 @@ subtitle = Preparing to write with references
 
 <text>
 
-The DDTXT format can take some adjustments when thinking about how to write, but it will soon save you time as you can quickly expand upon your document. The DDTXT introduces character references that transform "hard baked" text into dynamic, changeable text. Text that is hard baked is rigid. It is written and stays the same. Dynamic text adapts to character pronouns and works to promote character relatablility while keeping the true story elements intact. This allows readers to digest your writing more easily.
+The DDTXT format can take some adjustments when thinking about how to write, but it will soon save you time as you can quickly expand upon your document. The DDTXT introduces character references that transform "hard baked" text into dynamic, changeable text. Text that is hard baked is rigid. It is written and stays the same. Dynamic text adapts to character pronouns and works to promote character relatability while keeping the true story elements intact. This allows readers to digest your writing more easily.
 
 (break)
 
@@ -751,17 +760,17 @@ It will be difficult at first as you learn the DDTXT language, but you should av
 
 (divide)
 
-All main document text is written within text subnodes. However, before you can write, you need to create a chapter node. This is a main node, not a subnode, and it should come after your character nodes and your global node. There are two main properties of chapter nodes other than the text subnode. Both of these properties takes words as input.
+All main document text is written within text subnodes. However, before you can write, you need to create a chapter node. This is a main node, not a subnode, and it should come after your character nodes and your global node. There are two main properties of chapter nodes other than the text subnode. Both of these properties take words as input.
 
 [prop: name]
 
-This is the chapter title (or name). This appears at the top of the chapter, before any main chapter text.
+This is the chapter name. This appears at the top of the chapter, before any main chapter text.
 
 [prop: subtitle]
 
 This is the chapter's subtitle, which is shown beneath the chapter's title.
 
-[note: Both the chapter name and subtitle can be turned off by using the keyword "none" as the property value.]
+[note: Both the chapter name and subtitle can be turned off by using the special word "none" as the property value.]
 
 [note: The chapter title and subtitle will be colored according to the document's headingColor as defined in the style subnode of the document's global node.]
 
@@ -773,13 +782,13 @@ Now that you have an empty chapter, you can start writing by creating a text sub
 
 (break)
 
-Any text written within this subnode, excluding comments, is interpreted according to DDTXT format. It should be noted that spacing is only relevant between written text. This means that you can and should organize your raw DDTXT file for readability by other authors and/or editors.
+Any text written within this subnode, excluding author comments, is interpreted according to DDTXT format. It should be noted that spacing is only relevant between written text. This means that you can and should organize your raw DDTXT file for readability by other authors and/or editors.
 
 // Seriously. This file is already cluttered enough as it is. If you don't try at all, your file will be even more cluttered!
 
 (break)
 
-Empty space to the left or right will be omitted by default. You can write an entire paragraph on one line or make each sentence a new line, but the text will be aggregated into a single paragraph. If you are having problems with spacing, you may need to insert line breaks. For more information, see the DDTXT Commands Chapter. [href: ##chapter-11].
+Empty space to the left or right will be ignored by default. You can write an entire paragraph on one line or make each sentence a new line, but the text will be aggregated into a single paragraph. If you are having problems with spacing, you may need to insert line breaks. For more information, see the DDTXT Commands Chapter. [href: ##chapter-11].
 
 </text>
 
@@ -792,15 +801,15 @@ subtitle = Finally! (The whole point of the DDTXT)
 
 <text>
 
-The DDTXT should be dialogue heavy, as that is the entire point of using the DDTXT instead of standard HTML webpages or the straight to the point .txt file.
+The DDTXT should probably be dialogue heavy, as that is the entire point of using the DDTXT instead of standard HTML webpages or the straight to the point .txt file, although it is up to you to find a good balance.
 
 [me: Hello! Look, it's dialogue!]
 
-To insert dialogue into your story, begin by writing a pair of square brackets. Anything inside of these brackets will be written as dialogue in your document. However, before you get writing, you need to specify who is talking! Each dialogue entry is actually split into two sections. The left side specifies the character and the right side holds the spoken words.
+To insert dialogue into your story, begin by writing a pair of square brackets ((left bracket)(right bracket)). Anything inside of these brackets will be written as dialogue in your document. However, before you get writing, you need to specify who is talking! Each dialogue entry is actually split into two sections. The left side specifies the character and the right side holds the spoken words.
 
 (break)
 
-In order to specify the character speaking, you use the character's code. (From now on, I'll just say "character code.") This is the shorter, abbreviated version of the character's name that you setup before. [href: ##chapter-4]
+In order to specify the character speaking, use the character's code. (From now on, I'll just say "character code.") This is the shorter, abbreviated version of the character's name that you setup before. [href: ##chapter-4]
 
 (break)
 
@@ -808,7 +817,7 @@ Now that you have the character code written inside the brackets, you need to sp
 
 (break)
 
-Now you just have to write the words that you have been wanting to write this whole time while you have been reading this chapter. The dialogue should now appear as a larger, bold line of text split from the rest of your text. If something went wrong, study this example.
+Now you just have to write the words that you have been wanting to write while you have been reading this chapter. The dialogue should now appear as a larger, bold line of text split from the rest of your text. If something went wrong, study this example.
 
 [text:
 (break)
@@ -832,22 +841,22 @@ subtitle = Using character information in your written work
 
 <text>
 
-You may have already discovered how difficult it is to write a story without using character names or pronouns. This chapter discusses the second most important part of the DDTXT, character references. These allow you to insert character information and pronouns directly into your document. These "references" all point back to the character node that you created earlier.
+You may have already discovered how difficult it is to write a story without using character names or pronouns. This chapter discusses the second most important part of the DDTXT, character references. These allow you to insert character information and pronouns directly into your document. These "references" all point back to the character node(s) that you created earlier.
 
 (break)
 
 The DDTXT language requires you to make your writing abstract. Instead of writing character information directly, you place references, which pull from the character node (and pronouns subnode) that you made earlier. These references can be used anywhere that the DDTXT language is used. They will require you to think about language differently, but you should get the hang of it quickly. Let's take a look at this example drawing on the "story" from Chapter 5 [href: ##chapter-5].
 
-[note: "To answer your question, HER name is ELIZABETH. SHE IS a CATAPULT."]
+[translated: To answer your question, HER name is ELIZABETH. SHE IS a CATAPULT.]
 
-All of the CAPITALIZED words are character information that needs to be converted to character references for a character with the code "example1":
+All of the CAPITALIZED words are character information that needs to be converted to character references. Let's look at what it looks like to convert these words to references for a character with the code "example1":
 
 // If you are reading this in the editor (you are) than ignore the dollar signs. They are just so that reader can read it correctly.
-[note: To answer your question, $=example1 name is $@example1. ${example1 a $~example1.]
+[text: To answer your question, $=example1 name is $@example1. ${example1 a $~example1.]
 
 (When this text gets converted to the finished version by the parser, it looks like this).
 
-[note: To answer your question, =example1 name is @example1. {example1 a ~example1.]
+[translated: To answer your question, =example1 name is @example1. {example1 a ~example1.]
 
 These words that start with special symbols are character references and the symbols are "reference symbols." You are probably confused by the abstract language, but I will go over each type of reference symbol and give you plenty of usage examples.
 
@@ -897,25 +906,25 @@ Let's take the example from earlier, but let's substitute a subject pronoun for 
 
 This reference symbol grabs the character's object pronoun. This is the pronoun that refers to actions happening to or toward someone. In technical terms, this is used for direct and indirect pronouns. (This is the "object" pronoun that you set when making the character.)
 
-[text: #<example1 went to the store to buy food for #>example2.]
+[text: Since #@example2 was hungry, #@example1 went to the store to buy food for #>example2.]
 
-[translated: <example1 went to the store to buy food for >example2.]
+[translated: Since @example2 was hungry, @example1 went to the store to buy food for >example2.]
 
 (horizon)
 
 [ref: #*]
 
-This reference symbol is used for reflexive actions that characters perform to themselves (feeding yourself, cleaning yourself, ect...). (This is the "reflexive" pronoun that you set up when making the character.)
+This reference symbol is used for reflexive actions that characters perform to themselves (feeding themselves, cleaning themselves, ect...). (This is the "reflexive" pronoun that you set up when making the character.)
 
-[text: #<example was glad she could cook for #*example.]
+[text: #<example was glad #<example could cook for #*example.]
 
-[translated: <example1 was glad she could cook for *example1.]
+[translated: <example3 was glad <example3 could cook for *example3.]
 
 (horizon)
 
 [ref: #~]
 
-This reference symbol is used for describing what the character generally is. This is a trickier concept, as explained previously [href: ##chapter-5]. (This is the "instance" pronoun that you set up when making the character.)
+This reference symbol is used for describing what (not who) the character generally is. This is a trickier concept, as explained previously [href: ##chapter-5]. (This is the "instance" pronoun that you set up when making the character.)
 
 [text: This is #@example, who is a #~example.]
 
@@ -925,17 +934,17 @@ This reference symbol is used for describing what the character generally is. Th
 
 [ref: #{]
 
-This reference symbol places a present "passive verb" (She is, he is, they're, ect...). You can use a "#<" and an "is", however this can break with the subject pronoun "they." (This is the "present" pronoun that you set up when making the character.)
+This reference symbol places a present passive verb (she is, he is, they are, ect...). You can use a "#<" and an "is", however this can break with the subject pronoun "they." (This is the "present" pronoun that you set up when making the character.)
 
 [text: You know how #{example...]
 
 [note: These are all made using the same reference symbol with different characters.]
 
-[translated: You know how {example1.]
+[translated: You know how {example1...]
 
-[translated: You know how {example3.]
+[translated: You know how {example3...]
 
-[translated: You know how {example2.]
+[translated: You know how {example2...]
 
 (horizon)
 
@@ -943,7 +952,7 @@ This reference symbol places a present "passive verb" (She is, he is, they're, e
 
 This reference is the same as the previous type except it is the condensed contraction version. (She's, he's, they're, ect...) (This is the "presentCompacted" pronoun that you set up when making the character.)
 
-[text: #}example going to the store right now.]
+[text: I know that #}example going to the store right now.]
 
 [translated: I know that }example3 going to the store right now.]
 
@@ -955,7 +964,7 @@ This reference is the same as the previous type except it is the condensed contr
 
 [ref: #+]
 
-This reference grabs the character name and adds the apostrophe and an "s" ('s) to turn the name into a possessive adjective. This is functionally identical to the possessive pronoun (accessed with the = symbol), however it is more specific.
+This reference grabs the character name and adds the apostrophe and an "s" ('s) to turn the name into a possessive adjective. This is functionally identical to the possessive pronoun (accessed with the #= symbol), however it is more specific. If you use the regular possessive pronoun, the reader may have forgotten who you mean, but if you use this reference symbol, the reader will be reminded with the character's name.
 
 [text: It was #+example idea.]
 
@@ -963,7 +972,7 @@ This reference grabs the character name and adds the apostrophe and an "s" ('s) 
 
 (horizon)
 
-You are probably still confused about this more abstract language, but I strongly suggest that you learn to translate the following passages. When you think that you understand the passages' meaning, highlight the mostly invisible (I used a character style from an upcoming chapter) translated passage underneath to check your answer.
+You are probably still confused about this more abstract language, but I strongly suggest that you practice by translating the following passages. When you think that you understand the passages' meaning, highlight the mostly invisible translated passage underneath to check your answer.
 
 [note: Here are the two characters featured in these passages.]
 
@@ -991,6 +1000,8 @@ Subject | <example5
 
 [text: #@example4 had to do #=example4 chores. There were lots of dishes in the sink and #<example4 knew that it would only get worse.]
 
+// (I used a character style from an upcoming chapter.)
+
 [hardToRead1: @example4 had to do =example4 chores. There were lots of dishes in the sink and <example4 knew that it would only get worse.]
 
 (divide)
@@ -1014,7 +1025,7 @@ subtitle = (I might also refer to this as "notation.")
 
 <text>
 
-There is a built-in shorthand system that you can use to save you typing time.
+There is a built-in, codeless shorthand system that you can use to save you typing time.
 
 (break)
 
@@ -1026,7 +1037,7 @@ Once you have specified a character code in an initial character reference, you 
 
 Here is an example passage that greatly utilizes shorthand.
 
-[text: #@example4 woke up and looked out of #= window. #< got out of bed and walked downstairs to make #* breakfast. It was difficult for #> to eat in the morning because #< had very little appetite during these hours. #< was much more of a lunch kind of #~.]
+[text: #@example woke up and looked out of #= window. #< got out of bed and walked downstairs to make #* breakfast. It was difficult for #> to eat in the morning because #< had very little appetite during these hours. #< was much more of a lunch kind of #~.]
 
 [translated: @example4 woke up and looked out of = window. < got out of bed and walked downstairs to make * breakfast. It was difficult for > to eat in the morning because < had very little appetite during these hours. < was much more of a lunch kind of ~.]
 
@@ -1061,7 +1072,7 @@ Consider the following example of formatted text.
 
 [note: "5 #+ 3 #= 8"]
 
-The above text will be interpreted as two character references. Since there is no character code given, it will be interpreted as codeless shorthand, which defaults to the last used character. Two pronouns will be plugged in here and this addition problem will be turned into something unintelligible like this.
+The above text will be interpreted as two character references. Since there is no character code given, it will be interpreted as codeless shorthand, which defaults to the last used character. Two pronouns will be plugged in here and this math equation will be turned into something unintelligible like this.
 
 [translated: 5 +example2 3 =example1 8]
 
@@ -1094,9 +1105,9 @@ In order to see all of these properly in your DDTXT, you would have to use a lot
 
 Instead of breaking your number 3 / hashtag key,
 // (seriously)
-$ use the dollar sign symbol. (I am not sure if this will be accessible internationally.) The dollar sign tells the parser to skip past the following word entirely.
+$ use the dollar sign symbol. (I am not sure if this will be readily accessible internationally.) The dollar sign tells the parser to skip past the following word entirely.
 
-[note: In-Text DDTXT Commands can still be triggered within these words! This is not an intentional feature, although it does not get in the way, so it will likely stay that way.]
+[note: In-Text DDTXT Commands can still be triggered within these words! This was not originally an intentional feature, although it does not get in the way, so it will likely stay that way.]
 
 (You can learn about DDTXT In-Text Commands more in the next chapter [href: ##chapter-11].)
 
@@ -1139,7 +1150,7 @@ $ clarification and editing.
 
 (break)
 
-The DDTXT parser (and HTML parser) remove extra space, which means that just adding an extra space at the beginning of the line will not do anything.
+The DDTXT parser (and HTML parser) remove extra spaces, which means that just adding an extra space at the beginning of the line will not do anything.
 
 (break)
 
@@ -1166,7 +1177,7 @@ subtitle = Special commands to use to format your DDTXT
 
 <text>
 
-There are some things that require special keywords, which perform specific actions. These commands will help tremendously. All of these commands must be written inside parentheses, however there is nothing special about these parentheses unless one of these keywords is used. (For example, this does not trigger any action.)
+There are some things that require special keywords, which perform specific actions. These commands will help improve the display of your document. All of these commands must be written inside parentheses, however there is nothing special about these parentheses unless one of these keywords is used. (For example, this does not trigger any action.)
 
 // Look, here is one of these commands:
 
@@ -1174,7 +1185,7 @@ There are some things that require special keywords, which perform specific acti
 
 [command: (left parenthesis)break(right parenthesis)]
 
-This will split your text apart. By default, this will leave space in between your text, but you can change this by setting the "break" property within the global style subnode. (You can also make this longer.)
+This will split your text apart. By default, this will leave space in between your text, but you can change this by setting the "break" property within the global style subnode [href: ##chapter-15].
 
 [command: (left parenthesis)divide(right parenthesis)]
 
@@ -1293,7 +1304,7 @@ The same principle applies to the document name. Here is what that looks like.
 
 [text:
 (break)
-$<global>
+#<global#>
 (break)
 #// Character's Exciting Day!
 (break)
@@ -1313,23 +1324,25 @@ $</global>
 <chapter>
 
 name = DDTXT Hyperlinks
-subtitle = A tool to be used occasionally (no link spamming)
+subtitle = A tool to be used occasionally (No link spamming!)
 
 <text>
 
-You can opt to include one of more of two kinds of links in your DDTXTs. To create a link, simply create a dialog entry with the character code "href". The link address will be the spoken words that write after the colon.
+You can opt to include one of two kinds of links in your DDTXTs. To create a link, simply create a dialog entry with the character code "href". The link address will be the spoken words that write after the colon.
 
 [text: (left bracket)href: LINK (right bracket)]
 
-The link address can, of course, be to an external website. If you do this, you will likely want to place a dollar sign directly before the link to have the parser skip over any DDTXT symbols that might naturally occur within the link. It is also good practice to leave a space after the link to signify when the link stops and the end bracket is placed. These links will show the full address. Because of the nature of hashtags in the DDTXT language, you will need to convert all single hashtags to double hashtags so as to not lose them.
+The link address can, of course, be to an external website. If you do this, you will likely want to place a dollar sign directly before the link to have the parser skip over any DDTXT symbols that might naturally occur within the link. It is also good practice to leave a space after the link to signify when the link stops and the end bracket is placed. Because of the nature of hashtags in the DDTXT language, you will need to convert all single hashtags to double hashtags so as to not lose them. Links to external websites will show the full address.
 
-[text: (left bracket)href: #$https://www.w3.org/wiki/CSS/Properties/color/keywords(hashtag)Basic_Colors (right bracket)]
+[text: (left bracket)href:
+// The first dollar sign is literalized, so the second dollar sign is actually functionalized.
+#$$https://www.w3.org/wiki/CSS/Properties/color/keywords#Basic_Colors (right bracket)]
 
 However, you can also include links to other parts of your document. This is especially useful for tutorials (like this DDTXT), where it's useful to refer to recursively interconnected chapters. To do this, start the link address with two hashtags $(##). Then, write "chapter-" followed by the chapter number you want the link to go to. This number will be the order that the chapters appear in the finished document, from 1 to however many chapters you have. (If you have the table of contents enabled, you can use the numbers provided for each chapter there.)
 
 [text: (left bracket)href: ####chapter-1(right bracket)]
 
-The above link takes you to the beginning of the document.
+The above link would take you to the beginning of the document.
 
 (break)
 
@@ -1354,16 +1367,16 @@ Before we discuss how to set your characters' styles, we should discuss good pra
 
 [note: READABILITY IS IMPORTANT!]
 
-For example, read the next part about an important feature of styles:
+For example, read the next part about an important feature of styles.
 
 // This text is supposed to be almost invisible on the background. (Dark on dark)
 [hardToRead1: Text that is difficult to read is almost useless.]
 
-Did you read that? Accessibility to your readers is of the utmost importance! This next example is fairly readable to non-colorblind people reading from brighter screens, although this could become an issue for readers who struggle to distinguish these colors:
+Did you read that? Accessibility to your readers is of the utmost importance! This next example is fairly readable to non-colorblind people reading from brighter screens, although this could become an issue for readers who struggle to distinguish these colors. If people have to highlight your text to read it, you need to fix your styling.
 
 [hardToRead2: Colors of medium readability can be the trickiest to diagnose and adjust. It's important to be able to determine when to increase the contrast of your document.]
 
-You should probably also try to avoid adding too many colors, as this will be annoying to your readers:
+You should probably also avoid adding too many colors, as this will be annoying to your readers.
 
 [hardToRead3: I bet you can read this now!!]
 
@@ -1383,7 +1396,7 @@ Really, this is all theory, so use your best judgement. Ideally, you should have
 
 (divide)
 
-It is time to discuss a new type of subnode. The style subnode tells your browser how to display dialogue spoken by your character. There are currently four different properties. Each of these properties, unless otherwise stated, uses CSS.
+It is time to discuss a new type of subnode, the style subnode. Within a character node, a style subnode tells your browser how to display dialogue spoken by your character. There are currently four different properties in character style subnodes. Each of these properties, unless otherwise stated, uses CSS values.
 
 (break)
 
@@ -1395,15 +1408,19 @@ CSS contains a plethora of predefined colors for you to use. These can be used b
 
 (break)
 
-You can find a list of CSS colors here: [href: https://www.w3.org/wiki/CSS/Properties/color/keywords##Basic_Colors]. If this link becomes obsolete, you should be able to find other CSS resources online.
+You can find a list of CSS colors here: [href: $https://www.w3.org/wiki/CSS/Properties/color/keywords#Basic_Colors]. If this link becomes obsolete, you should be able to find other CSS resources online.
 
 (break)
 
-You can also choose an exact color using the RGB color system, which stands for Red, Green, and Blue. Color pickers allow you to select a color from an interactive color wheel and then read the corresponding RGB numbers. (You should be able to find online color pickers.) To use these numbers, start the value with "rgb(". Then write the numbers as a comma seperated list. Finally, close the parentheses. It should look something like this: "rgb(255, 127, 63)".
+You can also choose an exact color using the RGB color system (RGB stands for Red, Green, and Blue). Color pickers allow you to select a color from an interactive color wheel and then read the corresponding RGB numbers. You should be able to find online and offline color pickers, as they are a common tool of anyone who works with digital colors. To use these numbers, start the color with "rgb(" exactly. Then write the RGB numbers as a comma seperated list in the order of the acronym: Red, then Green, followed by Blue. Finally, close the parentheses. It should look something like this: "rgb(255, 127, 63)".
 
 (break)
 
-(This paragraph is for people who are already familiar with the RGB system and the idea of hexadecimal numbers.) By the way, a hexadecimal color is an RGB value combined to form six hexadecimal digits back to back. The first two are the red component, from 0 (00) to 255 (FF). The middle two are the green component, and the final two are the blue component. (Alpha / opacity would be represented by an additional two digits if the color is actually an RGBA color.) For example, the color "32, 127, 161" becomes "##207FA1". (Hex colors usually are written with a hashtag at the beginning.)
+(The next two paragraphs are for people who are already familiar with the RGB system and the idea of hexadecimal numbers.) By the way, a hexadecimal color is an RGB value combined to form six hexadecimal digits back to back. The first two are the red component, from 0 (00) to 255 (FF). The middle two are the green component, and the final two are the blue component. (Alpha / opacity would be represented by an additional two digits if the color is actually an RGBA color.)
+
+(break)
+
+For example, the color "32, 127, 161" becomes "##207FA1". Hex colors usually are written with a hashtag at the beginning, although you only need to type one hashtag since properties are set outisde of text nodes. You should be able to also use hex color notation as a color value in place of an "rgb(X, Y, Z)" color.
 
 [note: If you would like to use the default value that the document would apply naturally, use the CSS keyword "inherit". This results in the same default color that you would get by not specifying a color, but it could let others know that you really meant to not specify a color. It's up to you.]
 
@@ -1413,15 +1430,15 @@ Here are the properties that control dialogue display in your document.
 
 [prop: color]
 
-This is the color of the text that your character speaks in dialogue and the color of their name that appears next to their words. If not specified, this will default to the main color of text throughout the rest of the document. For more information on the color of text, visit the $<global> $<style> subnode documentation here: [href: ##chapter-18]
+This is the color of the text that your character speaks in dialogue and the color of their name that appears next to their words. If not specified, this will default to the main color of text throughout the rest of the document. For more information on the color of text, visit the $<global> $<style> subnode documentation here: [href: ##chapter-18].
 
 [prop: backgroundColor]
 
-You can choose to set a background color for your character's dialogue. I would recommend using colors of subtle difference to the main document, if any background color at all. If you do this, I would also recommend setting the character's dialoguePadding property. (See below.)
+You can choose to set a background color for your character's dialogue. I would recommend using colors of subtle difference to the main document, if any background color at all. If you choose to set this, I would also recommend setting the character's dialoguePadding property. (See below.)
 
 [prop: paragraphColor]
 
-You can also choose to set the color of the character's spoken words a different color than the color of the character's name in the dialogue snippet. This should be a shade different from the character's main color, if different at all.
+You can also choose to set the color of the character's spoken words a different color than the color of the character's name in the dialogue snippet. This should probably be a shade different from the character's main color, if different at all.
 
 [prop: dialoguePadding]
 
@@ -1457,11 +1474,11 @@ subtitle = Creating a style for your entire document
 
 <text>
 
-The same ideas behind character styling apply to styling the rest of your document. Visibility and accessibility should be the focus of styling your document since this covers paragraph text, which is smaller than character dialogue. Just like in characters, document styling is done in a style subnode. To set global styling properties, create a style subnode within the global node [href: ##chapter-3], which you should have already made.
+The same ideas behind character styling apply to styling the rest of your document. Visibility and accessibility should especially be the focus of styling your document since this covers paragraph text, which is smaller than character dialogue. Just like in character nodes, document styling is done in a style subnode. To set global styling properties, create a style subnode within the global node [href: ##chapter-3], which you should have already made.
 
 (break)
 
-The values for color properties here should be CSS colors. [href: ##chapter-14] Values in other forms will be noted and emphasized.
+The values for color properties here should be CSS colors [href: ##chapter-14]. Values in other forms will be noted and emphasized.
 
 [prop: color]
 
@@ -1483,7 +1500,7 @@ This is the color of your document's title. In this document, the titleColor is 
 
 [prop: divide]
 
-[note: This property takes words or a phrase as input.]
+[note: This property takes words or a phrase as input. This text is not interpreted in the DDTXT format, which means that you can use symbols without literalizing them.]
 
 This is the text that is used as a division between sections upon being called through the in-text keyword "divide". This can be made up of any text characters, including spaces. The default value is $"~~~", which uses aesthetically pleasing tildes to break apart your DDTXT. This document uses $"---~~~---", which extends these tildes.
 
@@ -1793,7 +1810,7 @@ Por ejemplo, cuando se escribe DDTXTs en español, el languaje DDTXT no puede ca
 
 (break)
 
-Una solución es poner las referencias posesivas inmediatamente dentro de los adjetivos porque el languaje DDTXT puede leer las referencias dentro de estas palabras adjetivas:
+Una solución es poner las referencias posesivas inmediatamente dentro de los adjetivos porque el languaje DDTXT puede leer las referencias dentro de estas palabras:
 
 [text: "#@ejemplo es aburrid#=example." $--> "#@ejemplo es aburrid#="]
 
@@ -1815,7 +1832,7 @@ For example, you may occasionally find that a character reference's translation 
 
 [translated: @example1 ran out of groceries. (<example1 went to the store.)]
 
-Even though the phrase in parentheses is a new sentence, the second reference is not capitalized because parentheses are often used for information inside of sentences. This example combines these two sentences to get rid of this problem.
+Even though the text in parentheses is a new sentence, the second reference is not capitalized because parentheses are often used for information inside of sentences. This example combines these two sentences to get rid of this problem.
 
 [translated: @example1 ran out of groceries (so < went to the store).]
 
@@ -1898,11 +1915,11 @@ There are two possible causes of the DDTXTReferenceError. Both of these causes w
 
 [text: #@exmple was glad to be #@example.]
 
-The above example features a typo initially that is fixed by the second reference. This require a simple typo fix. The other cause is a little more subtle.
+The above example features a typo initially that is fixed by the second reference. This requires a simple typo fix. The other cause is a little more subtle.
 
 [text: #@ was glad to be #@.]
 
-If you place this shorthand after a previous character reference, this work perfectly fine. However, if you place this before any explicit character references (which specify the character code), then you will get the following error message.
+If you place this shorthand after a previous character reference, this will work perfectly fine. However, if you place this before any explicit character references (which specify the character code), then you will get the following error message.
 
 [note: DDTXTReferenceError: There was an attempt to use shorthand with no previous character to go by! Please reference a character at least once before using this shorthand.]
 
@@ -2012,7 +2029,7 @@ I've explained a lot throughout this document, from rigid requirements to loose 
 (break)
 
 Here are some general tips to leave you with:
-(break)(em dash) If you are getting stuck with an intricate, detailed problem, either move on for now or give up and find a work around.
+(break)(em dash) If you are getting stuck with an intricate, detailed problem, either move on for now or give up and find a work-around.
 (break)(em dash) If you write in linear order, have a writing notes section at the beginning of your document. When you have ideas, write them in author comments here so that you can come back to these ideas later.
 (break)(em dash) If you unsure of a word's spelling or meaning, write it in ALL CAPS or put a comment starting with the word "ISSUE" above it.
 
@@ -2027,8 +2044,8 @@ Then, later on, you can change the word:
 [translated: @example4 felt invisible to the world.]
 
 (em dash) Refresh your final document frequently. If you have problems, this will reduce the amount of added text you have to be suspicious of.
-(break)(em dash) Pay attention to storytelling in shows, movies, and books. The more tropes you recognizes, the more you can use them or break from them.
-(break)(em dash) If you don't know how something in DDTXTs works, experiment with it and you should find out.
+(break)(em dash) Pay attention to storytelling in shows, movies, and books. The more tropes you recognize, the more you can use them or break from them.
+(break)(em dash) If you don't know how something in the DDTXT language works, experiment with it and you should find out.
 
 (break)
 
