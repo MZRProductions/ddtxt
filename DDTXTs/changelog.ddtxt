@@ -1,0 +1,71 @@
+<!DOCTYPE DDTXT>
+
+<global>
+
+name = DDTXT Reader Changelog
+author = MZRProductions (Michael Rumpff)
+
+</global>
+
+<character>
+
+code = listPoint
+name = (break)(em dash)
+
+</character>
+
+<chapter>
+
+name = Pre-Release
+subtitle = #< v1.0
+
+</chapter>
+
+<chapter>
+
+name = v0.2.0
+subtitle = Bug fixes and polishing
+
+<text>
+
+@listPoint Fixed ## and #$ literalizing symbols
+@ Added DDTXTs folder
+@ Added unfinished sample story cookout.ddtxt
+@ Finished DDTXT Writing Tutorial
+@ Updated READMEs
+@ The editor no longer gets stuck open when reading the document summary
+@ Links to other document chapters now require two hashtags ((left bracket)href: ##chapter-1(right bracket) $--> (left bracket)href: ####chapter-1(right bracket)) due to changed hashtag rules
+@ Casting a character into existence now requires two hashtags ((left bracket)##Magic Voice: Hello, world!(right bracket) $--> (left bracket)####Magic Voice: Hello, world!(right bracket)
+@ Added (left parenthesis)dollar sign) command officially and (left parenthesis)hashtag) command from scratch
+@ Unicode characters should be supported now, including the em dash ((em dash))
+@ Added this changelog!
+@ Chapter titles now have more space between them and previous chapter text.
+@ The document background is now correctly all the same color when the editor is open.
+@ The document progress statistic now goes from 0.0% to 100.0% instead of less or more.
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = v0.1.0
+subtitle = Almost a version
+
+<text>
+(Added in this edition means originally included.)
+@ Added $<global>, $<character>, and $<chapter> nodes
+@ Added $<style>, $<pronouns>, $<text> subnodes
+@ Added character references
+@ Added DDTXT commands
+@ Added statistics bar
+@ Added summary box
+@ Added GPL-3.0 License
+@ Added README.txt
+@ Added README.ddtxt
+@ Obvious, but added DDTXT Reader (DDTXTReader.html)
+@ Began writing DDTXT Writing Tutorial
+
+</text>
+
+</chapter>
