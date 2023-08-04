@@ -823,9 +823,19 @@ var clearDDTXT = function () {
 						
 						var htmlDialog;
 						
-						// Formal character name
-						const characterName = (characterCode [0] === "#" || characterCode.toLowerCase() === "href") ? characterCode.substring(1, characterCode.length) : DDTXT.cast.getCharacterByCode(characterCode).name;
-						// If the name begins with a hashtag, that means that it has been casted in, and therefore does not exist. In this case, use the name provided, removing the hashtag at the beginning (substring).
+						// Formal character name seen by readers.
+						var characterName;
+						// Determine character name:
+						if (characterCode.substring(0, 9) === "(hashtag)") {
+							characterName = characterCode.substring(9, characterCode.length)
+						}
+						else if (characterCode.toLowerCase() === "href") {
+							characterName = characterCode.substring(1, characterCode.length)
+						}
+						else {
+							characterName = DDTXT.cast.getCharacterByCode(characterCode).name;
+						}
+						// If the name begins with a hashtag (which at this point has been converted to a DDTXT command), that means that it has been casted in, and therefore does not exist. In this case, use the name provided, removing the hashtag at the beginning (substring).
 						
 						// Proper, formal HTML text:
 						// If the "dialog" is a link, don't format it. Simply return the string as a link that opens in a new tab be default:
