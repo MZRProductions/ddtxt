@@ -126,7 +126,7 @@ name = Frank
 
 <style>
 
-// Full red 
+// Full red would be #FF0000
 color = #FF4040
 // Above color is rgb(255, 64, 64)
 
