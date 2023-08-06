@@ -3,6 +3,7 @@
 // This document has been made as a sample of the capabilities of the DDTXT language.
 // For more information, please see the README in your installation of the DDTXT Reader.
 // If you do not have the reader, then you will not be able to read this document properly.
+// MZRProductions (Michael Rumpff)
 
 <global>
 
@@ -16,14 +17,14 @@ author = MZRProductions
 
 backgroundColor = rgb(36, 18, 54)
 color = white
-headingColor = pink
+headingColor = rgb(245, 81, 118)
 titleColor = lightblue
 
 </style>
 
 <text>
 
-@james and @brandon are spending some quality time together on a national holiday during the summer. However, they discover a strange realm where they gain magic powers. What happens when they realize that they must attend the neighbor's cookout? (Probably not much, but you won't know until you've read it.)
+@james and @brandon are spending some quality time together on a national holiday during the summer. However, they discover a strange realm where they gain magic powers. What happens when they realize that they must attend the picky neighbor's cookout? (Probably not much, but you won't know until you've read it.)
 
 </text>
 
@@ -83,6 +84,114 @@ color = rgb(247, 138, 59)
 </text>
 
 </character>
+
+// EMILY
+
+<character>
+
+code = emily
+name = Emily
+
+<style>
+
+color = lime
+
+</style>
+
+<pronouns>
+
+subject = she
+possessive = her
+object = her
+reflexive = herself
+present = she is
+presentCompacted = she's
+
+</pronouns>
+
+<text>
+
+@emily is good friends with @frank, +james neighbor. {emily is more direct and blunt than @frank. <emily doesn't care about projecting a perfect life, as does @frank, who sees @emily as =frank "wild friend."
+
+</text>
+
+</character>
+
+// FRANK
+
+<character>
+
+code = frank
+name = Frank
+
+<style>
+
+// Full red 
+color = #FF4040
+// Above color is rgb(255, 64, 64)
+
+</style>
+
+<pronouns>
+
+subject = he
+possessive = his
+object = him
+reflexive = himself
+present = he is
+presentCompacted = he's
+
+</pronouns>
+
+<text>
+
+@frank, +james neighbor, is good friends with @emily. <frank is more particular than the rest of = friends. < likes to think that } more proper than the other residents of the neighborhood, with = perfect lawns and = pristine wooden fence. = biggest problem was +james lawn, which was an eyesore and a threat to the community!
+
+</text>
+
+</character>
+
+// IDA
+
+<character>
+
+code = ida
+name = Ida
+
+<style>
+
+color = deepskyblue
+paragraphColor = pink
+// Because she is her highness the unicorn queen, she gets her own background.
+backgroundColor = #501070
+// Above color is rgb(5*16, 16, 7*16)
+dialoguePadding = 1%
+
+</style>
+
+<pronouns>
+
+subject = she
+possessive = her
+object = her
+reflexive = herself
+instance = her highness the unicorn queen
+present = she is
+presentCompacted = she's
+
+</pronouns>
+
+<text>
+
+@ida is an enchanted unicorn from (insert magic realm name here). < serves as  ~ over the citizens of (magic realm name here).
+
+</text>
+
+</character>
+
+
+// BEGINNING OF CHAPTERS
+
 
 <chapter>
 
@@ -280,9 +389,33 @@ subtitle = none
 
 <text>
 
-Violent swells of colorful light and sound enveloped them as they were crudely forced through dimensions.
+Violent swells of colorful light and sound enveloped them as they were crudely forced and
+// (Dropkicking is when you drop something over or near your foot and then kick it before it reaches the ground.)
+$ dropkicked through dimensions.
 
-[#Brandon and James: AAHH!]
+// My standard for multiple characters speaking at once is to use a comma separated list.
+// [##X, Y, and Z: ]
+// If only two characters are speaking, then you would only need "and" between the names.
+// [##X and Y: ]
+
+// (We use two hashtags to specify the literal symbol.)
+[##Brandon and James: AAHH!]
+
+There was either no gravity or as much gravity as they could feel. It mattered very little in that instant. Their livelihood was only tethered to that day by their current flipbook of flight.
+
+[brandon: Don't let go of my hand!!]
+
+[james: (silence)]
+
+[brandon: Alright!?]
+
+[james: O(em dash)...k-ay..!]
+
+[ida: Hello, world!]
+
+[emily: Hello, world!]
+
+[frank: Hello, world!]
 
 </text>
 
@@ -298,3 +431,11 @@ subtitle = Finally, an answer!
 </text>
 
 </chapter>
+
+// Future writing plans:
+
+// After they both get powers, they get really hungry and sick for a night (as their powers develop), which means that they sleep in till really late the following morning.
+
+// They wake up to the doorbell ringing. It's James' neighbor, Emily, reminding James of the cookout later that day.
+
+// At some point, Brandon discovers his powers by running to save James from a temporary boom in the bonfire.
