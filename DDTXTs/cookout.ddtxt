@@ -19,6 +19,10 @@ backgroundColor = rgb(36, 18, 54)
 color = white
 headingColor = rgb(245, 81, 118)
 titleColor = lightblue
+divide = (. . .)
+divideSize = 40
+// Divisions are the same color as headings
+divideColor = rgb(245, 81, 118)
 
 </style>
 
@@ -184,6 +188,113 @@ presentCompacted = she's
 <text>
 
 @ida is an enchanted unicorn from (insert magic realm name here). < serves as  ~ over the citizens of (magic realm name here).
+
+</text>
+
+</character>
+
+<character>
+
+code = king
+name = Gary
+
+<style>
+
+color = deeppink
+paragraphColor = fuchsia
+// "fuchsia" is a weird word
+// Because he is his highness the pig king, he gets his own background.
+backgroundColor = #501070
+// Above color is rgb(5*16, 16, 7*16)
+dialoguePadding = 1%
+
+</style>
+
+<pronouns>
+
+subject = he
+possessive = his
+object = him
+reflexive = himself
+instance = his highness the pig king
+present = he is
+presentCompacted = he's
+
+</pronouns>
+
+<text>
+
+@king inherited = royal status from = marriage with @ida, ~. Now <king serves as ~.
+
+</text>
+
+</character>
+
+<character>
+
+// ROYAL BRANDON AND JAMES
+
+<character>
+
+code = royal-james
+name = James
+
+<style>
+
+color = rgb(247, 138, 59)
+paragraphColor = sandybrown
+// Because James has been made royal, they now get their own background.
+backgroundColor = #501070
+// Above color is rgb(5*16, 16, 7*16)
+dialoguePadding = 1%
+
+</style>
+
+<pronouns>
+
+instance = their highness
+
+</pronouns>
+
+<text>
+
+(This is the royal version of @james. Refer to +james entry.)
+
+</text>
+
+</character>
+
+<character>
+
+code = royal-brandon
+name = Brandon
+
+<style>
+
+color = rgb(50, 155, 252)
+paragraphColor = cornflowerblue
+// Because Brandon has been made royal, he now gets his own background.
+backgroundColor = #501070
+// Above color is rgb(5*16, 16, 7*16)
+dialoguePadding = 1%
+
+</style>
+
+<pronouns>
+
+subject = he
+possessive = his
+object = him
+reflexive = himself
+instance = his highness
+present = he is
+presentCompacted = he's
+
+</pronouns>
+
+<text>
+
+(This is the royal version of @brandon. Refer to +brandon entry.)
 
 </text>
 
@@ -411,11 +522,117 @@ There was either no gravity or as much gravity as they could feel. It mattered v
 
 [james: O(em dash)...k-ay..!]
 
-[ida: Hello, world!]
+The screeching crackle sounds resonating in the nothing were getting louder and louder.
 
-[emily: Hello, world!]
+[james: Wha-t i...s tha...t.?]
 
-[frank: Hello, world!]
+[brandon: Hold...on.!]
+
+The sounds reached a climax as they were squeezed through an omnipresent vortex.
+
+(divide)
+
+When they woke up, they were really sore.
+
+[brandon: Oww...]
+
+@brandon sat up and looked at = surroundings. @james was still on = side on the ground.
+
+[james: Are we out of there?]
+
+[brandon: I think so...]
+
+@james sat up and looked around too. The landscape was flat and glittery, with pockets of scattered, vivid colors.
+
+[james: Look below!]
+
+They were on a path made of color-changing grass. The grass shifted between waves of orange, yellow, and red.
+
+[brandon: Wow. Did we hit our heads..?]
+
+[james: Look, over there.]
+
+@brandon looked where @james was pointing. There was a strange creature walking toward them. As the creature approached closer, they could see that the creature was somewhat indigo, somewhat purple, with a light blue mane and tail, like a horse.
+
+[james: What do you think is about to happen?]
+
+@brandon got up and stood looking toward the unfamiliar creature, who was now only a few feet away. The creature was slightly shiny and iridescent, radiating a warm glow.
+
+[brandon: Who are you?]
+
+As @james was standing up, the creature, now clearly visible as a unicorn, stopped in front of them.
+
+[ida: Please, you must come with me for your induction ceremonies!]
+
+[james: Ex(em dash)excuse me?]
+
+[ida: Pardon my impoliteness. I am @ida, ~. ~king, @, and I govern this widespread land.]
+
+[brandon: Does this have anything to do with my line of frisbees?]
+
+[james: @brandon! Your royal highness (bow), we apologize for not addressing your properl-]
+
+[ida: Don't worry about it. You both can just call me @ida.]
+
+[james: (unbow) Really.? Thank you.]
+
+[ida: We chose you as the best candidates for helping our governing reach further.]
+
+[brandon: I've always thought I would do well with authority.]
+
+[james: I will work to live up to my role!]
+
+[ida: Well, it's good to hear that you are ready and willing to accept your positions. I'll carry you to the royal palace.]
+
+@ida lowered = back and waited for them to take their seat. @james went first, followed by @brandon. Once they were both ready, @ida stood back up and began walking down the path.
+
+(divide)
+
+They took the walking time to introduce themselves to each other, although now they could see the royal palace in the distance. It was a beautiful structure, even taller than it was wide. Its composition was colorful and inventive yet tasteful. Its smooth, flowing, semi-hollow architecture was inspired.
+
+(break)
+
+@james was gently stroking +ida glowing mane, which was soft and fluffy.
+
+[james: Is that where you both live? It's so incredible..!]
+
+[brandon: Do we get to live here?]
+
+[ida: You can visit anytime, although we are going to build your own palace for you to rule from.]
+
+[brandon: That's awesome.]
+
+[james: I don't know what we'll do with an entire palace... That's a lot for us.]
+
+[brandon: (whisper) Shh... Take the win...]
+
+[ida: You'll get used to royal life.]
+
+[brandon: Think of what this will do for my brand!]
+
+[james: All of your promoters are back in the real world. Nobody here knows anything about you..]
+
+[brandon: We'll work on that.]
+
+After a couple minutes, they were greeted by royal assistants, who were pigs or unicorns.
+
+[##Royal Assistant 1: Greetings your highness! We have a lift prepared for your final approach.]
+
+[##Royal Assistant 2: Please step here, your highness.]
+
+[##Royal Assistant 3: Are you bringing the creatures inside the palace, your highness?]
+
+[ida: Indeed, I am. One shall not question my word.]
+
+[##Royal Assistant 3: Certainly not, your highness. I humbly ask for your forgiveness.]
+
+[ida: The question was not out of place, however, I have only the loftiest of hopes for these two creatures.]
+
+@ida stepped onto a golden platform pushed by the royal assistants. They were pushed through the entrance gate and toward the palace elevator, which carried them to the royal penthouse.
+
+[ida: Up here are the royal quarters, which is where we live and gaze upon our kingdom.]
+
+// Remember when this story was about a summer cookout?
 
 </text>
 
@@ -428,6 +645,436 @@ subtitle = Finally, an answer!
 
 <text>
 
+After a few seconds, the elevator stopped at the penthouse. It was quite tall and open, almost in a foreboding way. The walls were a deep, rich red with a gold and wood trim. The floor was a soft and luxurious purple carpet. The furniture was impossibly elegant and glittery on the edges. The entire left side of the room was an open-air window looking out to the countryside.
+
+[ida: Honey! I'm back.]
+
+[king: Hello, dear. AH! What has happened to these poor fellows?]
+
+~king was quite a hefty, rotund pig. < waddled a bit as < came toward them. Just like @ida, ~king was glowing and glittery too, although = exterior was mostly a bright orange.
+
+[ida: Nothing, sweetie. They are naturally this way.]
+
+[king: Oh! My apologies. We don't see many residing in your bodily form around here.]
+
+[james: It's okay... We were also a bit taken aback too when we first came to your kingdom.]
+
+[king: Excuse me.?]
+
+[ida: (whisper) Look, while I'm more understanding of your(em dash)natural...condition(em dash)others won't take too kindly to that kind of talk.]
+
+[james: Nevermind.]
+
+[king: My name is @king.]
+
+[james: I'm @james and this is @brandon.]
+
+[brandon: Hey. It's quite a nice place you have here.]
+
+[king: Oh, thank you! Come on, I'll give you two a tour of the whole place.]
+
+They walked through their expansive living room to their dining room, their library, their spa, and their guest bedroom. All rooms were equally superfluous in their luxury.
+
+(break)
+
+After the tour, they all went to the dining room, where lunch was being served. They feasted on the diverse nutrition given to them by the royal kitchen.
+
+[king: Isn't the bread lovely?]
+
+[james: This is delicious, although isn't this a lot?]
+
+[brandon: Come on! Live a little. Enjoy the food.]
+
+[ida: You're royalty now.]
+
+[king: Wait until you discover your royal superpowers. You'll be hungry tonight..!]
+
+[ida: They come from a land where grass is always green and there are great, big plants all around! That must be quite spectacular.]
+
+[king: Especially when combined with more creatures of your kind.]
+
+After they finished the first few courses, the waiters brought out two cakes. They were of completely different sizes, the larger cake being made for @king.
+
+[king: I usually don't share, but as a declaration of goodwill, I would like to offer you each a bite of my cake.]
+
+[james: Thank you!]
+
+[brandon: See, @james, we'll get to eat as much cake as we want!]
+
+The two of them had a sample bite each of the larger cake, which was decadent. After they were done, @ida grabbed a big spoon and began feeding @king.
+
+[ida: Aw... Sweetie.. Do you like this cake?]
+
+[king: Yes, honey. I love it when you help me eat my cake.]
+
+[ida: I know... I love my piggy-blimp!]
+
+[king: Wee!]
+
+[brandon: (whisper) What's going on.?]
+
+[james: (whisper) I guess this is what kings and queens do here?]
+
+[ida: Oh, I hope that we're not making you uncomfortable.]
+
+[king: (burp) Oh!]
+
+[james: No, not at all.]
+
+[ida: Please, finish up your food. We are going to your coronation soon!]
+
+[james: What's going on here?]
+
+[brandon: I don't know, but I like the attention we're getting here.]
+
+[james: This is all happening so fast...]
+
+@brandon looked toward @james and gave an assuring look.
+
+[brandon: This is all meant to be.]
+
+(divide)
+
+After finishing the meal, the four of them traveled to the ceremonial platform near the bottom of the palace. Below, there were thousands of spectators, cheering and eagerly awaiting their new celebrities. @brandon was getting a huge rush from the crowd of citizens, both unicorns and pigs.
+
+[brandon: I haven't had this much publicity since my book tour.]
+
+[james: I forgot that you wrote that book.]
+
+[brandon: Writing's for suckers.
+// (That's not true.)
+I had other people write based off of my stories.]
+
+[james: You know, you're not supposed to say that out loud. Critics usually frown on that.]
+
+[brandon: Eh... Nobody here will ever be able to read that book anyway.]
+
+[ida: You can have all the writers you want now.]
+
+[james: You overheard that?]
+
+[ida: Most of our royal actions are done by other people. We still take the credit, but people know that we really just delegated.]
+
+[james: That sounds awful..]
+
+[ida: It's just tradition. There's too much to do as a royal individual. You have to use your loyal assistants as extensions of yourself.]
+
+[brandon: Don't worry, @james. I'll teach you how to delegate.]
+
+The two of them were called forward by an official holding two crowns.
+
+[##Official: My, @ida really is looking for anyone to govern that region.]
+
+[brandon: What?]
+
+[##Official: How will these crowns fit on your heads? I've never seen heads like that before!]
+
+[brandon: They'll fit(em dash)and this kind of talk won't fly in my lands!]
+
+[james: We get crowns..?]
+
+[brandon: Well, of course! Haven't you always wanted this?]
+
+[james: Not really. This is so much responsibility! And besides, what good will any of this do for my life goals?]
+
+[##Official: (whispering to themselves) Wait till they both see what they're getting into...]
+
+[brandon: Don't get so existential! We are a big deal now! Life is only going to get better for us.]
+
+The royal official placed a blue crown on +brandon head. @ blushed at the fame and exposure = crown would bring.
+
+[royal-brandon: Hell yeah.]
+
+Then, the official placed an orange crown on +james head. Originally, @ thought it was all silly, but the physical crown on = head made everything seem perfect. This was the place to be, and this life became much more appealing, even in its hyper-luxury.
+
+[royal-james: @brandon, this was meant to be!]
+
+[royal-brandon: There you are. I was wondering how long it would take.]
+
+[royal-james: Oh, this is wonderful!]
+
+[ida: See? Isn't this worth it?]
+
+[royal-james: I love this feeling! I want to address my citizens.]
+
+[royal-brandon: Your citizens?]
+
+[royal-james: Our citizens. Come on, let's both say something.]
+
+They walked over to the elaborate stone railing surrounding the platform.
+
+[royal-brandon: Hey, everybody!]
+
+[royal-james: We're so grateful to become a part of your royalty!]
+
+[royal-brandon: We can fix all of your problems!]
+
+[royal-james: Wait, I don't think that's realistic..]
+
+[royal-brandon: (whisper) But, false promises are the backbone of success in branding. What else can we say to stir up the crowd?]
+
+[royal-james: (whisper) Why do we need to stir up the crowd? I'm not going to lie to our kingdom!]
+
+[royal-brandon: Don't you want to be a star like me?]
+
+A royal assistant burst through the door leading into the main palace and whispered some words to @ida and @king. Both of their faces immediately turned sour. They motioned toward the crowning official, who took both of the crowns back.
+
+[brandon: Wait, what?]
+
+[james: No! I felt so happy!]
+
+[ida: You aren't royalty! You just stumbled upon our great kingdom by accident.]
+
+[james: What about before? You were convinced of us at dinner when you told @king about us.]
+
+[ida: That's "~king" to you, filth. Get them out of here.]
+
+Guards grabbed them both and threw them off the opposite side of the platform over the railing. Thankfully, it was only a handful of feet above the ground. (It still hurt though.) @ida and @king walked over to where they had fallen.
+
+[king: I shared my food with you! (spit)]
+
+[ida: I trusted you! (spit)]
+
+The two of them sat there for a few moments to assess their current situation.
+
+[james: You know how everything around here is shiny and glittery?]
+
+[brandon: Yeah?]
+
+[james: I have glitter in my eyes, and it's not a fun time.]
+
+[brandon: I never thought this place could hurt us.]
+
+[james: Maybe it's for the best. Who knows what would have become of us with such a jarring change in power?]
+
+[brandon: Maybe for you. I was ready to be a king!]
+
+[james: Come on. Back home, you're basically treated as a king anyway!]
+
+[brandon: I suppose you're right. Neither of us needs a crown to be important. I have my celebrity status and you know a celebrity personally. That's all that really matters.]
+
+[james: That's not(em dash)We'll talk about this later.]
+
+[brandon: You'll always have a crown to me.]
+
+[james: Thanks.]
+
+They briefly hugged before getting up. Once they were standing, a few guards appeared and prodded them away from the palace. They were led to a large vertical glass tube away from the palace.
+
+[brandon: Where are you taking us?]
+
+[##Guard: Where you freaks belong.]
+
+[brandon: We are NOT FREAKS!]
+
+[james: @brandon, don't upset them.]
+
+[brandon: But it's ridiculous! What's with all these unicorns and fat pigs?]
+
+[james: That'll help. Just say that louder.]
+
+They were forced inside the glass tube, which seemed like a prison once the door was locked behind them.
+
+[brandon: GrRr.! (angry sounds)]
+
+[james: I'm scared..]
+
+[brandon: Don't be nervous, I'll kick their asses for this!]
+
+[james: Are we going to die here?]
+
+[brandon: Of course not...]
+
+The floor beneath them shook and they felt sparks fly through their bodies.
+
+[james: AHH!! What's going on!?]
+
+[brandon: DAMN YOU GUYS!]
+
+(divide)
+
+They were back in the space where physics stood still, twirling through the chaotic purgatory of colors. This time, they were more prepared for the jolts between points in the "journey."
+
+[james: At least the glitter isn't on me anymore!]
+
+[brandon: What!?]
+
+[james: Nevermind!]
+
+[brandon: There's that sound again!]
+
+The screech of reality grew louder as they were compressed and extrapolated through the omnipresent vortex.
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = "The Everyday People"
+subtitle = Back to the original plans
+
+<text>
+
+They woke up in the backyard, with the glowing orb behind them. The sun had set long ago, and the sky delivered its special show of a cosmic band of stars.
+
+[james: AH! It's still there!]
+
+@brandon shot up and pulled @james away from the light indicative of their previous destination.
+
+[brandon: We're safe now.]
+
+@james looked at +brandon legs, which were scraped and bleeding.
+
+[james: You're cut up.]
+
+[brandon: You are too..]
+
+@james looked at = own arms, which had some cuts big enough to feel but not big enough to be super dangerous.
+
+[james: We should disinfect ourselves. We don't know what micro-biomes existed back there.]
+
+[brandon: (sigh) Alright, fine.]
+
+They worked their tired way back to the house, which still had lights turned on. They limped to the bathroom, which had a bottle of mild wound disinfectant.
+
+[james: This is going to hurt a little bit.]
+
+[brandon: Okay. If you think it'll help, then it doesn't matter.]
+
+@james grabbed a cotton pad and placed it over the bottle's lid, briefly tipping the bottle upside down to dab the pad in the solution.
+
+[james: Here's yours.]
+
+@james then prepared one for = own use.
+
+[brandon: Is it bad if it stings?]
+
+[james: They're pretty big cuts.(em dash)Ah!(em dash)Okay.]
+
+After they were done, they went to the living room to sit down. They sat on the couch and rested for a few minutes.
+
+[james: (sigh) Why couldn't we be royalty?]
+
+[brandon: They'll regret their decision. It's inevitable.]
+
+There was silence for a few seconds.
+
+[james: Yeah..]
+
+[brandon: Are you hungry?]
+
+[james: A little bit. There's still some snacks out in the kitchen.]
+
+[brandon: If you bring back some snacks, I'll start the movie.]
+
+[james: Okay.]
+
+@james went to the kitchen and grabbed a couple trays of snacks and two paper plates. @james also grabbed a couple bottles of soda (pop) for them to drink with their snacks. When @james returned to the living room, the movie had already started. @james wasn't going to watch it, but a seat on the couch was appealing enough on its own after the ordeal from earlier.
+
+[brandon: Alright!]
+
+@brandon grabbed one of the trays and started quickly eating chips off of it.
+
+[brandon: (crunch) (chomp)]
+
+[james: You must be hungry!]
+
+[brandon: (munch) (crunch) Mhm.]
+
+@james sat down and began to eat as well. The sounds of their crunching were so loud that @brandon turned up the volume of the movie.
+
+[brandon: Can you bring out more?]
+
+[james: Really.? Okay...]
+
+As @james stood up, < got a huge stomach pain.
+
+[james: I think that food made us sick.. How can you eat right now?]
+
+[brandon: I don't think that's nausea. Let's both go into the kitchen and see our snack options.]
+
+@brandon took the remaining snack tray back into the kitchen, and @james followed behind >brandon. < began digging through the fridge.
+
+[brandon: We could eat some shredded cheese.]
+
+[james: That's for salad.]
+
+[brandon: We could make salad, but(em dash)we could also just eat cheese.]
+
+The more @brandon said it, the more desirable the bagged shredded cheese sounded as +james hunger grew.
+
+[james: Okay, let's eat it.]
+
+They finished off the open bag of cheese and then ate the remaining chips on the trays. @james began re-heating the cheese dip on the stove.
+
+[brandon: There's ice cream in your freezer.]
+
+[james: I'll get spoons!]
+
+They ate the cheese and the ice cream, followed by @james eating salad vegetables raw and @brandon eating soup crackers.
+
+[brandon: We need more.]
+
+They began tearing through the cupboards and the pantry to find more to eat. Food wrappers were left everywhere as their search for snacks continued. They didn't care about the mess on the floor or their faces. All that mattered was curbing their growing hunger.
+
+[james: (munch) (chew)]
+
+[brandon: (crunch) (swallow)]
+
+After a half hour, they had burned through +james entire food supply.
+
+[brandon: That's better. (belch) Phew!]
+
+[james: What's happening to us.?]
+
+[brandon: I feel so(em dash)cold.]
+
+[james: (sniffle) I have blankets in the closet.!]
+
+They ran to the closet and yanked as many blankets out as they could carry back to the living room couch. They sat on the couch and piled the blankets over their chilly bodies.
+
+[brandon: You're warm, right?]
+
+[james: What?]
+
+[brandon: I'm so cold..d. I need your body heat.]
+
+[james: Okay? Isn't that weird.?]
+
+[brandon: No! It's perfectly normal.]
+
+@brandon sat directly next to @james and covered up with blankets.
+
+[brandon: That's bett..ter.]
+
+[james: You're the one who's always trying to prove your independence, (chuckle) and yet here you are, curled up next to me.]
+
+[brandon: I don't know why I'm so cold! Did they curse us?]
+
+[james: Perhaps. But I get that you also want protection when your body is feeling weak.]
+
+[brandon: I do not need protection.! (sniffle)]
+
+@brandon was clearly affected more than @james, who could still perform basic tasks. It seemed that, ironically, <brandon needed someone to take care of >.
+
+[james: It's okay. I'm going to try to sleep away this miserable condition.]
+
+[brandon: I'll wa(em dash)(yawn)(em dash)tch(em dash)ov..er(em dash)y...ou... (snore)]
+
+@brandon had already fallen asleep and @james wasn't far behind >brandon. 
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = The Neighbor
+subtitle = (We can't let >frank see the mess in the kitchen!)(break)(Imagine the complaints <'ll make to the neighborhood!)
+
+<text>
+
 </text>
 
 </chapter>
@@ -436,6 +1083,6 @@ subtitle = Finally, an answer!
 
 // After they both get powers, they get really hungry and sick for a night (as their powers develop), which means that they sleep in till really late the following morning.
 
-// They wake up to the doorbell ringing. It's James' neighbor, Emily, reminding James of the cookout later that day.
+// They wake up to the doorbell ringing. It's James' neighbor, Frank, reminding James of the cookout later that day.
 
 // At some point, Brandon discovers his powers by running to save James from a temporary boom in the bonfire.
