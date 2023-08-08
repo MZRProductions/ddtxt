@@ -1608,7 +1608,7 @@ This button closes the editor, leaving you to read the finished, translated docu
 <chapter>
 
 name = Advanced Documentation
-subtitle = (break)Full Properties Documentation: [href: ##chapter-18](break)Current Limits of the DDTXT: [href: ##chapter-19](break)DDTXT Errors: [href: ##chapter-20]
+subtitle = (break)Full Properties Documentation: [href: ##chapter-18](break)Current Limits of the DDTXT: [href: ##chapter-19](break)DDTXT Errors: [href: ##chapter-20](break)General Advice: [href: ##chapter-21]
 
 </chapter>
 
