@@ -1,0 +1,277 @@
+<!DOCTYPE DDTXT>
+// Above is the DDTXT DOCTYPE statement, which tells the reader that this file can be read.
+
+
+
+// This is an example of a functional Digital Dialogue Text (DDTXT) document.
+// Please refer to TUTORIAL.ddtxt for more specific guidance.
+
+
+
+// We usually place the <global> node at the beginning of the document for easy access, although it shouldn't matter where in the document you place the <global> node.
+<global>
+
+// These are properties of the main node:
+name = Example DDTXT
+author = MZRProductions (Michael Rumpff)
+provideTableOfContents = true
+
+// Now we are going to set this document's style:
+<style>
+
+// Document background color
+backgroundColor = azure
+// Main text color
+color = darkmagenta
+titleColor = darkmagenta
+headingColor = midnightblue
+
+// We end the <style> subnode here.
+</style>
+
+// We end the <global> node here.
+</global>
+
+
+
+// Here are the document's characters.
+
+
+// AMY
+
+
+// We begin a <character> node like any other.
+<character>
+
+// This code is the word we'll use to refer to this character.
+code = A
+
+// This is the name that readers will see.
+name = Amy
+
+// We set a character's pronouns with the <pronouns> subnode.
+<pronouns>
+
+// Amy uses all female pronouns.
+// (In other words, Amy is a woman.)
+
+subject = she
+possessive = her
+object = her
+reflexive = herself
+present = she is
+presentCompacted = she's
+
+// This is the end of the <pronouns> subnode.
+</pronouns>
+
+// This is the beginning of the <style> subnode.
+<style>
+
+color = royalblue
+
+// This is the end of the <style> subnode.
+</style>
+
+// This is the end of Amy's <character> node.
+</character>
+
+
+// BILL
+
+
+<character>
+
+// This code is the word we'll use to refer to this character.
+code = B
+
+// This is the name that readers will see.
+name = Bill
+
+<pronouns>
+
+// Bill uses all male pronouns.
+// (In other words, Bill is a man.)
+
+subject = he
+possessive = his
+object = him
+reflexive = himself
+instance = flower shop owner
+present = he is
+presentCompacted = he's
+
+</pronouns>
+
+<style>
+
+color = teal
+
+</style>
+
+</character>
+
+
+// CHARLES
+
+
+<character>
+
+// This code is the word we'll use to refer to this character.
+code = C
+
+// This is the name that readers will see.
+name = Charles
+
+// Charles uses all gender-neutral pronouns.
+// (In other words, Charles is a gender-neutral person.)
+
+// This means that we don't need a pronouns subnode, since the DDTXT Reader assumes gender-neutrality unless told otherwise.
+
+</character>
+
+
+
+
+// MAIN DOCUMENT
+
+
+
+
+// INTRODUCTION
+
+
+// We start a <chapter> node like any other.
+<chapter>
+
+// I use introductions in most documents, but it seems like fun to start with a named chapter.
+// Let's use references in the chapter name:
+name = +A Big Day
+
+// This line is technically useless. (If you don't believe me, comment it out and see for yourself.)
+subtitle = none
+
+// We still include it because it tells other authors or editors that meant to exclude the subtitle.
+
+// All document words go inside of the <text> subnodes of every <chapter> node in your document.
+<text>
+
+// I am going to write each sentence on a new line for easier reading in the editor.
+
+// Here are references to the character "A" (Amy).
+@A woke up to a bright square of sunlight coming from =A window.
+<A got out of bed to close the window curtains, which were warm from the continued sun exposure.
+// Now let's use character reference shorthand. (Sometimes called reference "notation.")
+// Right now there is only one character being referenced, so codeless shorthand will always point back to A (Amy).
+Since @ was still tired, < went back to bed.
+The blankets were still warm from = overnight body heat. 
+
+// This is character dialogue, indicated by square brackets. (The word in parentheses doesn't trigger any special actions since the word is not a command keyword.)
+[A: (yawn)]
+
+The blankets melted into soft warmth from sleepiness.
+
+// This character does not exist, but just for this dialogue, we are pretending that it has been registered.
+// This basic "character" only serves as words for the reader to see next to the dialogue.
+// This process is referred to as "casting" a character in.
+[##Alarm Clock: AAAAA!]
+
+It was still too early.
+
+[A: No...]
+
+[##Alarm Clock: AAAAAA!]
+
+[A: Ugh...]
+
+<A got out of bed and brushed =A teeth. After putting on the day's outfit, < went downstairs and grabbed = keys.
+
+// We want to split text after this into a new paragraph, so we use the (break) command.
+// This command can be used anywhere, but writing it on a new line makes it easier to understand the document in raw form.
+
+(break)
+
+// When there's only one character, I tend to use mostly codeless shorthand.
+
+There was a slight breeze outside on the warm summer day.
+=A short but compacted fenced in front lawn was filled with colorful flowers and shrubs.
+Before < could go to work, < had to go the flower emporium and buy some decorative flowers for the office.
+Luckily, the flower emporium and the office were both within close walking distance of = house.
+
+(break)
+
+The pedestrian street was crowded with people buying from the open-air stores.
+< had to push through a really thick crown outside of the new donut bakery in town.
+
+[A: Excuse me. I have to get through.]
+
+= words helped a little bit, but people still blocked the way.
+< had to keep pushing through, but eventually, < made it to +B Flower Emporium.
++B Flower Emporium was a lighter, pale green on the outside, which was covered in slanted shingles.
+The bottom floor had tall windows leading up to intricate window arches and an elegant exterior trim separating each floor.
+
+(break)
+
+With no regard for the business rush of the bakery next door, <A opened the store door, greeted by a bell.
+
+[B: Good morning! What can I get for you?]
+
+The store was empty except for @B.
+Every shelf was stocked to the brim with flowers, waiting for a customer and a new home that would never come.
+The floor was a dark orange, and the walls were the same green painted on the building's exterior.
+
+[A: Hello. I'm looking for an office plant for a break room.]
+
+// We can use the (em dash) command to
+[B: Ah. Well,(em dash) this hearty Peace Lily flowers and can survive with less water, although if that is not an obstacle then I recommend this fern.]
+
+@A took a few seconds to digest what <B said.
+
+[A: Uhh...]
+
+The fluorescent light above briefly flickered.
+
+[A: How about the Peace Lily? We have someone to water the other plants in the office.]
+
+[B: Well, then it sounds like you've got that covered. I'll get the Peace Lily prepped.]
+
+[A: Thanks.]
+
+Without a conversation, they could hear the aggressive crowd next door.
+
+[B: You know, ever since they put that bakery in, I haven't had half as many customers as I did before!]
+
+[A: It was hard to push through that crowd.]
+
+<B examined the tag hanging from the lily's pot and scribbled a few numbers down behind the counter.
+
+[B: Well, I'm glad you still came here.]
+
+@A paid for the Peace Lily and began to walk toward the door when there was a chaotic sound from the crowd outside.
+
+// Now we end the <text> subnode.
+</text>
+
+// Now we end the <chapter> node and start a new chapter.
+</chapter>
+
+
+// AUTHOR'S NOTES
+
+// Amy and Bill go to the upper floor of the flower shop (Bill's apartment) to escape the crazed crowd below.
+// Eventually, they make their way to the flower shop roof and decide to investigate the source of the unusual crowd.
+// They make their way onto the donut bakery's roof and break in through the ceiling, discovering the donuts' secret ingredient.
+
+
+<chapter>
+
+name = Quick, Panic!
+subtitle = none
+
+<text>
+
+
+
+</text>
+
+</chapter>
