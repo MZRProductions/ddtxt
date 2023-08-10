@@ -20,16 +20,33 @@
 
 -->
 
+<!-- You are currently viewing v0.2.1 of the DDTXT language. -->
+
 <!--
 TODO: Fix usePluralVerbForm Character attribute usage.
 TODO: Fix or remove hardbaked text, as it currently provides more problems than benefits.
+TODO: Verfiy correct XML organization of <html> header node.
+TODO: Verfiy that CSS inheritance (as in "color: inherit;" etc...) is applying DDTXT style changes to the webpage correctly.
+-->
+
+<!-- Future Ideas: -->
+
+<!--
+
+- Introduce (silence) DDTXT command
+- Introduce a way of setting custom commands. The syntax would be something along the lines of (`CUSTOMNAME) with a grave accent (`). This would be a simple search and replace system, so there would not be much overhead. The most complicated part of this would be using it. I haven't needed anything like this so far, although it might not be a bad idea in the future.
+- The same as above but with character pronouns. The syntax would be something along the lines of `custom`charactercode. These custom replacements would have to be worth the added complexity.
+- Verb plurality ternary, as "included" (but not functionally) in the original versions of the DDTXT language. Right now, this also isn't very important.
+- Optional background images instead of solid colors.
+- Different styles for individual chapters.
+
 -->
 
 <!-- HTML -->
 
 <html lang="en-US">
 
-<!-- (This is an attempt to support Unicode characters and make sure that they are not broken during transition between files) -->
+<!-- (This is an attempt to support Unicode characters and make sure that they are not broken during transition between files.) -->
 
 <meta charset="utf-8"/>
 
@@ -42,7 +59,7 @@ body {
 	background-color: black;
 }
 
-#reloadText {
+#blankDocumentText {
 	text-align: center;
 	font-size: 20px;
 }
@@ -325,7 +342,7 @@ html {
 
 <input id="fileInput" type="file" accept=".txt, .ddtxt"/>
 
-<p id="reloadText" onclick="loadFileInput()">Click me to reload the DDTXT file.</p>
+<p id="blankDocumentText" onclick="createBlankDDTXT()">Click me to open a blank DDTXT.</p>
 
 <p id="printText" onclick="printDDTXT()">Click me to save this DDTXT as a PDF or print it out!<br>(You may have to enable background graphics to get the correct background color.)</p>
 
@@ -526,7 +543,8 @@ var trimAndRetainStringToValidPart = function (disallowedChars, string) {
 };
 
 var clearDDTXT = function () {
-	// The following object should be used as the definition of the DDTXT object
+	// The following object should be used as the definition of the DDTXT object.
+	// All of these values are default values.
 	DDTXT = {
 		style: {
 			color: "black",
@@ -541,13 +559,13 @@ var clearDDTXT = function () {
 		errorContextLength: 50, // How much text errors should provide follwing an error (so that people can read where the error happened)
 		addMissingSpaces: true, // Whether or not the DDTXT parser should append needed spaces after most punctuation.
 		// NOTE: (addMissingSpaces = true) is a good idea because it maintains consistency no matter how the DDTXT is spaced out.
-		formatHeadings: false, // Convert references in chapter headings. If you disable this, chapter headings will be hard baked.
 		global: {
 			name: "Untitled DDTXT",
 			webtitle: "",
 			author: "Unknown Author",
 			summary: "There is no summary present.",
-			provideTableOfContents: false,
+			provideTableOfContents: false, // Whether the document will get an automatic table of contents.
+			allowBracketLiterals: false, // Whether the parser can literalize square brackets with dollar signs. (NOTE: Hashtags will always literalize square brackets as they are specific and emphatic.)
 			lastModified: null,
 			filename: "untitled.ddtxt",
 		},
@@ -755,9 +773,12 @@ var clearDDTXT = function () {
 					// Special case: dollar sign used to skip the parser past a word (for example, links)
 					if (text [spot] === "$" && text [spot - 1] !== "#") {
 						const currentWord = text.substring(spot, text.length).split(" ") [0]; // Stop after the next space
+						var wordShift = 0; // I'm trying an internal shift in addition to the external shift.
 						
 						// Convert any hashtags to literalized hashtags so they are not removed
-						for (var currentWordChar = 1; currentWordChar < currentWord.length; currentWordChar ++) {
+						for (var currentWordChar = 1; currentWordChar < currentWord.length + wordShift; currentWordChar ++) {
+							// const wordSpot = currentWordChar + wordShift + spot; // I'm trying an internal shift in addition to the external shift.
+						
 							// We start at 1 because 0 is the dollar sign
 							if (text [spot + currentWordChar] === "#") {
 								text = text.substring(0, spot + currentWordChar) + "#" + text.substring(spot + currentWordChar, text.length);
@@ -765,6 +786,26 @@ var clearDDTXT = function () {
 								currentWordChar ++; // Shift the text seeker one forward for the added character
 								currentChar ++; // and one forward becuase we know what the next character is
 							}
+							
+							
+							// I'm working on getting this code to replace brackets within a literalized word
+							
+							if (DDTXT.global.allowBracketLiterals) {
+								if (text [spot + currentWordChar] === "[") {
+									text = text.substring(0, spot + currentWordChar) + "(left bracket)" + text.substring(spot + currentWordChar, text.length);
+									// wordShift += ("left bracket").length; // Shift the index forward
+									currentWordChar += ("left bracket").length; // Shift the text seeker forward for the added characters
+									currentChar += ("left bracket").length; // and shift the  forward becuase we know what the next character is
+								}
+								// The else if stops more than one bracket being handled at once
+								else if (text [spot + currentWordChar] === "]") {
+									text = text.substring(0, spot + currentWordChar) + "(right bracket)" + text.substring(spot + currentWordChar, text.length);
+									// wordShift += ("right bracket").length; // Shift the index forward
+									currentWordChar += ("right bracket").length; // Shift the text seeker one forward for the added character
+									currentChar += ("right bracket").length; // and one forward becuase we know what the next character is
+								}
+							}
+							
 						}
 						
 						// Skip the parser that many characters, removing a character for the dollar sign that we are removing
@@ -778,11 +819,19 @@ var clearDDTXT = function () {
 				// Now that all references have been converted, any remaining <s and >s can be converted to the HTML friendly &lt; and &gt; respectively:
 				text = text.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 				
-				// Replace all double hashtags with a single hashtag, removing unused single hashtags.
+				// Replace all double hashtags with a single hashtag.
 				// This is not covered above since the if clause is not triggered.
 				// (A commenting hashtag would be paradoxically confused with a double hashtag.)
 				
 				text = text.replaceAll("##", "(hashtag)");
+				
+				// Replace all literalized brackets.
+				
+				text = text.replaceAll("#[", "(left bracket)");
+				text = text.replaceAll("#]", "(right bracket)");
+				
+				// Remove unused single hashtags.
+				
 				text = text.replaceAll("#", "");
 				
 				// text = text.replaceAll("(hashtag)", "#"); Covered by DDTXT In-text commands below
@@ -799,11 +848,11 @@ var clearDDTXT = function () {
 				for (var currentChar = 0; currentChar + charactersShifted < text.length; currentChar ++) {
 					const spot = currentChar + charactersShifted;
 
-					if (!withinBrackets && text [spot] === "[" && text [spot - 1] !== "#") {
+					if (!withinBrackets && text [spot] === "[") {
 						withinBrackets = true;
 						lastSpot = currentChar; // Save this spot, EXCLUDING the shift that we add later
 					}
-					else if (withinBrackets && text [spot] == "]" && text [spot - 1] !== "#") {
+					else if (withinBrackets && text [spot] == "]") {
 						withinBrackets = false;
 						const dialog = splitLineAtFirst(text.substring(lastSpot + 1 + charactersShifted, spot), ":"); // Pull out the dialog and split it into both parts, assuming any extra colons are part of the dialog.
 						// Syntax error handling
@@ -1032,10 +1081,25 @@ var updateBodyCSS = function () {
 	footer.style.color = DDTXT.style.color;
 	document.getElementById("footerHolder").style.backgroundColor = DDTXT.style.backgroundColor;
 	// Update UI colors
+	// Fixed document header
 	const header = document.getElementById("ui");
 	header.style.backgroundColor = DDTXT.style.backgroundColor;
 	header.style.color = DDTXT.style.color;
 	header.style.border = "2px solid " + DDTXT.style.color;
+	// Update UI buttons:
+	// Obtain access to the document's Cascading Style Sheets.
+	const CSSAccess = document.createElement("style");
+	CSSAccess.type = "text/css";
+	// Now, append information to the access.
+	CSSAccess.innerHTML = ".ui-button {\n\tborder: 2px solid " + DDTXT.style.color + ";\n}";
+	//
+	// .ui-button {
+	// 	border: 2px solid COLOR;
+	// }
+	//
+	// Push the access to the actual document.
+	document.getElementsByTagName("head") [0].appendChild(CSSAccess);
+	// These two are meant to be different. One is a container and the other is the styling class for the buttons.
 	document.getElementById("ui-buttons").style.backgroundColor = DDTXT.style.backgroundColor;
 	// Update editor background color
 	document.getElementById("editor").style.backgroundColor = DDTXT.style.backgroundColor;
@@ -1183,6 +1247,7 @@ const dataTypes = [
 	"webtitle",
 	"author",
 	"provideTableOfContents",
+	"allowBracketLiterals",
 	"divide",
 	"divideSize",
 	"divideColor",
@@ -1263,7 +1328,7 @@ var parseDDTXTLine = function (line, lineNumber = -1) {
 								currentSubNode [attribute] = defaults [attribute];
 							}
 						}
-						const styleCopy = currentSubNode; // Create a deep copy
+						const styleCopy = currentSubNode; // Create a deep copy. (A constant has to save a separate, frozen copy of varying information by definition.)
 						DDTXT.style = styleCopy; // Move the data over to the DDTXT object
 					}
 					// Character <style> subnodes are handled fully upon ending the <character> node
@@ -1318,6 +1383,7 @@ var parseDDTXTLine = function (line, lineNumber = -1) {
 					DDTXT.global.author = (currentNode.author) ? currentNode.author : "Unknown Author"; // Default to "Unknown Author" if the DDTXT does not specify an author
 					DDTXT.global.summary = (currentNode.content) ? currentNode.content : "Document summary is not present."; // Default to "Document summary is not present." if the DDTXT does not specify a summary
 					DDTXT.global.provideTableOfContents = toBool((currentNode.provideTableOfContents) ? currentNode.provideTableOfContents : false); // Default to false (no Table of Contents provided)
+					DDTXT.global.allowBracketLiterals = toBool((currentNode.allowBracketLiterals) ? currentNode.allowBracketLiterals : false); // Default to false (Dollar signs will not literalize square brackets, meaning dialogue will be left untouched.)
 				}
 				currentNode = {}; // Clear stored node data
 				parseType = NONE;
@@ -1411,8 +1477,9 @@ var updateExternalText = function () {
 
 var parseDDTXT = function (text = stringifiedDDTXT) {
 	stringifiedDDTXT = text; // In case we don't have the string yet, copy it to a more permanent location
-	document.getElementById("editor-content").innerHTML = stringifiedDDTXT;
 	clearDDTXT(); // Clear the DDTXT again in case we are refreshing and not loading
+	//document.getElementById("editor-content").reset(); // Clear the editor's contents.
+	document.getElementById("editor-content").innerHTML = stringifiedDDTXT; // Pour the raw document into the editor.
 	
 	// Break the file into lines:
 	const lines = text.split("\n");
@@ -1445,6 +1512,38 @@ var parseDDTXT = function (text = stringifiedDDTXT) {
 	console.log(DDTXT);
 	// Having loaded all file contents to the DDTXT object, convert the DDTXT object into a string readable by HTML
 	convertDDTXTToHTML();
+};
+
+// Open a blank DDTXT, opening the editor (since that's the main purpose of a blank document).
+var createBlankDDTXT = function () {
+	// Create new file information:
+	var alertInput; // Create an input reference.
+	// It looks like I'm in the clear here, but I'm going to include this try/catch in case the basic prompt() function is not supported properly or at all, which means that this will still work.
+	try {
+		alertInput = prompt("Please enter a file name!"); // Grab input.
+	}
+	catch {
+		console.error("The prompt() function is not supported in your browser!");
+		alertInput = "";
+	}
+	
+	const newFileName = (typeof(alertInput) !== "string" || alertInput === "") ? "untitled.ddtxt" : alertInput; // If no input is provided, then create a filename.
+	
+	sourceFileName = (newFileName.substring(newFileName.length - 6, newFileName.length) === ".ddtxt") ? newFileName : newFileName + ".ddtxt"; // Set the new file's name to the input, adding the correct file extension if not present.
+	console.log(alertInput + " | " + newFileName + " | " + sourceFileName);
+	sourceFileTime = Date.now(); // Set the new file's lastModified time to the current time.
+	
+	parseDDTXT(text = "<!DOCTYPE DDTXT>"); // Put only the DOCTYPE statement into the parser, but also trigger a file "loading," resetting the webpage.
+	
+	// Open the editor.
+	editorState = false;
+	refreshEditorVisibility();
+	// Update the external document features:
+	updateExternalText();
+	// Make the document statistics UI visible
+	document.getElementById("ui").style.visibility = "visible";
+	// Update the UI initially
+	updateScrollProgress();
 };
 
 
