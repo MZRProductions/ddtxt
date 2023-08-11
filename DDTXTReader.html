@@ -556,7 +556,13 @@ var clearDDTXT = function () {
 			divideColor: "inherit",
 			break: "<br><br>",
 		},
-		errorContextLength: 50, // How much text errors should provide follwing an error (so that people can read where the error happened)
+		debug: {
+			errorContextLength: 50, // How much text errors should provide follwing an error (so that people can read where the error happened)
+			dollarSignIterations: 0, // FOR DEBUGGING. READ-ONLY. How many loops the dollar signs in the document took up. (High numbers increase down load time.)
+			dollarSignTime: 0, // FOR DEBUGGING. READ-ONLY. How much time was taken working on dollar signs.
+			logLoading: false, // To see dollar sign parsing time, set this to true. This is turned off by default.
+			loadTime: 0, // READ-ONLY. How much time the document took to load.
+		},
 		addMissingSpaces: true, // Whether or not the DDTXT parser should append needed spaces after most punctuation.
 		// NOTE: (addMissingSpaces = true) is a good idea because it maintains consistency no matter how the DDTXT is spaced out.
 		global: {
@@ -772,47 +778,66 @@ var clearDDTXT = function () {
 					
 					// Special case: dollar sign used to skip the parser past a word (for example, links)
 					if (text [spot] === "$" && text [spot - 1] !== "#") {
-						const currentWord = text.substring(spot, text.length).split(" ") [0]; // Stop after the next space
-						var wordShift = 0; // I'm trying an internal shift in addition to the external shift.
+						const debugAddedTime = Date.now();
+						const currentWord = text.substring(spot, text.length).split(" ") [0]; // Stop after the next space. HIGHLY INEFFICIENT WASTEFUL SPLIT, REPLACE WITH TEXT SEEKER
+						// Save both of these for relative comparison below.
+						const wordStart = spot;
+						const originalShift = charactersShifted;
 						
-						// Convert any hashtags to literalized hashtags so they are not removed
-						for (var currentWordChar = 1; currentWordChar < currentWord.length + wordShift; currentWordChar ++) {
-							// const wordSpot = currentWordChar + wordShift + spot; // I'm trying an internal shift in addition to the external shift.
+						// Convert any hashtags (and brackets if desired) to literalized symbols so they are not removed.
 						
+						for (var currentWordChar = 0; currentWordChar < currentWord.length + (charactersShifted - originalShift); currentWordChar ++) {
+							const wordSpot = spot + currentWordChar;
+							// Keep track of how many iterations we run
+							DDTXT.debug.dollarSignIterations ++;
 							// We start at 1 because 0 is the dollar sign
 							if (text [spot + currentWordChar] === "#") {
-								text = text.substring(0, spot + currentWordChar) + "#" + text.substring(spot + currentWordChar, text.length);
-								charactersShifted ++; // Shift the index forward
-								currentWordChar ++; // Shift the text seeker one forward for the added character
-								currentChar ++; // and one forward becuase we know what the next character is
+								const replacement = "(hashtag)";
+								const replacementLength = replacement.length;
+								text = text.substring(0, wordSpot) + replacement + text.substring(wordSpot + 1, text.length);
+								charactersShifted += replacementLength - 1; // Shift forward index cap minus the removed character.
+								currentWordChar += replacementLength - 1; // Shift forward minus the removed character.
+								// This used to be here and in the next two if clauses below:
+								// currentChar += replacementLength; // Shift forward, including the removed character.
 							}
-							
 							
 							// I'm working on getting this code to replace brackets within a literalized word
 							
-							if (DDTXT.global.allowBracketLiterals) {
-								if (text [spot + currentWordChar] === "[") {
-									text = text.substring(0, spot + currentWordChar) + "(left bracket)" + text.substring(spot + currentWordChar, text.length);
-									// wordShift += ("left bracket").length; // Shift the index forward
-									currentWordChar += ("left bracket").length; // Shift the text seeker forward for the added characters
-									currentChar += ("left bracket").length; // and shift the  forward becuase we know what the next character is
+							else if (DDTXT.global.allowBracketLiterals) {
+							
+								if (text [wordSpot] === "[") {
+									const replacement = "(left bracket)";
+									const replacementLength = replacement.length;
+									
+									text = text.substring(0, wordSpot) + replacement + text.substring(wordSpot + 1, text.length);
+									charactersShifted += replacementLength - 1; // Shift forward index cap minus the removed character.
+									currentWordChar += replacementLength - 1; // Shift forward minus the removed character.
 								}
 								// The else if stops more than one bracket being handled at once
-								else if (text [spot + currentWordChar] === "]") {
-									text = text.substring(0, spot + currentWordChar) + "(right bracket)" + text.substring(spot + currentWordChar, text.length);
-									// wordShift += ("right bracket").length; // Shift the index forward
-									currentWordChar += ("right bracket").length; // Shift the text seeker one forward for the added character
-									currentChar += ("right bracket").length; // and one forward becuase we know what the next character is
+								else if (text [wordSpot] === "]") {
+									const replacement = "(right bracket)";
+									const replacementLength = replacement.length;
+									
+									text = text.substring(0, wordSpot) + replacement + text.substring(wordSpot + 1, text.length);
+									charactersShifted += replacementLength - 1; // Shift forward minus the removed character.
+									currentWordChar += replacementLength - 1; // Shift forward minus the removed character.
 								}
+								
+							}
+							
+							else {
+								currentChar ++; // If nothing happens, increment the seeker one forward.
 							}
 							
 						}
 						
 						// Skip the parser that many characters, removing a character for the dollar sign that we are removing
-						currentChar += currentWord.length;
+						//currentChar += currentWord.length;
 						charactersShifted --;
 						// Remove the dollar sign
 						text = text.substring(0, spot) + text.substring(spot + 1, text.length);
+						// Store the time taken (in milliseconds) to work through the dollar signs.
+						DDTXT.debug.dollarSignTime += Date.now() - debugAddedTime;
 					}
 				}
 				
@@ -1194,6 +1219,10 @@ var toBool = function (value) {
 	else if (typeof(value) === "number") {
 		return (value === 1);
 	}
+	// Otherwise, determine truthiness based on (not) being undefined.
+	else {
+		return !(value === undefined || value === null || value === NaN);
+	}
 };
 
 // Parsing modes (track what we are looking at)
@@ -1382,8 +1411,9 @@ var parseDDTXTLine = function (line, lineNumber = -1) {
 					DDTXT.global.webtitle = currentNode.webtitle;
 					DDTXT.global.author = (currentNode.author) ? currentNode.author : "Unknown Author"; // Default to "Unknown Author" if the DDTXT does not specify an author
 					DDTXT.global.summary = (currentNode.content) ? currentNode.content : "Document summary is not present."; // Default to "Document summary is not present." if the DDTXT does not specify a summary
-					DDTXT.global.provideTableOfContents = toBool((currentNode.provideTableOfContents) ? currentNode.provideTableOfContents : false); // Default to false (no Table of Contents provided)
-					DDTXT.global.allowBracketLiterals = toBool((currentNode.allowBracketLiterals) ? currentNode.allowBracketLiterals : false); // Default to false (Dollar signs will not literalize square brackets, meaning dialogue will be left untouched.)
+					// toBool() includes error handling and ternary that result in a value of false unless otherwise proven.
+					DDTXT.global.provideTableOfContents = toBool(currentNode.provideTableOfContents); // Default to false (no Table of Contents provided)
+					DDTXT.global.allowBracketLiterals = toBool(currentNode.allowBracketLiterals); // Default to false (Dollar signs will not literalize square brackets, meaning dialogue will be left untouched.)
 				}
 				currentNode = {}; // Clear stored node data
 				parseType = NONE;
@@ -1478,8 +1508,9 @@ var updateExternalText = function () {
 var parseDDTXT = function (text = stringifiedDDTXT) {
 	stringifiedDDTXT = text; // In case we don't have the string yet, copy it to a more permanent location
 	clearDDTXT(); // Clear the DDTXT again in case we are refreshing and not loading
-	//document.getElementById("editor-content").reset(); // Clear the editor's contents.
 	document.getElementById("editor-content").innerHTML = stringifiedDDTXT; // Pour the raw document into the editor.
+	
+	const startParseTime = Date.now();
 	
 	// Break the file into lines:
 	const lines = text.split("\n");
@@ -1512,11 +1543,23 @@ var parseDDTXT = function (text = stringifiedDDTXT) {
 	console.log(DDTXT);
 	// Having loaded all file contents to the DDTXT object, convert the DDTXT object into a string readable by HTML
 	convertDDTXTToHTML();
+	// Store loading time for debugging purposes:
+	DDTXT.debug.loadTime = (Date.now() - startParseTime) / 1000;
+	// If we want debug info, print it.
+	if (DDTXT.debug.logLoading) {
+		logDebugInfo();
+	}
+};
+
+var logDebugInfo = function () {
+	console.log("Document loading time: " + DDTXT.debug.loadTime + "s");
+	console.log("Dollar Sign Parsing ($):\n" + DDTXT.debug.dollarSignIterations + " iterations total\n" + DDTXT.debug.dollarSignTime / 1000 + " seconds spent on dollar signs (" + Math.round(DDTXT.debug.dollarSignTime / DDTXT.debug.dollarSignIterations, 3) + " milliseconds / iteration)");
 };
 
 // Open a blank DDTXT, opening the editor (since that's the main purpose of a blank document).
 var createBlankDDTXT = function () {
 	// Create new file information:
+	
 	var alertInput; // Create an input reference.
 	// It looks like I'm in the clear here, but I'm going to include this try/catch in case the basic prompt() function is not supported properly or at all, which means that this will still work.
 	try {
@@ -1533,7 +1576,9 @@ var createBlankDDTXT = function () {
 	console.log(alertInput + " | " + newFileName + " | " + sourceFileName);
 	sourceFileTime = Date.now(); // Set the new file's lastModified time to the current time.
 	
-	parseDDTXT(text = "<!DOCTYPE DDTXT>"); // Put only the DOCTYPE statement into the parser, but also trigger a file "loading," resetting the webpage.
+	// Put only the DOCTYPE statement into the parser, but also trigger a file "loading," resetting the webpage.
+	
+	parseDDTXT(text = "<!DOCTYPE DDTXT>");
 	
 	// Open the editor.
 	editorState = false;
@@ -1561,11 +1606,11 @@ var loadFileInput = function () {
 		clearDDTXT();
 		
 		// Save this filename for use by the editor:
-		sourceFileName = inputReference.files [0].name;
+		sourceFileName = file.name;
 		// Save the file's last modified time to the DDTXT object:
-		sourceFileTime = inputReference.files [0].lastModified;
+		sourceFileTime = file.lastModified;
 		
-		const readFile = inputReference.files [0].text();
+		const readFile = file.text();
 		
 		stringifiedResult = readFile.then(
 			function (result) {
@@ -1678,7 +1723,7 @@ var jumpToEditorTop = function () {
 
 document.getElementById("editor-top").onclick = jumpToEditorTop;
 
-// Refresh the contents of the editor to the reader (push changes forward to the left side of the screen)
+// Refresh the contents of the editor to the reader (push changes forward to the right side of the screen)
 var refreshEditorToDDTXT = function () {
 	const editorContent = document.getElementById("editor-content").value;
 	const newDDTXT = editorContent.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
@@ -1693,10 +1738,11 @@ var refreshEditorToReader = function () {
 
 document.getElementById("editor-refresh").onclick = refreshEditorToReader;
 
-// Export the contents of the editor textbox to a .ddtxt file
+// Export the contents of the editor textbox to a .ddtxt file.
+
 var exportToDDTXT = function () {
 	refreshEditorToDDTXT(); // Make sure stringifiedDDTXT is current.
-	// Prepare the file data and exporting path
+	// Prepare the file data and exporting path.
 	const exportFile = new Blob(
 		[stringifiedDDTXT], {
 			type: "text/ddtxt",
@@ -1705,8 +1751,9 @@ var exportToDDTXT = function () {
 	const exportFileInternalLink = document.createElement("a", "id=tempLink");
 	exportFileInternalLink.href = URL.createObjectURL(exportFile);
 	exportFileInternalLink.download = String(DDTXT.global.filename);
-	exportFileInternalLink.click(); // Perform the functions that would happen if we could click on the link
-	// Clear the URL after this function is over
+	// Perform the functions that would happen if we could click on the link.
+	exportFileInternalLink.click();
+	// Clear the URL after this function is over.
 	URL.revokeObjectURL(exportFileInternalLink.href);
 }
 
@@ -1748,8 +1795,8 @@ var toggleEditor = function () {
 
 // Connect the press of the E key to opening and closing the editor:
 var checkForKey = function (key) {
-	// If E is pressed, we are not typing in the editor, and there is a DDTXT loaded, then toggle the editor.
-	if (key.key === "e" && !currentlyEditing && stringifiedDDTXT !== "") {
+	// If E is pressed, we are not typing in the editor, there is a DDTXT loaded, and we are not looking at the document's summary, then toggle the editor.
+	if (key.key === "e" && !currentlyEditing && stringifiedDDTXT !== "" && !summaryIsOpen) {
 		toggleEditor();
 	}
 };
