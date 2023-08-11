@@ -3,6 +3,22 @@
 
 
 
+// Digital Dialogue Text Reader (and Parser)
+// Copyright (C) 2023 Michael Rumpff (MZRProductions)
+
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+
 // This is an example of a functional Digital Dialogue Text (DDTXT) document.
 // Please refer to TUTORIAL.ddtxt for more specific guidance.
 
@@ -28,6 +44,27 @@ headingColor = midnightblue
 
 // We end the <style> subnode here.
 </style>
+
+
+// To write the document summary, we add a <text> subnode here.
+<text>
+
+// Like any other <text> subnode, we can use all of the tools in the DDTXT language.
+// Here are some references.
+One day, @A has to buy flowers for work. However, before <A can finish buying the flowers, the spectacular crowd at the next door bakery begins to break into the surrounding buildings.
+
+// Here is a (break) command.
+(break)
+
+@A and @B, the owner of the flower shop, escape to the higher floors of the building. Only trying to got out of the reach of the crowd, they discover the reason for the crowd's energy.
+
+// Here is a (horizon) command.
+(horizon)
+
+This document has been written as an example of authoring DDTXTs. There are comments all-throughout guiding beginning authors through the process of writing their very own DDTXT. To access this document in raw form, please press "E" on your keyboard or open this file in a text editor (like Notepad).
+
+// We end the <text> subnode (document summary) here.
+</text>
 
 // We end the <global> node here.
 </global>
@@ -73,6 +110,17 @@ color = royalblue
 // This is the end of the <style> subnode.
 </style>
 
+// To write a character biography (a short summary of their life or role in the story), we create a <text> subnode within the <character> node.
+<text>
+
+// Use of codeless reference notation is very common in biographies since they mostly discuss their respective character.
+@A is an office worker. } on = way to buy flowers for the office when < meets the crowd.
+// {A --> She is
+// }A --> She's
+
+// This is the end of the <text> subnode.
+</text>
+
 // This is the end of Amy's <character> node.
 </character>
 
@@ -88,6 +136,7 @@ code = B
 // This is the name that readers will see.
 name = Bill
 
+// PRONOUNS
 <pronouns>
 
 // Bill uses all male pronouns.
@@ -103,11 +152,19 @@ presentCompacted = he's
 
 </pronouns>
 
+// STYLE
 <style>
 
 color = teal
 
 </style>
+
+// BIOGRAPHY
+<text>
+
+@B is the owner of + Flower Emporium, which does indeed sell flowers. However, business hasn't been too strong recently (thanks to that new donut bakery). @ has been contemplating = next steps to avoid financial distress.
+
+</text>
 
 </character>
 
@@ -223,7 +280,7 @@ The floor was a dark orange, and the walls were the same green painted on the bu
 [A: Hello. I'm looking for an office plant for a break room.]
 
 // We can use the (em dash) command to
-[B: Ah. Well,(em dash) this hearty Peace Lily flowers and can survive with less water, although if that is not an obstacle then I recommend this fern.]
+[B: Ah. Well,(em dash) this hearty Peace Lily is harder to over-water, although if that is not an obstacle then I recommend this fern.]
 
 @A took a few seconds to digest what <B said.
 
