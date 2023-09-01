@@ -157,6 +157,7 @@ body {
 /* This container holds the reader and the editor: */
 #mainPage {
 	display: flex;
+	flex-direction: row; /* Set this to column for aspect ratios <= X/X */
 	background-color: inherit;
 }
 
@@ -387,7 +388,6 @@ var Character = function (
 	code = "",
 	name = "Unnamed Character",
 	pronouns = genericPronouns,
-	usePluralVerbForm = false,
 	content = "There is no biographic summary present.",
 	color = "inherit",
 	paragraphColor = "inherit",
@@ -403,7 +403,6 @@ var Character = function (
 			this.pronouns [index] = genericPronouns [index];
 		}
 	}
-	this.usePluralVerbForm = usePluralVerbForm;
 	this.bio = content;
 	// Create an empty style subnode:
 	this.style = {};
@@ -433,7 +432,7 @@ var Character = function (
 	// Print a character to the console:
 	this.toString = function () {
 		const header = "Character " + this.name + " AKA (" + this.code + ")\n";
-		const values = "\nusePluralVerbForm: " + this.usePluralVerbForm + "\nstyle.color: " + this.style.color + "\nstyle.paragraphColor: " + this.style.paragraphColor + "\nstyle.backgroundColor: " + this.style.backgroundColor + "\nstyle.padding: " + this.style.padding;
+		const values = "\nstyle.color: " + this.style.color + "\nstyle.paragraphColor: " + this.style.paragraphColor + "\nstyle.backgroundColor: " + this.style.backgroundColor + "\nstyle.padding: " + this.style.padding;
 		return header + values + "\n\n--- Pronouns ---\n\n" + this.pronounsToString() + "\n\n--- Biography ---\n\n" + this.bio;
 	}
 };
@@ -675,7 +674,7 @@ var clearDDTXT = function () {
 			// Convert an already known reference type and a known code to the correct pronoun and/or character information
 			// spot, fullText, and withinDialogue parameters are used for debugging and context
 			getCharacterPronounByCode: function (code, referenceCharacter, spot, fullText, withinDialogue = false) {
-				const DDTXTCharacter = DDTXT.cast.getCharacterByCode(((referenceCharacter === "&") ? "" : code), " (This problem occurs around the following: \"" + fullText.substring(spot, spot + DDTXT.errorContextLength) + "\")"); // If the reference is a verb form checker (&), then pass through an empty string (which means reuse the previous code)
+				const DDTXTCharacter = DDTXT.cast.getCharacterByCode(((referenceCharacter === "&") ? "" : code), " (This problem occurs around the following: \"" + fullText.substring(spot, spot + DDTXT.debug.errorContextLength) + "\")"); // If the reference is a verb form checker (&), then pass through an empty string (which means reuse the previous code)
 				
 				const referenceToPronoun = {
 					["="]: "possessive",
@@ -686,17 +685,6 @@ var clearDDTXT = function () {
 					["{"]: "present",
 					["}"]: "presentCompacted",
 				};
-				// Unique cases
-				if (referenceCharacter === "&") { // Verb forms
-					if (DDTXT.cast.lastCharacterReferenced !== "") {
-						return (DDTXT.cast.lastReferenceType !== "@" && DDTXTCharacter.usePluralVerbForm) ? "" : code; // "code" here is the letters that should be used for the singular form of the verb. This ternary handles most cases of verb conjugations.
-						// If ((the character always uses plural verb form) or (the most recent reference is not the character's name)) then omit the extra letters of the verb.
-					}
-					else {
-						console.error("DDTXTReferenceError: There was an attempt to use shorthand with no previous character to go by! Please reference a character at least once before using this shorthand.");
-						return "";
-					}
-				}
 				
 				// Save the last reference type:
 				DDTXT.cast.lastReferenceType = referenceCharacter;
@@ -1054,29 +1042,21 @@ var clearDDTXT = function () {
 				// Final steps
 				
 				if (withinBrackets) { // Check for weird syntax problems
-					console.error("DDTXTSyntaxError: Character dialog has not been closed off around \"" + text.substring(0, DDTXT.errorContextLength) + "\".");
+					console.error("DDTXTSyntaxError: Character dialog has not been closed off around \"" + text.substring(0, DDTXT.debug.errorContextLength) + "\".");
 				}
 				
 				return text;
 			},
 			// Call this function to convert formatted DDTXT text to literal HTML text
 			format: function (text) {
-				// Convert all HTML segment ends to beginnings, since we are going to use a simple split:
-				text.replaceAll("(/hardbaked)", "(hardbaked)");
-				// Simply split by "(hardbaked)"s
-				const textChunks = text.split("(hardbaked)");
+				// Perform any splitting operation here.
 				
 				tempString = ""; // Create a temp string to concatenate to.
 				
-				for (currentChunk = 0; currentChunk < textChunks.length; currentChunk ++) { // Append each chunk, formatting, excluding odd chunks from formatting
-					if (currentChunk % 2 === 1) {
-						tempString += "<pre>" + textChunks [currentChunk].replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("&", "&amp;") + "</pre>";
-						// Convert all tags to their stringified equivalent and 
-					}
-					else {
-						tempString += DDTXT.cast.formatChunk(textChunks [currentChunk]);
-					}
-				}
+				// We are not spliting the document currently, but if you were to do so, you
+				// should use a for loop to iterate through each chunk of text.
+				
+				tempString += DDTXT.cast.formatChunk(text); // Since we are plugging in the entire document in one go, we'll simply concatenate the document here.
 				
 				return tempString;
 			},
@@ -1251,9 +1231,7 @@ const subParseTypes = [
 	"pronouns",
 ];
 
-// Text types:
-
-const HARDBAKED = 0;
+// As of v0.3.0 there are no text types (previously hardbaked). All text is in DDTXT format. Use the # or $ instead.
 
 // Variables for keeping track of limited parsing possibilites:
 var parseType = NONE; // Current main node type (global, chapter, ect...)
@@ -1389,7 +1367,6 @@ var parseDDTXTLine = function (line, lineNumber = -1) {
 						code = currentNode.code,
 						name = currentNode.name,
 						pronouns = currentNode.pronouns, // This is an object (string -> string dictionary)
-						usePluralVerbForm = toBool(currentNode.usePluralVerbForm),
 						bio = currentNode.content,
 						color = currentNode.style.color,
 						paragraphColor = currentNode.style.paragraphColor,
@@ -1421,16 +1398,6 @@ var parseDDTXTLine = function (line, lineNumber = -1) {
 		}
 		// Text node "parsing"
 		else if (currentlyInTextNode) {
-			if (textMode === HARDBAKED) {
-				textBuffer += "<br>"; // When text is hardbaked, lines are actually lines (the new lines are kept by DDTXT.cast.format())
-			}
-			// Hardbaked mode checks:
-			if (line === "(/hardbaked)") {
-				textMode = NONE;
-			}
-			else if (line === "(hardbaked)") {
-				textMode = HARDBAKED;
-			}
 			// Regular text addition:
 			textBuffer += ((DDTXT.addMissingSpaces && spacedPunctuation.includes(textBuffer [textBuffer.length - 1])) ? " " : "") + line; // Push the text forward to the text buffer, adding an extra space after certain punctuation if not present.
 		}
@@ -1516,11 +1483,24 @@ var parseDDTXT = function (text = stringifiedDDTXT) {
 	const lines = text.split("\n");
 	
 	if (lines [0] == DDTXTHeader) {
+		var inBlockComment = false; // Store whether we are inside of a block comment, denoted by /* and */.
+	
 		for (var currentLineIndex = 1; currentLineIndex < lines.length; currentLineIndex ++) { // Read each line
 			const line = lines [currentLineIndex].trim(); // Grab the line and trim it
-			// If the line is not empty or beginning with a comment identifier, then parse it
-			if (!(line === "" || line.substring(0, 2) === "//")) {
+			
+			// Check for block comments initially.
+			if (!inBlockComment && line.substring(0, 2) === "/*") {
+				inBlockComment = true;
+			}
+			
+			// If the line is not empty or beginning with a single or block comment start/end identifier, then parse it
+			else if (!(line === "" || line.substring(0, 2) === "//" || inBlockComment)) {
 				parseDDTXTLine(line, currentLineIndex + 1); // currentLineIndex + 1 is the line number that would be displayed in the actual file
+			}
+			
+			// Check for block comments ending (possibly on the same line as the start):
+			if (inBlockComment && line.substring(line.length - 2, line.length) === "*/") {
+				inBlockComment = false;
 			}
 		}
 		// Check for syntax errors:
@@ -1529,9 +1509,6 @@ var parseDDTXT = function (text = stringifiedDDTXT) {
 		}
 		if (parseType !== NONE) {
 			console.error("DDTXTNodeError: File ends without closing off a " + parseTypes [parseType + 1] + " node!");
-		}
-		if (textMode !== NONE) {
-			console.error("DDTXTNodeError: File ends without closing off a hardbaked segment of a text node!");
 		}
 		performFinalDDTXTChecks();
 	}
@@ -1847,8 +1824,10 @@ document.getElementById("editor-content").addEventListener("keydown", () => {cur
 document.getElementById("editor-content").addEventListener("keyup", () => {currentlyEditing = false});
 //document.getElementById("editor-content").onclick = adjustEditorWidth; // Currently broken
 
-// Debugging information for users:
-console.log("To see more about a character,\nuse the function tellMeAbout(<code>),\nwhere <code> is the character's code.");
+// Report a successful launch and provide information for advanced users (authors, mostly):
+const greeting = "Welcome to v0.3.0 of the DDTXT Language!";
+// The actual print:
+console.log(greeting + "\n\n---\n\nTo see more about a character,\nuse the function tellMeAbout(<code>),\nwhere <code> is the character's code.");
 
 // I'll use () => {} function shorthand here:
 var tellMeAbout = (code) => { console.log(DDTXT.cast.getCharacterByCode(code).toString()); };
