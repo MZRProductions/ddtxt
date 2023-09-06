@@ -20,7 +20,7 @@
 
 -->
 
-<!-- You are currently viewing v0.2.1 of the DDTXT language. -->
+<!-- You are currently viewing v0.3.0 of the DDTXT language. -->
 
 <!--
 TODO: Fix usePluralVerbForm Character attribute usage.
@@ -57,6 +57,8 @@ TODO: Verfiy that CSS inheritance (as in "color: inherit;" etc...) is applying D
 body {
 	color: white;
 	background-color: black;
+	margin-top: 1%;
+	margin-bottom: 1%;
 }
 
 #blankDocumentText {
@@ -67,6 +69,7 @@ body {
 #printText {
 	text-align: center;
 	font-size: 20px;
+	visibility: hidden; /* Start the print text out as hidden and show it upon loading a file. */
 }
 
 #fileButton {
@@ -90,6 +93,11 @@ body {
 }
 
 .chapterHeading {
+	break-before: page;
+	text-align: inherit;
+}
+
+.chapterTitle {
 	text-align: center;
 }
 
@@ -103,6 +111,7 @@ body {
 
 .dialogue {
    /* (Empty class to be used for organization) */
+	break-before: avoid;
 }
 
 #footerHolder {
@@ -157,7 +166,7 @@ body {
 /* This container holds the reader and the editor: */
 #mainPage {
 	display: flex;
-	flex-direction: row; /* Set this to column for aspect ratios <= X/X */
+	flex-direction: row; /* Set this to column for square or thinner aspect ratios. */
 	background-color: inherit;
 }
 
@@ -254,6 +263,16 @@ html {
 /* @media print holds special cases for printing the webpage */
 /* Printing can also mean converting to a PDF, which is the most useful purpose of the following adjustments: */
 @media print {
+	/* Add margins here with CSS? */
+	p {
+		margin-top: 1%;
+		margin-bottom: 1%;
+		break-inside: avoid-page;
+	}
+	.dialogue {
+		margin-top: 1%;
+		margin-bottom: 1%;
+	}
 	#footer {
 		display: none;
 	}
@@ -1169,7 +1188,7 @@ var convertDDTXTToHTML = function () {
 	// If there should be a table of contents, then generate that first:
 	if (DDTXT.global.provideTableOfContents) {
 		const tableOfContents = generateTableOfContents(); // Get generated table of contents in DDTXT format
-		HTMLFormat += "<h1 class=\"chapterHeading\" id=\"chapter-0\" style=\"color: " + DDTXT.style.headingColor + "\">Table of Contents</h1><br><p style=\"text-align: center; font-size: 20px\">" + DDTXT.cast.format(tableOfContents) + "</p>";
+		HTMLFormat += "<div class=\"chapterHeading\"><h1 class=\"chapterTitle\" id=\"chapter-0\" style=\"color: " + DDTXT.style.headingColor + "\">Table of Contents</h1></div><br><p style=\"text-align: center; font-size: 20px\">" + DDTXT.cast.format(tableOfContents) + "</p>";
 	}
 	
 	// Keep track of the numerical identity of each chapter
@@ -1178,7 +1197,7 @@ var convertDDTXTToHTML = function () {
 	// Append each chapter to the webpage (DDTXT.cast.format() does most of the work here)
 	for (const chapter of DDTXT.chapters) {
 		chapterNumber ++; // Increment the tracker (this starts at 1 since we do it before anything else)
-		HTMLFormat += "<br><h1 class=\"chapterHeading\" id=\"chapter-" + chapterNumber + "\" style=\"color: " + DDTXT.style.headingColor + "\">" + DDTXT.cast.format(chapter.name) + "</h1><h2 class=\"chapterSubHeading\" style=\"color: " + DDTXT.style.headingColor + "\">" + DDTXT.cast.format(chapter.subtitle) + "</h2><br><p>" + DDTXT.cast.format(chapter.text) + "</p>";
+		HTMLFormat += "<br><div class=\"chapterHeading\"><h1 class=\"chapterTitle\" id=\"chapter-" + chapterNumber + "\" style=\"color: " + DDTXT.style.headingColor + "\">" + DDTXT.cast.format(chapter.name) + "</h1><h2 class=\"chapterSubHeading\" style=\"color: " + DDTXT.style.headingColor + "\">" + DDTXT.cast.format(chapter.subtitle) + "</h2></div><br><p>" + DDTXT.cast.format(chapter.text) + "</p>";
 	}
 	
 	// Add a final space to provide more breathing room on the webpage:
@@ -1463,6 +1482,8 @@ var performFinalDDTXTChecks = function () {
 	// Always copy this saved value to the file information inside the DDTXT {} object:
 	DDTXT.global.filename = sourceFileName;
 	DDTXT.global.lastModified = sourceFileTime;
+	// Make the printing button at the bottom of the screen visible:
+	document.getElementById("printText").style.visibility = "visible";
 };
 
 var updateExternalText = function () {
@@ -1736,6 +1757,8 @@ var exportToDDTXT = function () {
 
 document.getElementById("editor-save").onclick = exportToDDTXT;
 
+document
+
 // Allow the editor to be opened and closed
 var editorState = true;
 var currentlyEditing = false;
@@ -1773,10 +1796,48 @@ var toggleEditor = function () {
 // Connect the press of the E key to opening and closing the editor:
 var checkForKey = function (key) {
 	// If E is pressed, we are not typing in the editor, there is a DDTXT loaded, and we are not looking at the document's summary, then toggle the editor.
-	if (key.key === "e" && !currentlyEditing && stringifiedDDTXT !== "" && !summaryIsOpen) {
+	if ((key.key === "e" || key.key === "E") && !currentlyEditing && stringifiedDDTXT !== "" && !summaryIsOpen) {
 		toggleEditor();
 	}
+	// CTRL + S saves your document.
+	if ((key.key === "s" || key.key === "S") && key.ctrlKey && stringifiedDDTXT !== "") {
+		exportToDDTXT();
+	}
 };
+
+// Screen accessibility: Place the editor below the document for mobile users (i.e: aspect ratio < 1).
+
+var updateViewStyle = function () {
+	// We will define a "narrow" screen as any screen that has an width (X) equal to or less than its height (Y).
+	// This means that hopefully computers of all forms can easily use the editor CSS.
+	// We will use innerWidth and innerHeight for increased customizability with native browser resizing.
+	
+	var flexDirection = "row";
+	
+	if (document.defaultView.innerWidth <= document.defaultView.innerHeight) {
+		console.log("SWAP");
+		flexDirection = "column";
+	}
+	
+	// Grant access to the page's CSS.
+	const CSSAccess = document.createElement("style");
+	CSSAccess.type = "text/css";
+	// Now, append information to the access.
+	CSSAccess.innerHTML = "#mainPage {\n\tflex-direction: " + flexDirection + ";\n}";
+	//
+	// #mainPage {
+	// 	flex-direction: DIRECTION;
+	// }
+	//
+	// Push the access to the actual document.
+	document.getElementsByTagName("head") [0].appendChild(CSSAccess);
+};
+
+// Call the above viewport adjustment once after loading the webpage:
+updateViewStyle();
+
+// Whenever the screen gets resized, update the viewport style:
+document.defaultView.onresize = updateViewStyle;
 
 // Connect the "Close Editor" button to closing the editor:
 
