@@ -57,18 +57,17 @@ TODO: Verfiy that CSS inheritance (as in "color: inherit;" etc...) is applying D
 body {
 	color: white;
 	background-color: black;
-	margin-top: 1%;
-	margin-bottom: 1%;
+	font-size: 18px;
 }
 
 #blankDocumentText {
 	text-align: center;
-	font-size: 20px;
+	font-size: 24px;
 }
 
 #printText {
 	text-align: center;
-	font-size: 20px;
+	font-size: 24px;
 	visibility: hidden; /* Start the print text out as hidden and show it upon loading a file. */
 }
 
@@ -263,15 +262,9 @@ html {
 /* @media print holds special cases for printing the webpage */
 /* Printing can also mean converting to a PDF, which is the most useful purpose of the following adjustments: */
 @media print {
-	/* Add margins here with CSS? */
-	p {
-		margin-top: 1%;
-		margin-bottom: 1%;
-		break-inside: avoid-page;
-	}
-	.dialogue {
-		margin-top: 1%;
-		margin-bottom: 1%;
+	@page {
+		size: auto;
+		margin: 1cm;
 	}
 	#footer {
 		display: none;
@@ -284,7 +277,9 @@ html {
 		display: none;
 	}
 	#DDTXT {
+		padding: 0.5cm;
 		width: 100%;
+		break-inside: auto;
 	}
 }
 
@@ -752,8 +747,6 @@ var clearDDTXT = function () {
 				
 				for (var currentChar = 0; currentChar + charactersShifted < text.length; currentChar ++) {
 					const spot = currentChar + charactersShifted;
-					
-					// Ascertain whether we are in HTML or not:
 					
 					// Ascertain whether we are in dialogue or not:
 					if (["[", "]"].includes(text [spot]) && text [spot - 1] !== "#") {
@@ -1538,6 +1531,8 @@ var parseDDTXT = function (text = stringifiedDDTXT) {
 	}
 	
 	// Print the object to the console. Some web consoles allow for interactive viewing of this information, which allows authors to make sure everything is correct.
+	
+	console.log((DDTXT.global.filename) ? (DDTXT.global.filename + ":") : ("DDTXT of unknown origin:"));
 	console.log(DDTXT);
 	// Having loaded all file contents to the DDTXT object, convert the DDTXT object into a string readable by HTML
 	convertDDTXTToHTML();
@@ -1571,7 +1566,6 @@ var createBlankDDTXT = function () {
 	const newFileName = (typeof(alertInput) !== "string" || alertInput === "") ? "untitled.ddtxt" : alertInput; // If no input is provided, then create a filename.
 	
 	sourceFileName = (newFileName.substring(newFileName.length - 6, newFileName.length) === ".ddtxt") ? newFileName : newFileName + ".ddtxt"; // Set the new file's name to the input, adding the correct file extension if not present.
-	console.log(alertInput + " | " + newFileName + " | " + sourceFileName);
 	sourceFileTime = Date.now(); // Set the new file's lastModified time to the current time.
 	
 	// Put only the DOCTYPE statement into the parser, but also trigger a file "loading," resetting the webpage.
@@ -1624,6 +1618,10 @@ var loadFileInput = function () {
 				return result; // Pass the raw DDTXT upward
 			}
 		);
+		
+		// .scroll(0, 0) resets the scroll of the given element.
+		// In this case, we want to reset the scroll of the document so that we do not start in the middle.
+		document.defaultView.scroll(0, 0);
 	}
 };
 
@@ -1646,6 +1644,8 @@ var printDDTXT = function () {
 	footer.visibility = "hidden";
 	
 	print(); // This seems to trigger the browser's webpage printing.
+	
+	// document.getElementById("DDTXT").style.fontSize = 
 	
 	// Show the footer again
 	footer.visibility = "visible";
@@ -1757,8 +1757,6 @@ var exportToDDTXT = function () {
 
 document.getElementById("editor-save").onclick = exportToDDTXT;
 
-document
-
 // Allow the editor to be opened and closed
 var editorState = true;
 var currentlyEditing = false;
@@ -1795,13 +1793,36 @@ var toggleEditor = function () {
 
 // Connect the press of the E key to opening and closing the editor:
 var checkForKey = function (key) {
-	// If E is pressed, we are not typing in the editor, there is a DDTXT loaded, and we are not looking at the document's summary, then toggle the editor.
-	if ((key.key === "e" || key.key === "E") && !currentlyEditing && stringifiedDDTXT !== "" && !summaryIsOpen) {
-		toggleEditor();
-	}
-	// CTRL + S saves your document.
-	if ((key.key === "s" || key.key === "S") && key.ctrlKey && stringifiedDDTXT !== "") {
-		exportToDDTXT();
+	// If we are not typing in the editor, and we are not looking at the document's summary, then check for keys:
+	if (!currentlyEditing && !summaryIsOpen) {
+		// If there is a DDTXT loaded:
+		if (stringifiedDDTXT !== "") {
+			// If E is pressed, there is a DDTXT loaded, then toggle the editor.
+			if (key.key === "e" || key.key === "E") {
+				toggleEditor();
+			}
+			// CTRL + S saves your document.
+			if ((key.key === "s" || key.key === "S") && key.ctrlKey) {
+				exportToDDTXT();
+			}
+			// P prints. Ctrl+P prints in most browsers by default, so either of these shortcuts should work.
+			if (key.key === "p" || key.key === "P") {
+				printDDTXT();
+			}
+		}
+		// If there isn't a DDTXT loaded:
+		else {
+			if (key.key === "Enter") {
+				// Pretend that we are clicking on the actual button:
+				inputReference.click();
+			}
+		}
+		
+		// R opens a new document, whether there is an open document or not. ENTER only works when there is nothing loaded (think of it as that big button is only selected in the beginning).
+		if (key.key === "r" || key.key === "R") {
+			// Once again, pretend that we clicked on the read button:
+			inputReference.click();
+		}
 	}
 };
 
@@ -1815,7 +1836,7 @@ var updateViewStyle = function () {
 	var flexDirection = "row";
 	
 	if (document.defaultView.innerWidth <= document.defaultView.innerHeight) {
-		console.log("SWAP");
+		//console.log("SWAP");
 		flexDirection = "column";
 	}
 	
