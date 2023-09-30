@@ -58,6 +58,7 @@ body {
 	color: white;
 	background-color: black;
 	font-size: 18px;
+	margin: 2%;
 }
 
 #blankDocumentText {
@@ -126,8 +127,7 @@ body {
 	background-color: inherit;
 	color: inherit;
 	padding: 1%;
-	margin-top: -1%;
-	margin-left: 1%;
+	margin-top: -2%;
 	border: 2px solid white;
 	display: flex;
 	font-size: 25px;
@@ -185,10 +185,10 @@ body {
 }
 
 #editor-content {
-	width: 48%;
-	max-width: 48%;
-	height: 70%;
-	max-height: 70%;
+	width: 46%;
+	max-width: 46%;
+	height: 65%;
+	max-height: 65%;
 	position: fixed;
 	resize: both;
 	/* The editor is always white text on a black background */
@@ -1761,29 +1761,48 @@ document.getElementById("editor-save").onclick = exportToDDTXT;
 var editorState = true;
 var currentlyEditing = false;
 
+var moveFooterForEditor = function (moveToRight = false) {
+	// If editor is on the left:
+	if (editorDirection === "row") {
+		if (moveToRight) {
+			footer.style.marginLeft = "50%";
+			footer.style.width = "50%";
+		}
+		else {
+			footer.style.marginLeft = "0%";
+			footer.style.width = "100%";
+		}
+	}
+	// If the editor is on the bottom, the footer will always be in the middle:
+	else {
+		footer.style.marginLeft = "0%";
+		footer.style.width = "100%";
+	}
+};
+
 // Open and close the editor:
 var refreshEditorVisibility = function () {
-	editorElement = document.getElementById("editor");
-	footer = document.getElementById("footer");
+	const editorElement = document.getElementById("editor");
+	const footer = document.getElementById("footer");
 	// Only show when the summary is hidden
 	if (editorState) {
 		// It's open. Close it.
 		editorElement.style.flex = 0;
 		editorElement.style.visibility = "hidden";
 		editorElement.style.display = "none";
-		footer.style.marginLeft = "0%";
-		footer.style.width = "100%";
+		moveFooterForEditor(moveToRight = false);
 	}
 	else {
 		// It's closed. Open it.
 		editorElement.style.flex = 1;
 		editorElement.style.visibility = "visible";
-		editorElement.style.display = "initial";
-		footer.style.marginLeft = "50%";
-		footer.style.width = "50%";
+		editorElement.style.display = "flex";
+		moveFooterForEditor(moveToRight = true);
 	}
 	// Always reset DDTXT's flex weight to 1
 	document.getElementById("DDTXT").style.flex = 1;
+	// Always update the editor's flex direction (row or column)
+	editorElement.style.flexDirection = editorDirection;
 };
 
 var toggleEditor = function () {
@@ -1828,30 +1847,26 @@ var checkForKey = function (key) {
 
 // Screen accessibility: Place the editor below the document for mobile users (i.e: aspect ratio < 1).
 
+var editorDirection = "row"; // Row is default (wide screens). Column would useful for phone screens or unique window sizes (multitasking).
+
 var updateViewStyle = function () {
 	// We will define a "narrow" screen as any screen that has an width (X) equal to or less than its height (Y).
 	// This means that hopefully computers of all forms can easily use the editor CSS.
 	// We will use innerWidth and innerHeight for increased customizability with native browser resizing.
+
+	// How we determine screen layout:
+	const screenIsSquare = document.defaultView.innerWidth <= document.defaultView.innerHeight;
+	const screenProportionality = document.defaultView.innerWidth / document.defaultView.innerHeight;
 	
-	var flexDirection = "row";
+	// Update editor positon:
+	editorDirection = (screenIsSquare) ? "column" : "row";
+	refreshEditorVisibility();
 	
-	if (document.defaultView.innerWidth <= document.defaultView.innerHeight) {
-		//console.log("SWAP");
-		flexDirection = "column";
-	}
+	// Update UI height (cannot go below 11%);
+	document.getElementById("ui").style.height = (screenIsSquare) ? "auto" : "11%";
 	
-	// Grant access to the page's CSS.
-	const CSSAccess = document.createElement("style");
-	CSSAccess.type = "text/css";
-	// Now, append information to the access.
-	CSSAccess.innerHTML = "#mainPage {\n\tflex-direction: " + flexDirection + ";\n}";
-	//
-	// #mainPage {
-	// 	flex-direction: DIRECTION;
-	// }
-	//
-	// Push the access to the actual document.
-	document.getElementsByTagName("head") [0].appendChild(CSSAccess);
+	// Add some padding to the top of the document to make up for the increased UI size;
+	document.getElementById("DDTXT").style.marginTop = (screenIsSquare) ? 15 / screenProportionality + "%" : "auto";
 };
 
 // Call the above viewport adjustment once after loading the webpage:
