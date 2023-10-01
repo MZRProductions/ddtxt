@@ -1700,26 +1700,70 @@ document.onscroll = updateScrollProgress;
 // Attach the update function to the input element
 inputReference.addEventListener("change", updateFileInput);
 
-// Editor functions
 
-// Jump to the bottom of the editor and document
-var jumpToEditorBottom = function () {
+// Editor functions:
+
+
+var getDDTXTScroll = function () {
+	// Return a table of numbers:
+	
+	// Editor:
+	
 	const editorElement = document.getElementById("editor-content");
+	// Y
 	const editorElementLength = editorElement.scrollHeight - (document.getElementById("footer").scrollHeight * 2);
-	document.defaultView.scroll(0, editorElementLength); // x: 0, y: editorElementLength
-	editorElement.scroll(0, editorElementLength)
+	// X
+	const editorElementWidth = editorElement.scrollWidth;
+	
+	// Document:
+	
+	const DDTXTElement = document.getElementById("mainPage");
+	// Y
+	const DDTXTElementLength = DDTXTElement.scrollHeight; // - (document.getElementById("footer").scrollHeight * 2);
+	// X
+	const DDTXTElementWidth = DDTXTElement.scrollWidth;
+	
+	return {
+		DDTXT: {
+			y: DDTXTElementLength,
+			yPercent: document.defaultView.scrollY / DDTXTElementLength,
+			x: DDTXTElementWidth,
+			xPercent: document.defaultView.scrollX / DDTXTElementWidth
+		},
+		editor: {
+			reference: editorElement,
+			y: editorElementLength,
+			x: editorElementWidth,
+		},
+	};
 };
 
-document.getElementById("editor-bottom").onclick = jumpToEditorBottom;
+var scrollDDTXTAndEditor = function (xPercent, yPercent) {
+	// Prep numbers:
+	
+	const scrollValues = getDDTXTScroll();
+	
+	// Actually scroll.
+	document.defaultView.scroll(scrollValues.DDTXT.x * xPercent, scrollValues.DDTXT.y * yPercent); // x: 0, y: editorElementLength
+	// The editor element's reference is saved in the above table:
+	const editorElement = scrollValues.editor.reference;
+	editorElement.scroll(scrollValues.editor.x * xPercent, scrollValues.editor.y * yPercent);
+};
 
 // Jump to the top of the editor and document
 var jumpToEditorTop = function () {
 	// .scroll(0, 0) resets the scroll of the given element.
-	document.defaultView.scroll(0, 0);
-	document.getElementById("editor-content").scroll(0, 0);
+	scrollDDTXTAndEditor(0, 0);
 };
 
 document.getElementById("editor-top").onclick = jumpToEditorTop;
+
+// Jump to the bottom of the editor and document
+var jumpToEditorBottom = function () {
+	scrollDDTXTAndEditor(1, 1);
+};
+
+document.getElementById("editor-bottom").onclick = jumpToEditorBottom;
 
 // Refresh the contents of the editor to the reader (push changes forward to the right side of the screen)
 var refreshEditorToDDTXT = function () {
@@ -1810,6 +1854,57 @@ var toggleEditor = function () {
 	refreshEditorVisibility();
 };
 
+// We are going to use the modern string identifiers, but here are the more traditional key codes as a backup.
+const K_ARROWUP = 38;
+const K_ARROWDOWN = 40;
+// Sprinting scroll speed:
+const sprintSpeed = 0.05; // (In percent of document)
+
+var upArrowIsPressed = function (key) {
+	return (key.key === "ArrowUp" || key.keyCode === K_ARROWUP);
+};
+
+var downArrowIsPressed = function (key) {
+	return (key.key === "ArrowDown" || key.keyCode === K_ARROWDOWN);
+};
+
+var scrollPeriod = 4; // Number of times scrolling is checked before it can be refreshed.
+var timesSinceLastScroll = scrollPeriod; // This is a number of function calls, not time. (times, NOT TIME)
+
+var scrollIncrementally = function (key) {
+	// (This code is triggered only when doing Shift+Up or Shift+Down.)
+	
+	if (timesSinceLastScroll >= scrollPeriod) {
+		const scrollValues = getDDTXTScroll();
+		console.log(scrollValues);
+		if (upArrowIsPressed(key) && key.shiftKey) {
+			scrollDDTXTAndEditor(0, scrollValues.DDTXT.yPercent - sprintSpeed); // Infinity -> 0 is upward (remember, (0, 0) is the top of the document).
+		}
+		else if (downArrowIsPressed(key) && key.shiftKey) {
+			scrollDDTXTAndEditor(0, scrollValues.DDTXT.yPercent + sprintSpeed); // 0 -> Infinity is downward.
+		}
+		timesSinceLastScroll = -1; // We are going to increment it below, so to get zero, we must use -1.
+	}
+	
+	timesSinceLastScroll ++;
+};
+
+var checkNumberScrolling = function (key) {
+	// Chunk scrolling (1st tenth, 2nd tenth, etc...)
+	const keyToNumber = (parseInt(key.key)) ? (parseInt(key.key) % 10) : null; // Subtract 1 from the key number (before wrapping) and then constrain it from 1 to 9, if the stringified key code even is a number. (otherwise, forget it).
+	// (It makes sense to me.)
+	if (keyToNumber) { // If all went well;
+		scrollDDTXTAndEditor(0, keyToNumber / 10); // Each number is a tenth.
+	}
+	// Add 0 and 10 back in, for QoL. For example, if you press 1 and then want to go up further, instead of pressing Ctrl+Up, you can just press "`".
+	else if (key.key === "`") {
+		jumpToEditorTop();
+	}
+	else if (key.key === "0") {
+		jumpToEditorBottom();
+	}
+};
+
 // Connect the press of the E key to opening and closing the editor:
 var checkForKey = function (key) {
 	// If we are not typing in the editor, and we are not looking at the document's summary, then check for keys:
@@ -1819,10 +1914,6 @@ var checkForKey = function (key) {
 			// If E is pressed, there is a DDTXT loaded, then toggle the editor.
 			if (key.key === "e" || key.key === "E") {
 				toggleEditor();
-			}
-			// CTRL + S saves your document.
-			if ((key.key === "s" || key.key === "S") && key.ctrlKey) {
-				exportToDDTXT();
 			}
 			// P prints. Ctrl+P prints in most browsers by default, so either of these shortcuts should work.
 			if (key.key === "p" || key.key === "P") {
@@ -1842,6 +1933,32 @@ var checkForKey = function (key) {
 			// Once again, pretend that we clicked on the read button:
 			inputReference.click();
 		}
+	}
+	// Editor shortcuts: (these only apply to the editor)
+	else {
+		if (stringifiedDDTXT !== "" && !summaryIsOpen) { // Only trigger when there's a document and we aren't looking at the document's summary.
+			// CTRL + S saves your document.
+			if ((key.key === "s" || key.key === "S") && key.ctrlKey) {
+				exportToDDTXT();
+			}
+			// CTRL + Q refreshes your final (translated) document based on changes made.
+			if ((key.key === "q" || key.key === "Q") && key.ctrlKey) {
+				refreshEditorToReader();
+			}
+		}
+	}
+	// Document scrolling (these shortcuts always apply to the main document, no matter where you are) if a document is open:
+	if (stringifiedDDTXT !== "") {
+		// Sprinting
+		scrollIncrementally(key);
+		// Instant to top or bottom:
+		if (upArrowIsPressed(key) && key.ctrlKey) { // We are checking old and new identifiers for maximum compatibility.
+			jumpToEditorTop();
+		}
+		if (downArrowIsPressed(key) && key.ctrlKey) { // We are checking old and new identifiers for maximum compatibility.
+			jumpToEditorBottom();
+		}
+		checkNumberScrolling(key);
 	}
 };
 
