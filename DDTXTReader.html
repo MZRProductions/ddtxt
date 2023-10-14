@@ -229,6 +229,33 @@ body {
 	overflow-y: scroll; /* Only scroll vertically */
 }
 
+/* (Implementation of the summary box and the error menu is roughly the same.) */
+
+#errorMenu {
+	width: 120%;
+	height: 125%;
+	visibility: hidden;
+	position: fixed;
+	margin-left: -10%;
+	margin-top: -10%;
+	background-color: red;
+}
+
+#errorMenu-content {
+	font-size: 20px;
+	position: fixed;
+	width: 80%;
+	height: 60%;
+	/* Half of 100% - 80% is 10%. We add 10% to that to counteract the division being 120% of both dimensions. (20%)
+	Then, we have to subtract the padding of both sides of each dimension (2 x 2% = 4%), leaving us with 16% */
+	margin: 16%;
+	padding: 2%;
+	background-color: black;
+	color: white;
+	border: 2px ridge maroon;
+	overflow-y: scroll; /* Only scroll vertically */
+}
+
 .summary-character {
 	display: flex;
 }
@@ -276,6 +303,9 @@ html {
 	#summary {
 		display: none;
 	}
+	#errorMenu {
+		display: none;
+	}
 	#DDTXT {
 		padding: 0.5cm;
 		width: 100%;
@@ -320,6 +350,12 @@ html {
 
 </div>
 
+<div id="errorMenu">
+
+<p id="errorMenu-content"></p>
+
+</div>
+
 <div id="mainPage">
 
 <!-- DDTXT editor -->
@@ -331,6 +367,7 @@ html {
 			<td id="editor-refresh" class="editor-style"><p class="editor-style-inner">Refresh DDTXT</p></td>
 			<td id="editor-bottom" class="editor-style"><p class="editor-style-inner">Jump to Bottom</p></td>
 			<td id="editor-top" class="editor-style"><p class="editor-style-inner">Jump to Top</p></td>
+			<td id="editor-errorMenu" class="editor-style" style="background-color: red;"><p class="editor-style-inner">Errors</p></td>
 			<td id="editor-close" class="editor-style"><p class="editor-style-inner">Close Editor</p></td>
 		</tr>
 		<tr>
@@ -592,16 +629,18 @@ var clearDDTXT = function () {
 			ASSIGNMENTERROR: 2,
 			NODEERROR: 3,
 			FILEERROR: 4,
+			REFERENCEERROR: 5,
 			// Organized list or error types for helper functions:
-			types: ["syntax", "link", "assignment", "node", "file"], // Number to string
+			types: ["syntax", "link", "assignment", "node", "file", "reference"], // Number to string
 			typeToCode: { // String to number
-				["syntax"]: SYNTAXERROR,
-				["link"]: LINKERROR,
-				["assignment"]: ASSIGNMENTERROR,
-				["node"]: NODEERROR,
-				["file"]: FILEERROR
+				["syntax"]: 0,
+				["link"]: 1,
+				["assignment"]: 2,
+				["node"]: 3,
+				["file"]: 4,
+				["reference"]: 5,
 			},
-			formalTypes: ["DDTXTSyntaxError", "DDTXTLinkError", "DDTXTAssignmentError", "DDTXTNodeError", "DDTXTFileError"], // (For improved reading)
+			formalTypes: ["DDTXTSyntaxError", "DDTXTLinkError", "DDTXTAssignmentError", "DDTXTNodeError", "DDTXTFileError", "DDTXTReferenceError"], // (For improved reading)
 			basicHelp: [
 				// 0, SYNTAXERROR
 				"",
@@ -612,7 +651,8 @@ var clearDDTXT = function () {
 				// 3, NODEERROR
 				"",
 				// 4, FILEERROR,
-				""
+				"",
+				// 5, REFERENCEERROR,
 			],
 			// Helper functions:
 			getTypeFromCode: function (code) { // Grab an error from the type list.
@@ -656,7 +696,7 @@ var clearDDTXT = function () {
 				}
 			},
 			// Static error objects:
-			newError: function (errorTypeOrCode = -1, context = "No context to share. (Maybe try undoing your most recent action?)", location = "Unknown location") {
+			newError: function (errorTypeOrCode = -1, context = "No context to share. (Maybe try undoing your most recent action?)", spot = "Unknown location") {
 				// Convert all error types to numbers:
 				if (typeof(errorTypeOrCode) === "string") {
 					errorTypeOrCode = getCodeFromType(errorTypeOrCode);
@@ -669,36 +709,45 @@ var clearDDTXT = function () {
 				const errorObject = {
 					code: errorTypeOrCode,
 					text: context,
-					spot: location,
+					spot: spot,
 				};
 				
 				return errorObject;
 			},
+			
 			// Logging an error (by creating a new error object and passing this along to the regular console):
-			log: function (errorTypeOrCode, context, location) {
-				const currentErrorIndex = DDTXT.error.list.length; // Get the length of the list and place the error in that spot.
-				DDTXT.error.list [currentErrorIndex] = DDTXT.error.newError(errorTypeOrCode, context, location); // Place it.
-				console.log("New " + DDTXT.error.getFormalTypeFromCode(DDTXT.error.list [currentErrorIndex].code) + ":\n\nReported Location: " + DDTXT.error.list [currentErrorIndex].spot + "\n\n" + DDTXT.error.list [currentErrorIndex].text); // Use the placed data to give a neater picture to the console.
-			},
+			
 			// How to create DDTXT formatted text to display in the DDTXT Error Console:
-			consoleHeader: "(Click anywhere to close.) (break) This menu displays all current errors in the document: (horizon) ",
-			generateErrorConsole: function () {
+			menuHeader: "(Click anywhere to close.) (break) This menu displays all current errors in the document: (horizon) ",
+			generateErrorMenuText: function () {
 				// Only go through all this if there are errors:
 				if (DDTXT.error.list.length > 0) {
 					var consoleText = ""; // Create a text buffer.
 					// For each error:
 					for (var currentError = 0; currentError < DDTXT.error.list.length; currentError ++) {
 						const errorData = DDTXT.error.list [currentError];
-						consoleText += "[##" + DDTXT.error.getFormalTypeFromCode(errorData.code) + ": At or around " + errorData.spot + "] " + errorData.text + " (horizon) " + DDTXT.error.getBasicHelpFromCode(errorData.code + " (break) ");
+						consoleText += "[##" + DDTXT.error.getFormalTypeFromCode(errorData.code) + ": At or around " + errorData.spot + "] " + errorData.text + " (horizon) " + DDTXT.error.getBasicHelpFromCode(errorData.code) + " (break) ";
 					}
 					// Return the whole stringified list of errors.
-					return DDTXT.error.consoleHeader + consoleText + "(Click anywhere to close.)";
+					return DDTXT.error.menuHeader + consoleText + "(Click anywhere to close.)";
 				}
 				// No errors. Yay!
 				else {
-					return DDTXT.error.consoleHeader + "There are no errors to report! Great job!";
+					return DDTXT.error.menuHeader + "There are no errors to report! Great job!";
 				}
-			}
+			},
+			// Push new errors to the error menu.
+			updateErrorMenu: function () {
+				document.getElementById("errorMenu-content").innerHTML = DDTXT.cast.format(DDTXT.error.generateErrorMenuText()); // Build a list of errors and convert it to HTML.
+			},
+			
+			// Log a DDTXT Error.
+			log: function (errorTypeOrCode, context, spot) {
+				const currentErrorIndex = DDTXT.error.list.length; // Get the length of the list and place the error in that spot.
+				DDTXT.error.list [currentErrorIndex] = DDTXT.error.newError(errorTypeOrCode, context, spot); // Place it.
+				DDTXT.error.updateErrorMenu(), // Push the new error to the error menu.
+				console.error("New " + DDTXT.error.getFormalTypeFromCode(DDTXT.error.list [currentErrorIndex].code) + ":\n\nReported Spot: " + DDTXT.error.list [currentErrorIndex].spot + "\n\n" + DDTXT.error.list [currentErrorIndex].text); // Use the placed data to give a neater picture to the console.
+			},
 		},
 		addMissingSpaces: true, // Whether or not the DDTXT parser should append needed spaces after most punctuation.
 		// NOTE: (addMissingSpaces = true) is a good idea because it maintains consistency no matter how the DDTXT is spaced out.
@@ -718,7 +767,7 @@ var clearDDTXT = function () {
 			characters: {}, // Empty list to be filled with characters
 			lastCharacterReferenced: "",
 			lastReferenceType: "",
-			getCharacterByCode: function (code, context) {
+			getCharacterByCode: function (code, errorContext) {
 				code = code.split(".") [0]; // If bad concatenation results in two sentences getting smooshed together, only use the part of the code before the period (this code works whether there is a period or not.
 				// Allow for implicit character references (shorthand for referencing the same character multiple times in a row)
 				if (code === "") { // Shorthand (there is no character code)
@@ -726,7 +775,11 @@ var clearDDTXT = function () {
 						code = DDTXT.cast.lastCharacterReferenced; // Use the previously referenced character as a reference (redundancy)
 					}
 					else {
-						console.error("DDTXTReferenceError: There was an attempt to use shorthand with no previous character to go by! Please reference a character at least once before using this shorthand." + context);
+						DDTXT.error.log(
+							DDTXT.error.REFERENCEERROR,
+							"There was an attempt to use shorthand with no previous character to go by! Please reference a character at least once before using this shorthand.",
+							errorContext
+						);
 						return new Character();
 					}
 				}
@@ -737,7 +790,11 @@ var clearDDTXT = function () {
 					return result;
 				}
 				else {
-					console.error("DDTXTReferenceError: Character of code \"" + code + "\" does not exist or has not been registered." + context);
+					DDTXT.error.log(
+						DDTXT.error.REFERENCEERROR,
+						"Character of code \"" + code + "\" does not exist or has not been registered.",
+						errorContext
+					);
 					return new Character();
 				}
 			},
@@ -1007,7 +1064,11 @@ var clearDDTXT = function () {
 						const dialog = splitLineAtFirst(text.substring(lastSpot + 1 + charactersShifted, spot), ":"); // Pull out the dialog and split it into both parts, assuming any extra colons are part of the dialog.
 						// Syntax error handling
 						if (dialog.length < 2) {
-							console.error("DDTXTSyntaxError: Character dialog does not have a colon around \"" + dialog [0] + "\"");
+							DDTXT.error.log(
+								DDTXT.error.SYNTAXERROR,
+								context = "Character dialog does not have a colon.",
+								"\"" + dialog [0] + "\""
+							);
 							return text;
 						}
 						
@@ -1060,7 +1121,10 @@ var clearDDTXT = function () {
 									document.getElementById(linkAddress);
 								}
 								catch {
-									console.log("DDTXTLinkError: Link unreadable! Links to other chapters must be in the form chapter-X, where X is the chapter number with no leading zeroes. This is case sensitive (6 is fine, but 006 is not fine.)");
+									DDTXT.error.log(
+										DDTXT.error.LINKERROR,
+										context = "Link unreadable! Links to other chapters must be in the form chapter-X, where X is the chapter number with no leading zeroes. This is case sensitive (6 is fine, but 006 is not fine.)"
+									);
 								}
 							}
 							// Standard link using target mode, address, and text to display:
@@ -1179,7 +1243,11 @@ var clearDDTXT = function () {
 				// Final steps
 				
 				if (withinBrackets) { // Check for weird syntax problems
-					console.error("DDTXTSyntaxError: Character dialog has not been closed off around \"" + text.substring(0, DDTXT.debug.errorContextLength) + "\".");
+					DDTXT.error.log(
+						DDTXT.error.SYNTAXERROR,
+						conttext = "Character dialog has not been closed off.",
+						spot = "\"" + text.substring(0, DDTXT.debug.errorContextLength) + "\"."
+					);
 				}
 				
 				return text;
@@ -1436,7 +1504,11 @@ var parseDDTXTLine = function (line, lineNumber = -1) {
 			subParseType = NONE;
 		}
 		else if (line [0] !== "<") { // Line is not a tag, therefore it is assignment information not going anywhere:
-			console.error("DDTXTNodeError: Misplaced information at the top level at line " + ((lineNumber === -1) ? "UNKNOWN" : lineNumber) + ": \"" + line + "\"");
+			DDTXT.error.log(
+				DDTXT.error.ASSIGNMENTERROR,
+				context = "Misplaced information at the top level.",
+				spot = "Line " + ((lineNumber === -1) ? "UNKNOWN" : lineNumber) + ": \"" + line + "\""
+			);
 		}
 	}
 	// Check for breaking:
@@ -1560,11 +1632,19 @@ var parseDDTXTLine = function (line, lineNumber = -1) {
 			
 			// Error handling
 			if (splitLine.length < 2) {
-				console.error("DDTXTAssignmentError: Line " + ((lineNumber === -1) ? "UNKNOWN" : lineNumber) + " does not have an equal sign (\"=\"): \"" + line + "\"");
+				DDTXT.error.log(
+					DDTXT.error.ASSIGNMENTERROR,
+					context = "Line \"" + line + "\" does not have an equal sign (\"#=\")",
+					spot = "Line " + ((lineNumber === -1) ? "UNKNOWN" : lineNumber),
+				);
 				return;
 			}
 			else if (splitLine.length > 2) {
-				console.error("DDTXTAssignmentError: Line " + ((lineNumber === -1) ? "UNKNOWN" : lineNumber) + " has an extra equal sign (\"=\"): \"" + line + "\"");
+				DDTXT.error.log(
+					DDTXT.error.ASSIGNMENTERROR,
+					context = "Line \"" + line + "\" has an extra equal sign (\"#=\")",
+					spot = "Line " + ((lineNumber === -1) ? "UNKNOWN" : lineNumber),
+				);
 				return;
 			}
 			
@@ -1609,6 +1689,10 @@ var updateExternalText = function () {
 	document.getElementById("webpageTitle").innerHTML = DDTXT.global.webtitle + " (" + DDTXT.global.filename + ")";
 	// Now that we know the last modified date, generate the DDTXT's summary:
 	document.getElementById("summary-content").innerHTML = generateHTMLSummaryText();
+	// Update the document's error menu:
+	DDTXT.error.updateErrorMenu();
+	// Update the error menu button based on whether or not there are errors.
+	document.getElementById("editor-errorMenu").style.backgroundColor = (DDTXT.error.list.length > 0) ? "red" : "darkblue";
 };
 
 var parseDDTXT = function (text = stringifiedDDTXT) {
@@ -1644,15 +1728,25 @@ var parseDDTXT = function (text = stringifiedDDTXT) {
 		}
 		// Check for syntax errors:
 		if (subParseType !== NONE) {
-			console.error("DDTXTNodeError: File ends without closing off a " + subParseTypes [subParseType] + " subnode!");
+			DDTXT.error.log(
+				DDTXT.error.NODEERROR,
+				context = "File ends without closing off a " + subParseTypes [subParseType] + " subnode!",
+			);
 		}
 		if (parseType !== NONE) {
-			console.error("DDTXTNodeError: File ends without closing off a " + parseTypes [parseType + 1] + " node!");
+			DDTXT.error.log(
+				DDTXT.error.NODEERROR,
+				context = "File ends without closing off a " + parseTypes [parseType + 1] + " node!",
+			);
 		}
 		performFinalDDTXTChecks();
 	}
 	else {
-		console.error("DDTXTFileError: Current file is not a DDTXT! (The first line must be \"" + DDTXTHeader + "\" exactly.)");
+		DDTXT.error.log(
+			DDTXT.error.FILEERROR,
+			context = "Current file is not a DDTXT! (The first line must be \"" + DDTXTHeader + "\" exactly.)",
+			spot = "Line 1",
+		);
 	}
 	
 	// Print the object to the console. Some web consoles allow for interactive viewing of this information, which allows authors to make sure everything is correct.
@@ -2034,7 +2128,7 @@ var checkNumberScrolling = function (key) {
 // Connect the press of the E key to opening and closing the editor:
 var checkForKey = function (key) {
 	// If we are not typing in the editor, and we are not looking at the document's summary, then check for keys:
-	if (!currentlyEditing && !summaryIsOpen) {
+	if (!currentlyEditing && !(summaryIsOpen || errorMenuIsOpen)) {
 		// If there is a DDTXT loaded:
 		if (stringifiedDDTXT !== "") {
 			// If E is pressed, there is a DDTXT loaded, then toggle the editor.
@@ -2064,7 +2158,7 @@ var checkForKey = function (key) {
 	}
 	// Editor shortcuts: (these only apply to the editor)
 	else {
-		if (stringifiedDDTXT !== "" && !summaryIsOpen) { // Only trigger when there's a document and we aren't looking at the document's summary.
+		if (stringifiedDDTXT !== "" && !(summaryIsOpen || errorMenuIsOpen)) { // Only trigger when there's a document and we aren't looking at the document's summary.
 			// CTRL + S saves your document.
 			if ((key.key === "s" || key.key === "S") && key.ctrlKey) {
 				exportToDDTXT();
@@ -2123,14 +2217,16 @@ document.defaultView.onresize = updateViewStyle;
 
 document.getElementById("editor-close").onclick = toggleEditor;
 
-// Summary box:
+// Summary box and error console (same implementation):
 
 var summaryIsOpen = false;
+var errorMenuIsOpen = false;
 // Hold the editor's state while in summary so that we can bring it back if needed:
 var tempEditorState;
 const summaryReference = document.getElementById("summary");
+const errorMenuReference = document.getElementById("errorMenu");
 
-// Main summary box:
+// Main summary and error console box (when opened, any click closes the summary / error console):
 
 summaryReference.onclick = function () {
 	summaryIsOpen = false;
@@ -2139,11 +2235,26 @@ summaryReference.onclick = function () {
 	refreshEditorVisibility();
 };
 
-// Summary button:
+errorMenuReference.onclick = function () {
+	errorMenuIsOpen = false;
+	errorMenuReference.style.visibility = "hidden";
+	editorState = tempEditorState; // Use the saved state. (See below)
+	refreshEditorVisibility();
+};
+
+// Summary button and editor error menu button:
 
 document.getElementById("ui-summary").onclick = function () {
 	summaryIsOpen = true;
 	summaryReference.style.visibility = "visible";
+	tempEditorState = editorState; // Save the editor's state.
+	editorState = true; // Close the editor no matter what.
+	refreshEditorVisibility();
+};
+
+document.getElementById("editor-errorMenu").onclick = function () {
+	errorMenuIsOpen = true;
+	errorMenuReference.style.visibility = "visible";
 	tempEditorState = editorState; // Save the editor's state.
 	editorState = true; // Close the editor no matter what.
 	refreshEditorVisibility();
