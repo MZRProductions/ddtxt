@@ -327,7 +327,7 @@ html {
 <div id="editor">
 	<table id="editor-ui">
 		<tr>
-			<td id="editor-save" class="editor-style"><p class="editor-style-inner">Export DDTXT</p></td>
+			<td id="editor-save" class="editor-style" style="background-color: green;"><p class="editor-style-inner">Export DDTXT</p></td>
 			<td id="editor-refresh" class="editor-style"><p class="editor-style-inner">Refresh DDTXT</p></td>
 			<td id="editor-bottom" class="editor-style"><p class="editor-style-inner">Jump to Bottom</p></td>
 			<td id="editor-top" class="editor-style"><p class="editor-style-inner">Jump to Top</p></td>
@@ -549,10 +549,15 @@ var trimStringToValidPart = function (disallowedChars, string) {
 	return tempString;
 };
 
-// Return the correct part and the trimmed part, in case we need it too  
+// Return the correct part and the trimmed part, in case we need it too:
 var trimAndRetainStringToValidPart = function (disallowedChars, string) {
 	const tempString = trimStringToValidPart(disallowedChars, string); // Use the function above to trim the string.
 	return [tempString, string.substring(tempString.length, string.length)]; // Then, using the length to find what was cut, give us the part that was trimmed.
+};
+
+// Log a DDTXT error that is saved to a more accessible object format (and passed along to the webpage console):
+var logDDTXTError = function () {
+	
 };
 
 var clearDDTXT = function () {
@@ -560,6 +565,7 @@ var clearDDTXT = function () {
 	// All of these values are default values.
 	DDTXT = {
 		style: {
+			// Default CSS style:
 			color: "black",
 			titleColor: "inherit",
 			headingColor: "inherit",
@@ -576,9 +582,128 @@ var clearDDTXT = function () {
 			logLoading: false, // To see dollar sign parsing time, set this to true. This is turned off by default.
 			loadTime: 0, // READ-ONLY. How much time the document took to load.
 		},
+		error: {
+			// CURRENT ERRORS:
+			list: [],
+			// FUNCTIONAL ERROR CONSTANTS: (THESE SHOULD NOT BE MODIFIED WITHOUT SUBSTANTIAL FURTHER CHANGE!)
+			UNKNOWNERROR: -1, // USE THIS CODE FOR ALL UNKNOWN ERRORS
+			SYNTAXERROR: 0,
+			LINKERROR: 1,
+			ASSIGNMENTERROR: 2,
+			NODEERROR: 3,
+			FILEERROR: 4,
+			// Organized list or error types for helper functions:
+			types: ["syntax", "link", "assignment", "node", "file"], // Number to string
+			typeToCode: { // String to number
+				["syntax"]: SYNTAXERROR,
+				["link"]: LINKERROR,
+				["assignment"]: ASSIGNMENTERROR,
+				["node"]: NODEERROR,
+				["file"]: FILEERROR
+			},
+			formalTypes: ["DDTXTSyntaxError", "DDTXTLinkError", "DDTXTAssignmentError", "DDTXTNodeError", "DDTXTFileError"], // (For improved reading)
+			basicHelp: [
+				// 0, SYNTAXERROR
+				"",
+				// 1, LINKERROR
+				"",
+				// 2, ASSIGNMENTERROR
+				"",
+				// 3, NODEERROR
+				"",
+				// 4, FILEERROR,
+				""
+			],
+			// Helper functions:
+			getTypeFromCode: function (code) { // Grab an error from the type list.
+				try {
+					return DDTXT.error.types [code];
+				}
+				catch {
+					console.log(DDTXT.error.typeToCode);
+					console.log("The code you provided does not correspond to a recognized error type.\nPlease consult this list to find your desired error.");
+					return "unknown";
+				}
+			},
+			getFormalTypeFromCode: function (code) { // Grab a more readable error from the type list.
+				try {
+					return DDTXT.error.formalTypes [code];
+				}
+				catch {
+					console.log("Code \"" + code + "\" is not recognized!");
+					return "Unknown Error";
+				}
+			},
+			// Call this function to translate from a string to a code.
+			getCodeFromType: function (type) {
+				try {
+					return DDTXT.error.codeToType [type];
+				}
+				catch {
+					console.log(DDTXT.error.types);
+					console.log("The type you provided does not correspond to a recognized error code.\nPlease consult this list to find your desired error.");
+					return -1; // ESTABLISHED CODE FOR UNKNOWN ERRORS
+				}
+			},
+			// Call this function to attain basic help for a certain error type.
+			getBasicHelpFromCode: function (code) {
+				try {
+					return DDTXT.error.basicHelp [code];
+				}
+				catch {
+					console.log(DDTXT.error.basicHelp);
+					return "This problem is not recognized as an official error. Please consult this list to see if one of these could be your solution. As always, try undoing your most recent action to until you can narrow down the problem.";
+				}
+			},
+			// Static error objects:
+			newError: function (errorTypeOrCode = -1, context = "No context to share. (Maybe try undoing your most recent action?)", location = "Unknown location") {
+				// Convert all error types to numbers:
+				if (typeof(errorTypeOrCode) === "string") {
+					errorTypeOrCode = getCodeFromType(errorTypeOrCode);
+				}
+				// Convert all data types not of string or number to -1 (unknown):
+				if (typeof(errorTypeOrCode) !== "number") {
+					errorTypeOrCode = -1;
+				}
+				// Return a static object.
+				const errorObject = {
+					code: errorTypeOrCode,
+					text: context,
+					spot: location,
+				};
+				
+				return errorObject;
+			},
+			// Logging an error (by creating a new error object and passing this along to the regular console):
+			log: function (errorTypeOrCode, context, location) {
+				const currentErrorIndex = DDTXT.error.list.length; // Get the length of the list and place the error in that spot.
+				DDTXT.error.list [currentErrorIndex] = DDTXT.error.newError(errorTypeOrCode, context, location); // Place it.
+				console.log("New " + DDTXT.error.getFormalTypeFromCode(DDTXT.error.list [currentErrorIndex].code) + ":\n\nReported Location: " + DDTXT.error.list [currentErrorIndex].spot + "\n\n" + DDTXT.error.list [currentErrorIndex].text); // Use the placed data to give a neater picture to the console.
+			},
+			// How to create DDTXT formatted text to display in the DDTXT Error Console:
+			consoleHeader: "(Click anywhere to close.) (break) This menu displays all current errors in the document: (horizon) ",
+			generateErrorConsole: function () {
+				// Only go through all this if there are errors:
+				if (DDTXT.error.list.length > 0) {
+					var consoleText = ""; // Create a text buffer.
+					// For each error:
+					for (var currentError = 0; currentError < DDTXT.error.list.length; currentError ++) {
+						const errorData = DDTXT.error.list [currentError];
+						consoleText += "[##" + DDTXT.error.getFormalTypeFromCode(errorData.code) + ": At or around " + errorData.spot + "] " + errorData.text + " (horizon) " + DDTXT.error.getBasicHelpFromCode(errorData.code + " (break) ");
+					}
+					// Return the whole stringified list of errors.
+					return DDTXT.error.consoleHeader + consoleText + "(Click anywhere to close.)";
+				}
+				// No errors. Yay!
+				else {
+					return DDTXT.error.consoleHeader + "There are no errors to report! Great job!";
+				}
+			}
+		},
 		addMissingSpaces: true, // Whether or not the DDTXT parser should append needed spaces after most punctuation.
 		// NOTE: (addMissingSpaces = true) is a good idea because it maintains consistency no matter how the DDTXT is spaced out.
 		global: {
+			// Basic document attributes:
 			name: "Untitled DDTXT",
 			webtitle: "",
 			author: "Unknown Author",
@@ -588,7 +713,7 @@ var clearDDTXT = function () {
 			lastModified: null,
 			filename: "untitled.ddtxt",
 		},
-		// This object holds character information
+		// This object holds character information and the main parsing function.
 		cast: {
 			characters: {}, // Empty list to be filled with characters
 			lastCharacterReferenced: "",
@@ -1876,13 +2001,14 @@ var scrollIncrementally = function (key) {
 	
 	if (timesSinceLastScroll >= scrollPeriod) {
 		const scrollValues = getDDTXTScroll();
-		console.log(scrollValues);
+
 		if (upArrowIsPressed(key) && key.shiftKey) {
 			scrollDDTXTAndEditor(0, scrollValues.DDTXT.yPercent - sprintSpeed); // Infinity -> 0 is upward (remember, (0, 0) is the top of the document).
 		}
 		else if (downArrowIsPressed(key) && key.shiftKey) {
 			scrollDDTXTAndEditor(0, scrollValues.DDTXT.yPercent + sprintSpeed); // 0 -> Infinity is downward.
 		}
+		
 		timesSinceLastScroll = -1; // We are going to increment it below, so to get zero, we must use -1.
 	}
 	
@@ -1919,6 +2045,8 @@ var checkForKey = function (key) {
 			if (key.key === "p" || key.key === "P") {
 				printDDTXT();
 			}
+			// Only allow number scrolling when not editing:
+			checkNumberScrolling(key);
 		}
 		// If there isn't a DDTXT loaded:
 		else {
@@ -1958,7 +2086,6 @@ var checkForKey = function (key) {
 		if (downArrowIsPressed(key) && key.ctrlKey) { // We are checking old and new identifiers for maximum compatibility.
 			jumpToEditorBottom();
 		}
-		checkNumberScrolling(key);
 	}
 };
 
