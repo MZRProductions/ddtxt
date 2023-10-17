@@ -367,7 +367,7 @@ html {
 			<td id="editor-refresh" class="editor-style"><p class="editor-style-inner">Refresh DDTXT</p></td>
 			<td id="editor-bottom" class="editor-style"><p class="editor-style-inner">Jump to Bottom</p></td>
 			<td id="editor-top" class="editor-style"><p class="editor-style-inner">Jump to Top</p></td>
-			<td id="editor-errorMenu" class="editor-style" style="background-color: red;"><p class="editor-style-inner">Errors</p></td>
+			<td id="editor-errorMenu" class="editor-style" style="background-color: red; width: 14%;"><p class="editor-style-inner">Errors</p></td>
 			<td id="editor-close" class="editor-style"><p class="editor-style-inner">Close Editor</p></td>
 		</tr>
 		<tr>
@@ -590,11 +590,6 @@ var trimStringToValidPart = function (disallowedChars, string) {
 var trimAndRetainStringToValidPart = function (disallowedChars, string) {
 	const tempString = trimStringToValidPart(disallowedChars, string); // Use the function above to trim the string.
 	return [tempString, string.substring(tempString.length, string.length)]; // Then, using the length to find what was cut, give us the part that was trimmed.
-};
-
-// Log a DDTXT error that is saved to a more accessible object format (and passed along to the webpage console):
-var logDDTXTError = function () {
-	
 };
 
 var clearDDTXT = function () {
