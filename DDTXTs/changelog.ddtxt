@@ -5,12 +5,30 @@
 name = DDTXT Reader Changelog
 author = MZRProductions (Michael Rumpff)
 
+<text>
+
+This is a changelog of the DDTXT language and the DDTXT Reader.
+
+</text>
+
 </global>
 
 <character>
 
 code = listPoint
 name = (break)(em dash)
+
+<text>
+
+Used to condense each bullet point to a single character: "#@".
+
+</text>
+
+<pronouns>
+
+instance = shortcut
+
+</pronouns>
 
 </character>
 
@@ -23,12 +41,60 @@ subtitle = #< v1.0
 
 <chapter>
 
+name = v0.3.0
+subtitle = Printing and keyboard shortcuts!
+
+<text>
+
+@listPoint Added block comments started by "/#*" and ended by "#*/", (as in C-based languages).
+@ Added Ctrl#+S shortcut to editor to save your edited DDTXT. (You should be pressing this frequently.)
+@ Added Ctrl#+Q shortcut in editor to refresh changes to the final document.
+@ Added P shortcut to print the DDTXT (in addition to Ctrl#+P).
+@ You can no longer print the start screen.
+@ Added R shortcut to read a new DDTXT.
+@ Added "number scrolling": Use, `, 1, 2, 3, 4, 5, 6, 7, 8, 9, and 0 to scroll to the corresponding tenth of the document. (` is the beginning and 0 is the end.) For example, 4 takes you to roughly 40% of the way through.
+@ When on the start screen, you can press ENTER to open a DDTXT.
+@ The object printed to the webpage's console now tells you the name of the file above the information.
+@ The global document margin has been increased to approximately 2% of the browser window's width.
+@ The paragraph text size has been increased.
+@ The reader now scrolls to the top every time a new file is loaded.
+@ Further revised TUTORIAL.ddtxt and added guides on new features.
+@ Fully drafted example.ddtxt, an example DDTXT with comments to help new writers.
+@ Continued writing sample story cookout.ddtxt.
+@ Removed hardbaked text style as it has been obsoleted by the dollar sign and hashtag.
+@ Removed usePluralVerbForm attribute of Characters and the #& verb ternary symbol.
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = v0.2.1
+subtitle = Quality of Life Improvements
+
+<text>
+
+@ Expanded upon sample DDTXT cookout.ddtxt.
+@ Further revised TUTORIAL.ddtxt (the DDTXT Manual).
+@ Added sample DDTXT example.ddtxt.
+@ Header UI buttons now have borders corresponding to the document style.
+@ New $<global> main property: allowBracketLiterals.
+(break) This property allows dollar signs to literalize dialogue brackets. This is turned off by default. To turn this on, set this property to "true". Now you can use brackets in words literalized by dollar signs. (Hashtags still literalize brackets regardless. Parentheses are never literalized.)
+@ "Click me to reload the DDTXT." has been replaced with "Click me to open a blank DDTXT.", which lets you create a new DDTXT without having to create initially create a file externally. You can now create an entire DDTXT without leaving the DDTXT Reader.
+
+</text>
+
+</chapter>
+
+<chapter>
+
 name = v0.2.0
 subtitle = Bug fixes and polishing
 
 <text>
 
-@listPoint Fixed ## and #$ literalizing symbols
+@ Fixed ## and #$ literalizing symbols
 @ Added DDTXTs folder
 @ Added unfinished sample story cookout.ddtxt
 @ Finished DDTXT Writing Tutorial
