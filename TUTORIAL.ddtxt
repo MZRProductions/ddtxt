@@ -1,25 +1,25 @@
 <!DOCTYPE DDTXT>
 
 
+/*
 
+  Digital Dialogue Text Reader (and Parser)
+  Copyright (C) 2023 Michael Rumpff (MZRProductions)
 
-// Digital Dialogue Text Reader (and Parser)
-// Copyright (C) 2023 Michael Rumpff (MZRProductions)
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+  See the GNU General Public License for more details.
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-// See the GNU General Public License for more details.
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-
+*/
 
 
 // This document looks chopped up and messy in raw form because there is so much specific formatting. For a more realistic DDTXT, please see example.ddtxt or another sample DDTXT included with the DDTXT Reader.
@@ -90,10 +90,18 @@ This character is used as a way to highlight important distinctions. By making t
 
 </text>
 
-// Since this isn't a real character, there is no need to specify pronouns.
-// If you attempted to use this character's pronouns (">note", for example),
-// you would get the default generic pronouns:
-// They, them, their, themselves, they are, they're, ect...
+// This is a block comment, by the way.
+// We start this with "/*" and end it with "*/".
+// (If you struggle to remember the start and end, remember that the asterisk is always facing toward the comment.)
+
+/*
+
+  Since this isn't a real character, there is no need to specify pronouns.
+  If you attempted to use this character's pronouns (">note", for example),
+  you would get the default generic pronouns:
+  They, them, their, themselves, they are, they're, ect...
+
+*/
 
 </style>
 
@@ -114,7 +122,7 @@ object = him
 possessive = his
 reflexive = himself
 present = he is
-// We have to specify both.
+// We have to specify both in the DDTXT language.
 presentCompacted = he's
 
 </pronouns>
@@ -429,7 +437,7 @@ The DDTXT document is split into three main categories. There are sections where
 // However, since the character before the split is not punctuation, there is no way of knowing that
 // there needs to be an extra space, so you will have to add a dollar sign to indicate that you meant the extra space.
 // Normally, spacing is completely ignored (in a similar manner to HTML text).
-$ the actual document, sections where set the document's properties, and sections where you organize the previous two kinds of information. It should be noted that the DDTXT in raw form reads similarly to fake XML, although the structuring of nodes is much more simplistic and limited. If you do not know anything about the XML, HTML, or CSS languages, you should be able to pick up the DDTXT format without learning about them.
+$ the actual document, sections where you set the document's properties, and sections where you organize the previous two kinds of information. It should be noted that the DDTXT in raw form reads similarly to fake XML, although the structuring of nodes is much more simplistic and limited. If you do not know anything about the XML, HTML, or CSS languages, you should be able to pick up the DDTXT format without learning about them.
 
 (break)
 
@@ -468,7 +476,7 @@ Before we continue, I must explain rules that apply across the entire DDTXT docu
 // Em dashes have a bit more presence than a single hyphen.
 (em dash) Unless otherwise noted, individual actions must be on their own line.
 (break)
-(em dash) Author comments can be written in the raw DDTXT file by starting a line with two forward slashes ("//"). These never affect the finished DDTXT in any way, and should be used frequently to explain the author's thoughts and intentions.
+(em dash) Author comments can be written in the raw DDTXT file by starting a line with two forward slashes ("//"). These never affect the finished DDTXT in any way, and should be used frequently to explain the author's thoughts and intentions. For more information, go here: [href: ##chapter-21].
 (break)
 (em dash) Capitalization often matters and failure to write phrases or keywords exactly as given may result in document properties not being set correctly.
 
@@ -829,6 +837,32 @@ Look! Here is some big text.
 (break)
 $</text>
 ]
+
+(divide)
+
+Sometimes, you'll want to have a genuinely unimportant character say something or have something written in the world of your story. If you have a sign that says "It would be in poor taste to use quotes in a DDTXT since the language has quotations built in," you should not be writing that in quotes.
+
+[note: You should be writing it in dialogue!]
+
+This silly example illustrates a problem, though. How would you use dialogue for this? You don't want to use a character that you've made because it would be confusing for the reader. You also don't want to create a new character for every little snippet of in-world text or murmurs.
+
+(break)
+
+To accomplish this, we'll do something called "casting a character in," or "casting" for short. This is where we tell the DDTXT parser to briefly ignore the lack of a speaker and substitute in a phrase that we provide for that single piece of dialogue.
+
+(break)
+
+We do this by writing two hashtags followed by whatever name we want to display temporarily (spaces are allowed) in place of the character code.
+
+[text: (left bracket)####Sign: Beware of reading signs.(right bracket)]
+
+This shows as the following line.
+
+[##Sign: Beware of reading signs.]
+
+Of course, this can be used for people who only speak once in your story.
+
+[##Unimportant Character: Hey! I too am important.]
 
 </text>
 
@@ -1579,16 +1613,19 @@ This editor currently has five buttons.
 
 (break)(em dash) Export DDTXT
 (break)
-This button will download the adjusted document to your common "Downloads" folder.
+This button will download the adjusted document to your common "Downloads" folder. This button has a hotkey of Ctrl #+ S.
 (break)(em dash) Refresh DDTXT
 (break)
-This button will apply any changes made to the finished, translated document. You can easily check your modifications by pressing this button.
+This button will apply any changes made to the finished, translated document. You can easily check your modifications (and should frequently) by pressing this button. This button has a hotkey of Ctrl #+ Q.
 (break)(em dash) Jump to Bottom
 (break)
-This button will scroll the editor and the finished document to the end. This way, you can easily append more content to the document without scrolling all the way down.
+This button will scroll the editor and the finished document to the end. This way, you can easily append more content to the document without scrolling all the way down. This action can also be achieved by pressing the 0 key when not typing in the editor.
 (break)(em dash) Jump to Top
 (break)
-This button will scroll the editor and the finished document back to the beginning. This way, you can easily access initial global and character nodes without scrolling all the way to the top.
+This button will scroll the editor and the finished document back to the beginning. This way, you can easily access initial global and character nodes without scrolling all the way to the top. This action can also be achieved by pressing the ` key (or ~ key) when not typing in the editor.
+(break)(em dash) Errors
+(break)
+This button will bring up an error menu that shows any current errors and possible fixes. For convenience, this button will appear red when there errors that need to be addressed. If the button is blue, then you have solved any problems with your document.
 (break)(em dash) Close Editor
 (break)
 This button closes the editor, leaving you to read the finished, translated document. You can trigger this same action by clicking off of the textbox and pressing "E" again.
@@ -1608,7 +1645,7 @@ This button closes the editor, leaving you to read the finished, translated docu
 <chapter>
 
 name = Advanced Documentation
-subtitle = (break)Full Properties Documentation: [href: ##chapter-18](break)Current Limits of the DDTXT: [href: ##chapter-19](break)DDTXT Errors: [href: ##chapter-20](break)General Advice: [href: ##chapter-21]
+subtitle = (break)Full Properties Documentation: [href: ##chapter-18](break)Current Limits of the DDTXT: [href: ##chapter-19](break)DDTXT Errors: [href: ##chapter-20](break)A Full Explanation of Comments: [href: ##chapter-21](break)General Advice: [href: ##chapter-22]
 
 </chapter>
 
@@ -1642,6 +1679,8 @@ author #= word(s) | Document author(s) | Unknown Author
 webtitle #= | Abbreviated document name shown in tab and top statistics bar | Full document name
 (break)
 provideTableOfContents #= true/false | "true" generates a table of contents based on chapter names and order. This manual has this set to "true". | "false"
+(break)
+allowBracketLiterals #= true/false | "true" allows the dollar sign to literalize (prevent functionality) square brackets, which are normally used for dialogue. Parentheses and DDTXT commands will still be unaffected by dollar signs.
 
 (break)
 
@@ -1871,25 +1910,37 @@ subtitle = What each error means
 
 [error: OH NO! EVERYTHING'S GOING TO EXPLODE! AAAHHH!!!]
 
-No, most errors keep the rest of your document intact, although they should still be avoided. Some of them can be tricky to diagnose, especially if it has something to do with node organization. This chapter will go over every kind of error and the possible problems that could cause the error. Solving these errors won't always be easy, but it will always be manageable.
+No, most errors keep the rest of your document intact, although they should still be avoided. Some of them can be tricky to diagnose, especially if it has something to do with node organization. This chapter will go over every kind of error and the possible problems that could cause the error. Solving these errors won't always be easy, but it should always be manageable.
 
 (divide)
 
-The first concept to go over is the programming idea of narrowing down the possible causes of an error. Let's say that you have recently written a new chapter and you have not yet tested its translation (by which I mean reading the finished document). When you open the document up, you find that there is an unexpected result within your document. Maybe a color is wrong or there is a reference that does not work.
+The first concept to go over is the programming idea of narrowing down the possible causes of an error. Let's say that you have recently written a new chapter and you have not yet tested its translation (by which I mean reading the finished document). When you open your document up or refresh it from the editor, maybe you find that there is an unexpected result within your document. Perhaps a color is wrong or there is a reference that does not work. This is likely the result of an error.
 
 (break)
 
+The first thing you should do is open the editor by pressing E (if it's not already open) and click on the "Errors" button. This will open up the error menu.
+
+(break)
+
+This menu is a summary of your document's issues. If everything is fine, you'll see nothing there. If there is an error, you'll see an entry with an error type, location (or rough context), and broad solutions. Most of the time, these errors will be a mere reminder to close off dialogue or add a colon or equal sign to a line. However, some of these problems will be more serious and/or will require you to examine your document more carefully.
+
+[note: There is a second way to view errors. The following is the original method of viewing DDTXT errors. This method is more suitable for programmers and web developers than for common authors, although you are welcome to take a peek.]
+
+(divide)
+
 The most egregious errors will show up in your browser's console. You can probably open up your console from one of the buttons that appears upon right-clicking the webpage. It will likely look confusing at first, but look for text mentioning "To see more about a character (...) $tellMeAbout(<code>)". This should be "printed" (which means written when talking about consoles) at the top of the console's output. You can then scroll through the console to find errors.
 
-[note: Nothing gets taken away from the console! This means that old errors will still show up! You can clear the console by refreshing the page or you can look for the most recently printed document information by scrolling to the bottom.]
+[note: Nothing gets taken away from the console! This means that old errors will still show up! You can clear the console by saving your work and refreshing the page or you can look for the most recently printed document information by scrolling to the bottom.]
 
-Whatever the problem is, if you know that the error was not present before and you know exactly what you have added, then through logical reasoning (and/or a programmer's mentality), you should be immediately checking your recent addition. As long as you know exactly what you have added, you can put a mental box around it. Better yet, you can temporarily move your added text, either by cutting and pasting or by commenting out each line of the entire addition with "//"s. If the errors go away, then you know that you have isolated the error. (This is great news!)
+(divide)
+
+Whatever the problem is, if you know that the error was not present before and you know exactly what you have added, then through logical reasoning (and/or a programmer's mentality), you should be immediately checking your recent addition. As long as you know exactly what you have added, you can put a mental box around it. Better yet, you can temporarily move your added text, either by cutting and pasting or by commenting out each line of the entire addition with "//" or in a block comment with "/#*" and "#*/". If the errors go away, then you know that you have isolated the error. (This is great news!)
 
 (break)
 
 (There should be decent error context to help you through the type of error and how to fix it, although due to the fact that line position in the raw document file and the translated file do not necessarily correlate, it is harder for the DDTXT Reader to pinpoint the exact location.)
 
-[note: Regardless, if the error goes to the console, pay attention to the type of error, as that will help tremendously when looking for it.]
+[note: Regardless, if the error goes to the error menu or web console, pay attention to the type of error, as that will help tremendously when looking for it.]
 
 Now that you have a much smaller box containing the error, you can begin to look for the specific cause and fix the error. There are many ways to go about this, although if the isolated text is small enough, I recommend simply reading the passage carefully beginning to end. Often times, this is enough.
 
@@ -2019,6 +2070,106 @@ The only real solution to problems like this is solid proofreading, which will l
 
 <chapter>
 
+name = A Full Explanation of Comments
+subtitle = All of the (simple) rules
+
+<text>
+
+I bet that you were really confused when I outlined author comments at the very beginning of this guide: [href: ##chapter-2]. Maybe you had seen the semi-famous double forward slashes (//) before, but if not, then this idea probably seemed a bit complicated for a single bullet point.
+
+(break)
+
+In this chapter, I will briefly go over both types of author comments, from now on called "comments", and when each should be used. Comments should always be used wherever there is a need to clarify intention, internally connect information, or to record information for future use. Since they are not read as DDTXT information (or included at all in the final document), they can be used more casually and loosely than document attributes.
+
+(divide)
+
+The first type of comment is the line comment. This comment will only prevent a single line from being read by the DDTXT parser. This type is particularly useful for mentioning a quick fact, idea, or purpose. This comment is signified by writing two forward slashes (//) as the first text characters of a separate line. Here is an example of the single line comment.
+
+[text: (break)
+$// This is a comment! Look at me go!
+(break)
+(left bracket)example: I'm not sure how I feel...(right bracket)
+(break)
+$// (Definitely sure, just doesn't want to admit it)
+]
+
+This type of comment is also great for future revision notes (things you want to fix in the future).
+
+[text: (break)
+$// ISSUE: What does this word mean?
+(break)
+#<example loved it, finding it abhorrent.
+]
+
+Then, you can come back and get it right.
+
+[text: (break)
+$// Way better now
+(break)
+#<example loved how abhorrent it was, for #@example had a strange fascination for it.
+(break)
+]
+
+(divide)
+
+The other type of comment is the block comment. Block comments tell the parser to ignore multiple lines at once. These are useful for paragraphs or longer disclaimers (such as the one at the top of this raw document). These should be created by writing "/*" on a new line and ended by writing "#*/" on a second new line. If you have trouble remembering which is which, remember that the asterisks (#*) are on the inside and the slashes are on the outside.
+
+(break)
+
+Here is a long-winded example.
+
+[text: (break)
+$/*
+(break)
+Hello!
+(break)
+I wanted to take a quick
+(break)
+break to talk about my
+(break)
+favorite flavors of ice
+(break)
+cream. First off, pecan
+(break)
+is pretty good, but there
+(break)
+are some flavors with
+(break)
+caramel that are even
+(break)
+better. In addition,
+(break)
+orange and vanilla is
+(break)
+a superb combination.
+(break)
+$*/
+]
+
+Technically, as long as the start is the first two characters of a line and the end is the last two characters, these can be bunched up with the comments, although it can look cramped. It is up to you to choose the spacing of your block comment endpoints. Here is the same comment, but squished a bit more.
+
+[text: (break)
+$/* Hello!
+(break)
+I wanted to take a quick break to talk about my
+(break)
+favorite flavors of ice cream. First off, pecan
+(break)
+is pretty good, but there are some flavors with
+(break)
+caramel that are even better. In addition,
+(break)
+orange and vanilla is a superb combination. #*/
+(break)
+$// Also, sometimes you might want to append a separate but related thought to your block comment as a new line comment.
+]
+
+</text>
+
+</chapter>
+
+<chapter>
+
 name = General Advice
 subtitle = Thanks for reading this whole tutorial!
 
@@ -2033,7 +2184,7 @@ Here are some general tips to leave you with:
 (break)(em dash) If you write in linear order, have a writing notes section at the beginning of your document. When you have ideas, write them in author comments here so that you can come back to these ideas later.
 (break)(em dash) If you unsure of a word's spelling or meaning, write it in ALL CAPS or put a comment starting with the word "ISSUE" above it.
 
-[text:
+[text: (break)
 #// ISSUE: I'm not sure what this means.
 (break)
 #@example felt benign to the world.
