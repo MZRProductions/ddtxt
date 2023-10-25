@@ -1,9 +1,12 @@
 <!DOCTYPE DDTXT>
 
-// This document has been made as a sample of the capabilities of the DDTXT language.
-// For more information, please see the README in your installation of the DDTXT Reader.
-// If you do not have the reader, then you will not be able to read this document properly.
-// MZRProductions (Michael Rumpff)
+/*
+  This document has been made as a sample of the capabilities of the DDTXT language.
+  For more information, please see the README in your installation of the DDTXT Reader.
+  If you do not have the reader, then you will not be able to read this document properly.
+  
+  MZRProductions (Michael Rumpff)
+*/
 
 <global>
 
@@ -12,6 +15,7 @@ name = +brandon and +james Summer Cookout
 // The webtitle appears in the top information bar.
 webtitle = Summer Cookout
 author = MZRProductions
+provideTableOfContents = true
 
 <style>
 
@@ -144,6 +148,7 @@ object = him
 reflexive = himself
 present = he is
 presentCompacted = he's
+instance = picky man
 
 </pronouns>
 
@@ -229,8 +234,6 @@ presentCompacted = he's
 </text>
 
 </character>
-
-<character>
 
 // ROYAL BRANDON AND JAMES
 
@@ -1075,14 +1078,415 @@ subtitle = (We can't let >frank see the mess in the kitchen!)(break)(Imagine the
 
 <text>
 
+[##Doorbell: DING..! DING!]
+
+The morning light came into the room like a detective's flashlight shines down upon a horrific scene. If the house looked messy last night, it was certainly no better in detail.
+
+(break)
+
+@brandon was jolted awake, bumping = head on the wall behind the couch.
+
+[brandon: Ow! What is that?]
+
+@james opened = eyes to answer.
+
+[james: Oh, shit! I told my neighbor that I'd go to =frank cookout thing.]
+
+[brandon: Why is <frank here?]
+
+[james: I don't know... Oh man, he's so picky. If he sees this mess, he'll report us.]
+
+[brandon: Who would care?]
+
+[james: There's all these rules and contracts. I was already written up once before!]
+
+[brandon: I'm going to go talk to >frank.]
+
+[james: Wait.!]
+
+@james knew that this would only cause problems, although @brandon would still be around to fix whatever problems that <brandon caused.
+
+[james: Oh, well...]
+
+@james waddled sleepily to the kitchen and began picking up trash. After a couple minutes, the counters were free of trash, only leaving spills behind. The floor was still a minefield of garbage, though.
+
+[james: (sigh)]
+
+@james began listening to the conversation at the front door.
+
+[brandon: (muffled) Are you kidding me?]
+
+[##Concerned Neighbor: (muffled) You should clean up your living room.]
+
+Yep. That was +frank voice.
+
+[frank: I should have you evicted right now!]
+
+[brandon: Fine! Go ahead.]
+
+@james began running back to the front door. By the time <james got back, +brandon face looked one second away from a stroke. @james stood in front of @brandon, only for a moment.
+
+[james: We are deeply sorry for the trouble. We'll take care of it immediately.]
+
+[brandon: Huh!?]
+
+@james quickly slammed the door shut, so as to avoid becoming homeless.
+
+[brandon: How can <frank evict you!? Don't you have a mortgage?]
+
+[james: Eh... I don't know anymore.]
+
+[brandon: You can't let >frank walk all over you like this.]
+
+@james sat down on the chair in the corner, kicking trash under the chair as <james sat down. What started as a posture of contemplation transformed into a defeated lean of exhaustion.
+
+[james: There's no point. No matter what, people like >frank will always win.]
+
+[brandon: We can at least make =frank life a living hell.]
+
+[james: No... Don't start more drama.]
+
+[brandon: (groan)]
+
+@brandon clearly wanted to.
+
+[james: Look at all this trash.!]
+
+@james stood back up out of the chair and looked around at the debris. @brandon dropped onto the couch, burying =brandon face sideways into the semi-flexible cushion.
+
+[brandon: I'm going back to bed..]
+
+[james: Okay..]
+
+@james began to pick up trash on the floor, holding the refuse in =james arms. By the time <james was finished, @brandon was fast asleep. While ping-ponging between the kitchen trash can and the living room, @james vowed to never again make this much trash. Although, after much effort, the cleaning of the room was finished (other than the kitchen).
+
+(break)
+
+@james sat back down and figured out how to get out of the cookout later that day. The two of them could pretend they had a family emergency. Or, even better, they could pretend they got injured playing a game of frisbee. (Nobody would refute that, right.?) 
+
+(break)
+
+It didn't matter, though. There was no excuse (or factual reason) that would allow them any course of action other than that which EMPRISONED them one yard over for a so-called "cookout."
+
+(break)
+
+@james went to the kitchen and opened the cupboard, where there was a broom and a dustpan. Instead of trying to pick up each individual fragment of foil and paper, <james made up
+// Remember codeless shorthand? (The dollar sign is just for a space.)
+$ = mind to get all the trash into a pile and then sweep that up.
+
+(break)
+
+Well, it almost worked. Unfortunately, there was so much that it required multiple passes, which took as long as picking up each object. After the floor was done, @james quickly cleaned the counters and wiped down some surfaces with noticeable food remnants.
+
+(break)
+
+@james was now done (enough).
+
+(break)
+
+Walking back into the living room, @james found @brandon barely awake again, thinking.
+
+[brandon: How are we going to get back at @frank?]
+
+[james: What do you mean.?]
+
+[brandon: What's the plan?]
+
+[james: No, there is no "plan." None that I'll be involved with anyway..]
+
+[brandon: Come on.! Look at what }frank doing to you!]
+
+[james: What good will that do?]
+
+[brandon: Not this again... (sigh)(em dash)You're too soft!]
+
+@james walked over to the dining room (connected to the living room) and looked out of the back window. @frank was peering over the fence and taking extensive notes, like +james backyard was a fascinating science experiment.
+
+(break)
+
+@james turned around.
+
+[james: (sigh)(em dash)Alright.]
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = Getting Back
+subtitle = (and how to do it)
+
+<text>
+
+[brandon: So, we could bring a horrible dish, rancid perhaps!]
+
+[james: I don't want my other neighbors to hate me.]
+
+They had been brainstorming over lunch, which, of course, made more dishes for @james to wash.
+
+[james: What if we put something in +frank dishes? That way, people will think that <frank did it.]
+
+[brandon: Oh!(em dash)That could work!]
+
+They sat chewing for a few seconds.
+
+[brandon: What would we put in it?]
+
+[james: Rotten dairy?]
+
+[brandon: No, it must be more potent than that.]
+
+<brandon got up and returned after a couple minutes. <brandon had brought =brandon "kit" of mischievousness. It was a brilliant blue plastic case (much like = hair color) filled with capsules, chemicals and general tools of delinquency. < usually only brought it out when things got serious. < may as well have written "It's serious time" on the side of the case.
+
+[james: You brought that thing here?]
+
+[brandon: Of course!]
+
+Opening it, he pulled out an object from the internal mess and read a scribbled note on the side.
+
+// Remember dialogue shorthand?
+[: Here! "Nausea-inducing paste."]
+
+[james: What is it.?]
+
+[brandon: I don't know. I hope it's really gross.]
+
+@james, disgusted at the concept, looked away from the vial slightly, as if to make an attempt at forgetting its existence.
+
+[brandon: We're also going to need a decoy dish.]
+
+[james: Huh?]
+
+[brandon: People might see me putting it into the food, but if I'm placing a dish there, then nobody will think anything of it.]
+
+[james: I'm not going to make anything new. You can take a leftover casserole.]
+
+[brandon: Good enough.]
+
+@james was slightly worried, which @brandon picked up on.
+
+[brandon: Do you want to play another game of frisbee?]
+
++james tone improved.
+
+[james: Sure.!]
+
+They both walked to the back door and onto the back porch.
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = Frisbee Again
+subtitle = (At least there's something fun on the agenda.)
+
+<text>
+
+The sun was high in the sky by this point. The edge of the forest behind +james house was the only source of shade. @brandon hurried to the back of the yard so that @james could throw the frisbee.
+
+[james: Here..]
+
+@brandon hopped up to catch it. They were both pretty experienced with frisbee throwing, given that they defaulted to this when all other activities failed. @brandon threw it back. @james was distracted by the reflections on the rounded edge of the frisbee, barely catching it.
+
+[brandon: What's going on today?]
+
+@james threw it back, but the wind picked up and carried it to the opposite corner of the yard.
+
+[brandon: Ah!]
+
+@brandon ran to catch it. Surprisingly, <brandon made it in time.
+
+[james: Great catch!]
+
+@brandon was consumed by a joyful cockiness, as usual upon any compliment (no matter how small). <brandon exuded it the way a lightbulb lights a room.
+
+[brandon: (smirk)(em dash)Thanks.]
+
+@brandon threw the frisbee back, but another gust of wind carried it really high. @james tried to reach up to grab the rogue frisbee, but <james suddenly felt light-headed.
+
+[james: Oh..! (slow double blink)]
+
+[brandon: Seriously, are you okay?]
+
+[james: Yeah, yeah...]
+
+@james began walking over to the semi-distant frisbee embedded in the grass.
+
+[brandon: You're so slow today!]
+
+// I can't take people who say "am not" seriously.
+[james: Am not!]
+
+Upon picking the frisbee up, @james purposely threw the frisbee aggressively far away toward the creek. It was (very) childish, but sometimes @james got sick of +brandon whiny temper. @brandon, seeing this grim chance of catching the wretched throw, raced to catch it to spite @james.
+
+[brandon: (grunt)]
+
+[james: (...)]
+
+@brandon ran faster and faster toward the creek's steep dive. =brandon legs oscillated vividly between a forward and backward position, speeding up as < approached the frisbee. Even for >, this was unusually committed to stubbornness.
+
+(break)
+
+Impossibly, <brandon caught it before it glided into the creek.
+
+[brandon: (pant)(em dash)Whoo!(em dash)What was that for?]
+
+[james: (muttering) Holy shit...]
+
+@james was taken aback by this speed. @brandon rushed back to +james general vicinity.
+
+[james: (normal volume) How did you do that.?]
+
+[brandon: What do you mean.? That wasn't that hard. (smirk)]
+
+[james: Come on. Your "humility" is showing through.]
+
+(This is complete sarcasm.)
+
+[james: How did you do that?]
+
+[brandon: (grin) I think you're just slower today.]
+
+@brandon started walking backwards, throwing the frisbee too high (perhaps on purpose). @james knew this was another impossible catch, but <james reached =james hands upward toward the sky. The ground's impact felt much softer and then @james felt = legs tip. In an instant, @james was falling into the sky above.
+
+[james: AAHH!!]
+
+@james felt carried upward by a gust of wind before falling back unnaturally to the ground.
+
+[james: Ow...]
+
+[brandon: What's happening to you.?]
+
+[james: I think I want to be done for a while..]
+
+[brandon: Let's go back inside.]
+
+@james got up and let @brandon walk protectively next to >james. Neither of them thought anything more of it.
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = Time Is a Funny Thing
+subtitle = (Don't think about it too much.)
+
+<text>
+
+They had come inside and sat down, from which @james still sat on the couch.
+
+[brandon: Everything sounds really deep today.]
+
+[james: Huh.?]
+
+[brandon: Your voice has been deeper than normal.]
+
+@james was confused.
+
+[james: No.? I'm not sick, and my voice is fine. Are your ears okay?]
+
+[brandon: I'm sure. I don't know why I brought it up. It's gone now anyway..]
+
+[james: Okay..]
+
+@james could picture the mental gymnastics @brandon was going through to justify and rationalize this mentioned phenomenon.
+
+[brandon: It must have been the wind. There were some crazy breezes out there.]
+
+There was a constant, gentle yet audible breeze during their game of frisbee. Certainly, the breeze was not "crazy." +brandon mental gymnastics were turning into the Olympics.
+
+[james: Yes.]
+
+@james was exhausted and struggled to get up off of the couch. Finally, @james lifted * off of the couch and sprang forward energetically.
+
+[brandon: There's no need to hurt yourself.]
+
+[james: I didn't do that on purpose.]
+
+@james started walking back to the bathroom to deal with the sudden illness. It was a brief adventure to get back to the bathroom, feeling on the verge of regurgitation. Despite this omen, nothing notable occurred in these few seconds.
+
+(break)
+
+Once @james made it into the bathroom, the illness dissipated and allowed for more careful thought. Had they been cursed by their mistaken destiny? Or was it all imaginary? @james decided to not take anything yet. Developing an immunity to pain-relief medicine was not on the bucket list. At the very least, the antique brown wallpaper bathroom provided a temporary break from +brandon incessant insecurities.
+
+(break)
+
+This would all pass, especially once the cookout was over.
+
+(break)
+
+Getting revenge would fix this, right?
+
+[james: Oh man...]
+
+@james had remembered +brandon plans for that evening. @james opened the door and returned down the hallway to the living room, where @brandon had started watching the movie he had brought yesterday.
+
+[brandon: The music is offkey!]
+
+[james: It sounds the same as last time. What do you mean?]
+
+[brandon: There goes your voice again.!]
+
+[james: Do you need to take a nap or something? You don't sound we-]
+
+[brandon: I'm fine! You're the slow one!]
+
++brandon already jittery nature increased as =brandon voice became more desperate.
+
+[brandon: The music is getting deeper and deeper!]
+
+@brandon began to talk faster and faster, with a higher pitch.
+
+[brandon: What's going on here?]
+
+@brandon got up and started pacing impressively quickly.
+
+[brandon: Somebody's messing with me. I know it. There's no way this(em dash)]
+
+@james felt a loss of ground contact accompanied with a feeling of unconstrained lightness characterized by the previous fall. =james stomach was queasy, yet well behaved, as the rest of = body trembled.
+
+[brandon: Look at you! Your feet are off the ground!]
+
+[james: What.?]
+
+What @james had previously been ignoring could be ignored no longer. It was sure that this phenomenon was gravely serious. Upon realizing this, @james fell into the narrow hallway that was unforgiving when used carefully. The walls gave reminders of their presence by hitting +james elbows and legs. After @james was flat on the ground, <james breathed calmly again.
+
+[james: Not again..]
+
+[brandon: They're raising you off the ground and giving me these hallucinations!]
+
+[james: Who?]
+
+[brandon: The kingdom people! This must be their doing!]
+
+[james: I don't think so..]
+
+Nothing else made sense, though, so @james had no choice but to somewhat agree.
+
+[james: Oh! What do we do?]
+
+The more @james thought about the feeling of floating, the lighter = body was. Quickly, @james thrust = arms and legs into the wall, trying to stop the ascent. It worked, although there was no friction. Carefully, < moved = left hand off the wall, still managing to stay still. This was followed by the departure of the right hand, the left leg and then finally, the right leg from the surface of the smooth wall.
+
+[brandon: Look at you! It's happening again!]
+
+[james: (em dash)I'm doing it this time.]
+
+@brandon stood in awe as @james gracefully landed back on the ground.
+
+[james: You might be able to control your phenomenon too..]
+
+[brandon: (still in a higher pitch)(em dash)That can't be. ]
+
 </text>
 
 </chapter>
 
 // Future writing plans:
 
-// After they both get powers, they get really hungry and sick for a night (as their powers develop), which means that they sleep in till really late the following morning.
-
-// They wake up to the doorbell ringing. It's James' neighbor, Frank, reminding James of the cookout later that day.
-
-// At some point, Brandon discovers his powers by running to save James from a temporary boom in the bonfire.
+// James and Brandon attend the cookout. (James is worried about Brandon's plans.)
+// Brandon and Frank get into a fight.
+// At some point, they (James, Brandon, Frank, and Emily) return to the magic realm.
