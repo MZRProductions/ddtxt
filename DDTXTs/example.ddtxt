@@ -1,22 +1,26 @@
 <!DOCTYPE DDTXT>
 // Above is the DDTXT DOCTYPE statement, which tells the reader that this file can be read.
 
+// The following notice is included in a block comment, which is started with "/*" and ended with "*/".
 
+// (You will not need to include the following notice in your DDTXTs. Since this document is crucial as an educational example of a DDTXT, I am providing a pointer back to the main program.)
 
-// Digital Dialogue Text Reader (and Parser)
-// Copyright (C) 2023 Michael Rumpff (MZRProductions)
+/*
+  Digital Dialogue Text Reader (and Parser)
+  Copyright (C) 2023 Michael Rumpff (MZRProductions)
 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, see <https://www.gnu.org/licenses/>.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https://www.gnu.org/licenses/>.
+*/
 
 
 // This is an example of a functional Digital Dialogue Text (DDTXT) document.
@@ -30,6 +34,8 @@
 // These are properties of the main node:
 name = Example DDTXT
 author = MZRProductions (Michael Rumpff)
+// This property enables a basic table of contents based on chapter names.
+// (You can find out more about this property in the manual.)
 provideTableOfContents = true
 
 // Now we are going to set this document's style:
@@ -71,7 +77,7 @@ This document has been written as an example of authoring DDTXTs. There are comm
 
 
 
-// Here are the document's characters.
+// Here are the document's characters. For the purpose of this example, we will use the letters A, B, and C to represent the three biggest characters. All of the other characters will be casted in, which I'll explain later. You will likely 
 
 
 // AMY
@@ -114,7 +120,12 @@ color = royalblue
 <text>
 
 // Use of codeless reference notation is very common in biographies since they mostly discuss their respective character.
-@A is an office worker. } on = way to buy flowers for the office when < meets the crowd.
+
+// (By the way, biographies are usually written in the present tense as opposed to stories, which are usually told in past tense. The difference is that characters are imagined to be livING currently, whereas stories happen once (preterite, completed past tense) and are fixed. Stories are finished. Characters are usually not finished unless you really want them to be.)
+
+@A is an office worker.
+} on = way to buy flowers for the office when < meets the crowd.
+
 // {A --> She is
 // }A --> She's
 
@@ -162,7 +173,9 @@ color = teal
 // BIOGRAPHY
 <text>
 
-@B is the owner of + Flower Emporium, which does indeed sell flowers. However, business hasn't been too strong recently (thanks to that new donut bakery). @ has been contemplating = next steps to avoid financial distress.
+@B is the owner of + Flower Emporium, which does indeed sell flowers.
+However, business hasn't been too strong recently (thanks to that new donut bakery).
+@ has been contemplating = next steps to avoid financial distress.
 
 </text>
 
@@ -184,6 +197,38 @@ name = Charles
 // (In other words, Charles is a gender-neutral person.)
 
 // This means that we don't need a pronouns subnode, since the DDTXT Reader assumes gender-neutrality unless told otherwise.
+
+<style>
+// For this character, we are going to do something more complicated.
+// Let's start by setting the background color of dialogue.
+backgroundColor = darkorange
+// Since we set a background color, we will likely want to setup some padding between the actual text and the webpage.
+// To do this, we use the dialoguePadding property.
+dialoguePadding = 0.75%;
+// Now that we have made the background roughly orange, we will want to choose a name color that fits with this and also stands out enough to be read easily.
+// For this, we'll choose a dark red or and orange.
+color = maroon
+// Since this character is the villain, we'll be extra fancy and choose a (slightly) different color for the spoken words. This is done by setting the paragraphColor property. 
+paragraphColor = white
+
+</style>
+
+// BIOGRAPHY
+<text>
+
+It was many years ago when @C(em dash)
+
+Forget it.
+
+(break)
+
+I'm not going to write a whole bunch of backstory that is of no relevance to the story. Come on, I've got other DDTXTs to write.
+
+(break)
+
+How about you practice writing a biography here? Yes, that's it. I meant this all along. If you practice doing my work for me, then you'll get even better at doing your own work!
+
+</text>
 
 </character>
 
@@ -208,12 +253,13 @@ name = +A Big Day
 // This line is technically useless. (If you don't believe me, comment it out and see for yourself.)
 subtitle = none
 
-// We still include it because it tells other authors or editors that meant to exclude the subtitle.
+// We still include it because it tells other authors or editors that we meant to exclude the subtitle.
 
 // All document words go inside of the <text> subnodes of every <chapter> node in your document.
 <text>
 
-// I am going to write each sentence on a new line for easier reading in the editor.
+// I am going to write each paragraph sentence on a new line for easier reading in the editor.
+// This is absolutely optional, and most of the time you will likely write an entire paragraph on one line. If you do this, you will want to make sure that text wrapping is enabled in your text editor.
 
 // Here are references to the character "A" (Amy).
 @A woke up to a bright square of sunlight coming from =A window.
@@ -228,9 +274,10 @@ The blankets were still warm from = overnight body heat.
 
 The blankets melted into soft warmth from sleepiness.
 
-// This character does not exist, but just for this dialogue, we are pretending that it has been registered.
-// This basic "character" only serves as words for the reader to see next to the dialogue.
+// This character does not exist, but just for this dialogue, we are pretending that it has been registered. To do this, we place a literalized hashtag (which, remember from TUTORIAL.ddtxt, is two hashtags back-to-back) directly before the text that we want to use in place of the character name.
+// This basic "character" only serves as words for the reader to see next to the dialogue. Any dialogue that has been casted in will follow basic document styling, which means that the color of the dialogue will match the color of your chapter's paragraph text.
 // This process is referred to as "casting" a character in.
+
 [##Alarm Clock: AAAAA!]
 
 It was still too early.
@@ -241,7 +288,8 @@ It was still too early.
 
 [A: Ugh...]
 
-<A got out of bed and brushed =A teeth. After putting on the day's outfit, < went downstairs and grabbed = keys.
+<A got out of bed and brushed =A teeth.
+After putting on the day's outfit, < went downstairs and grabbed = keys.
 
 // We want to split text after this into a new paragraph, so we use the (break) command.
 // This command can be used anywhere, but writing it on a new line makes it easier to understand the document in raw form.
@@ -320,6 +368,15 @@ Without a conversation, they could hear the aggressive crowd next door.
 // They make their way onto the donut bakery's roof and break in through the ceiling, discovering the donuts' secret ingredient.
 
 
+// Here is the second chapter.
+
+// You will see that I have used an increasing length style of chapter organization. I start with smaller chapters and build up to longer chapters, hopefully mirroring the readers' attention span corresponding to each segment.
+// The farther the reader gets, the more the reader has committed, presumably. Pacing will never be perfect, but this can at least prevent some readers from giving up on long initial chapters.
+// Furthermore, you'll probably still want to vary chapter length for emphasis and contrast.
+
+// (This is one way of approaching chapter lengths.)
+
+
 <chapter>
 
 name = Quick, Panic!
@@ -327,7 +384,549 @@ subtitle = none
 
 <text>
 
+// Here we have another casted (temporary) character, this time for a group. Anytime you have a generically named group, you will likely use a casted dialogue entry.
 
+[##Crowd: LET US IN!]
+
+[A: I need to get out of here before it gets crazier.]
+
+A window broke next door and all that could be heard was the echo of trampling footsteps.
+The glass made an uncomfortable crunching sound underneath the hectic feet of the enraged crowd.
+The crowd began pushing up against the windows of the flower shop.
+
+[A: Ah!]
+
+[B: What are they doing now?]
+
+[A: They're blocking my way!]
+
+// This is entirely optional, but I sometimes use periods before question marks (?) and exclamation marks (!). Each period represents less energetic or confident speech, with no periods being the strongest, ultimate form of each.
+// So does that mean we win? (Strong)
+// So does that mean we win.? (Confused)
+// So does that mean we win..? (Perhaps groggy or very confused)
+// Yes! I like pizza. (Strong)
+// Yes.! I like pizza. (Not confident)
+// Yes..! I like pizza. (Very delayed or almost the same as a single period)
+// Yes..yeah..sure... I "like" pizza. (Bad liar / Full of it)
+
+[B: Not anymore.!]
+
+@B grabbed a broom and walked to the front door. Opening it, < yelled at the crowd.
+
+[B: Hey! Get back or I'm calling the police!]
+
+@ waved the broom in the air, hoping to shoo the absurd crowd away.
+
+// These three periods inside of parentheses are called an "ellipsis" (plural is ellipses). This represents silence or, in fancier settings, omitted text.
+
+[##Crowd: (. . .) Get >!]
+
+@B made it back inside, only losing = broom.
+< locked the door and briefly planned an escape strategy.
+
+// (Double exclamation marks (!!) and question marks (??) are extra emphatic, and are usually associated with yelling or freaking out.)
+
+[B: Leave the Peace Lily here for now!! We need to go upstairs!!]
+
+@A placed the Peace Lily on the desk and followed @B, who was running to a door at the back of the store.
+<B opened the back door and took a sharp right.
+Upon entering the doorway, <A could see that the back of the store was covered up by a very tall and lofty connected greenhouse.
+There were a myriad of colorful, flowering plants comprising a fluid, amorphous pile of greenery.
+
+(break)
+
+They walked up the metal catwalk staircase connecting the flower store to the upstairs floor, whatever it held.
+@B grabbed = keys out of = pocket and unlocked the door.
+
+[B: Quick! Come up here!]
+
+@A ran up the steps and stepped through the open doorway.
+@B closed the door and locked it, bolting it shut.
+
+[B: Phew! They shouldn't be able to come up here..!]
+
+@A looked around at the room, slightly scared of following a stranger into an unknown place.
+
+[A: What is this?]
+
+[B: This is my apartment.]
+
+[A: It must be nice to walk downstairs to work instead of commuting.]
+
+[B: Yeah, but who knows how long I can make that last..]
+
+It had beige, floral wallpaper.
+Usually, the beige wallpaper would have been hideous, but the wallpaper featured a design made of enough colorful flowers that the overall effect was that of a colorful room.
+The room was a large rectangle with a little nook immediately to the left and a diagonal hallway to the far back left corner.
+The main room held seats around a table and a fireplace to the right.
+
+// You can have large paragraphs, but I like to split them up to make it feel more readable.
+// A good time to split paragraphs is when you shift focus. For example, I have finished describing the main room and have started describing the side branches of the room, which means that I should (break) here and split my thoughts.
+// (I tend to have better focus and retention, which results in better comprehension, when text is split up. That's a large reason for this entire file format!)
+
+(break)
+
+The nook housed two bookshelves built into the wall and a thick armchair for reading.
+The nook was mostly shaded due to the sunlight's angle.
+The hallway was the brightest space visible from where they stood.
+Presumably, the hallway was connected to the front facade windows that looked out onto the street below.
+
+[B: I'm calling for help.]
+
+// "Back in the day" (not that long ago) there used to be phones attached to walls called "landlines". Now, most landlines have been succeeded by cell (mobile) phones.
+
+@B walked to the landline to report the commotion below.
+@A kept looking around the peculiar apartment.
+Within a few seconds, @B had already hung up.
+
+// In the real world, they might make Bill stay on the call (depending on the severity of the situation), but for the purpose of this story, we'll pretend that this call is a simple report.
+
+[B: They're already on it. (labored sigh)(em dash)I need a break...]
+
+<B sat down on the couch in the living room.
+Meanwhile, @A walked through the bright hallway to look at the crowd from above.
+
+(break)
+
+After walking carefully through the unfamiliar space, < made = way to the windows, which were adorned with potted plants.
+< peeked through the plants sitting in the thick, protective window sills, listening to the sounds of the people breaking into the flower store below.
+
+(break)
+
+The crowd filled up the entire street now.
+People were scrambling in and out of the shops below, including the bakery next door.
+< saw people walking out of the many stores below with all kinds of products in hand.
+// Stores here means the buildings surrounding the bakery.
+
+(break)
+
+< walked back to the main room, since there was not much else to do.
+
+[A: It's getting worse! It's all over the street.]
+
+[B: You may want to call off of work...]
+
+Utilizing that sound advice, <A approached the landline and called into work.
+
+[A: Hello, this is @A. I won't be able to come into work until much later or not even today due to this crowd downtown.]
+
+[##Boss: Where are you now?]
+
+[A: I'm at the +B, erm(em dash)+B Flower Emporium! I was coming here to buy the office plant you asked for, and by the time I was getting ready to leave, the crowd was too thick!]
+
+[##Boss: Nice try, that flower store has been closed for over a month!]
+
+// (It's a joke. Bill doesn't get much business.)
+
+[A: It's still ope-]
+
+[##Boss: Save it. Look, either you come here soon or your future at the company will be in jeopardy.]
+
+[A: Al(em dash)alright.. Understood.]
+
+<A hung up and sat down across from @B.
+
+</text>
+
+</chapter>
+
+// Next chapter:
+// They go to the roof and try to determine the cause of this whole mess.
+
+<chapter>
+
+name = The Secret Ingredient
+// You can include references in a subtitle the same way you would in a main title.
+subtitle = (and +A and +B plans to uncover it!)
+
+<text>
+
+[B: I find it unlikely that anything will come of us just sitting around. We need to take action!]
+
+[A: You think so.?]
+
+// Remember, the * symbol represents the reflexive pronoun.
+@B looked around the room, mumbling = thoughts to *.
+
+[B: Let's go up to the roof.]
+
+< walked over to a rectangle in the ceiling over the right part of the living room.
+Upon pulling a cord,
+// (not an electrical cord but a rope)
+// Since we split a sentence with a comment, we need to add a space before the word. Punctuation is not present to add a space.
+$ the rectangle revealed itself to be a pivoting ceiling panel.
+A wooden staircase descended from the attic space above.
+
+[A: Yeah, but this seems safer.]
+
+// Plot convenience:
+
+Only a brief moment after <A spoke, there were metallic echos coming up the greenhouse staircase.
+The gentler echoes soon turned into poundings upon the apartment door.
+
+[A: Okay.!]
+
+@B climbed the steps, followed by @A.
+Once they were both up, @B yanked the staircase up and retracted the ceiling.
+
+[B: Phew...]
+
+[A: What about your apartment?]
+
+[B: Don't remind me. For now, I just want to escape this madness.]
+
+They were standing on plywood above ceiling beams.
+Surrounding the platform was an elaborate layered network of wooden beams and supports holding the building's roof together.
+The attic was lit by 
+In front of them was an offshoot of the platform leading to a wooden door.
+
+(break)
+
+@B walked to the wooden door and opened it.
+Sunlight increasingly poured into the attic as the door became more perpendicular
+// Perpendicular means at a right, 90 degree angle, so this fancier description basically just means that the door is opening.
+$ to the wall.
+
+[B: Let's go out onto the balcony!]
+
+Once again, @A followed @B across the offshoot and onto the balcony in front of the main roof.
+The bright sunlight above the city blinded the two of them.
+@B closed the attic door behind them in order to thwart the crowd as much as possible in following them.
+
+[B: This is it!(em dash)There's nowhere else to go!]
+
+[A: This can't be it.]
+
+<A looked around for means of escape. The only things present were various crates and pallets.
+
+[A: Where did you get all these? How did you even get these up here??]
+
+[B: They were here when I moved in! I haven't the slightest clue!]
+
+@ began moving the pallets toward the exterior side wall of the bakery, attached to the balcony.
+Since the wall was higher than they were, < planned to simply make a staircase and climb the gap.
+
+[B: What are you doing.?]
+
+[A: I want to get to the bottom of this!]
+
+[B: Are you crazy!?]
+
+[A: I'm not losing my job for nothing! Come on! Help me build a way up!]
+
+@B stood silently for a few moments, weighing the possible outcomes.
+
+[A: We don't have all day!]
+
+// Just a reminder: regular words inside of parentheses do not trigger any action.
+
+[B: Alright... (sigh)]
+
+[B: If it's what it takes to make up for this day, then we should do it.]
+
+They hastily propped up all the boxes and crates at their disposal.
+After finishing the shoddily built pile, @A awkwardly stumbled upward toward the bakery's flat, concrete roof.
+
+(break)
+
+Having made it, < stopped for a moment to breathe.
+@B was working on coming up too.
+
+[B: What's up there? Ah!]
+
+The pile shifted slightly.
+
+[A: Nothing much.]
+
+<A noticed an access point on the opposite corner of the roof.
+< rushed over to it, although the doorknob was jammed.
+
+// Profanity is especially useful when used rarely.
+// This occasional usage keeps profanity meaningful.
+// Of course, different character types may utilize exaggerated profanity much more often.
+// Ultimately, it's all just words. Clever usage is everything.
+// ("Non-profane" language tends to be much more harmful when applied maliciously.)
+[A: Damn!]
+
+[B: What is it?]
+
+By this point, @B had made it over the brick half-wall enclosing the bakery's flat roof.
+
+[A: The door is completely stuck!]
+
+[B: Are we trying to get inside?]
+
+[A: Of course! Why else would we climb up here?]
+
+[B: There's an ajar ventilation
+// (Ventilation is usually abbreviated as "vent.")
+$ panel over there.. If you're really desperate.]
+
+They hesitantly approached the broken ventilation panel, peeking inside of the dark, enclosed space.
+@A put = hands in the opening and tried to peel more of it away, mostly succeeding.
+
+[A: Do you think it would be too small?]
+
+[B: (shrug)(em dash)How would I know?]
+
+@A put one of = legs into the opening.
+Then, grabbing onto the top of the shaft, as if it was a handle, < placed = other leg into the darkness and plunged into the cold shaft.
+
+</text>
+
+</chapter>
+
+// Next chapter: Charles, the antagonist, is introduced!
+// Charles has been concentrating a previously undiscovered fruit by turning it into jam and then cooking it down even further into a syrup that is then mixed into the donut batter.
+// Charles is doing this because the condensed syrup is addictive, and addicted customers leads to more business for the bakery.
+// (Charles is truly an upstanding citizen.)
+// And, of course, because this is a generic, trope-ridden story, the main characters will stop the villain from accomplishing any more evil.
+// Well done, A and B. This act really is legendary, and will surely be written in history books forevermore.
+
+<chapter>
+
+name = Getting to the Bottom of It
+subtitle = (Do we really need a subtitle here?)
+
+<text>
+
+// By this point, I'll assume that you can read this text easily, so I won't write any comments unless I do something strange or have something to say.
+
+[A: (scream)(em dash)AAHH!!]
+
+<A began to slide down a downwardly diagonal stretch of ventilation shaft.
+It was much colder than < had thought it would be
+$ (unbelievably cold, in fact).
+< felt like < was a prototype of the newest flavor of popsicle.
+
+(break)
+
+After a few feet, < landed in even more ventilation shaft.
+The walls had narrowed a bit, making it even harder for > to move through.
+
+[A: Grr...ugh..]
+
+< wiggled further and further in, hoping that there would be some reward for all of this.
+
+(break)
+
+Suddenly, there was a loud metal screech.
+The portion of the shaft < was in began to bend a bit.
+The whole thing began to pivot and fall.
+
+[A: AH!]
+
+// By this point, readers should be engaged enough (or they've already left) that long paragraphs should be a welcome sight.
+
+< was knocked out of the vent onto something soft, thankfully.
+Once the initial effects of light blunt trauma subsided, < crawled completely out of the air duct and
+// To ascertain roughly means to obtain knowledge of or figure out something
+$ ascertained = current location.
+< was in a room with a dark ceiling but a bright floor.
+There was a bright desk lamp sitting on a stack of phone books in the corner of the room.
+This desk lamp was illuminating the middle and opposite side of the room greatly.
+
+(break)
+
+Along the edges of the room were dozens of filing cabinets, most of them with open drawers.
+Scribbled notes and papers were littered across the beige carpet floor.
+However, the main topic of importance was the large contraption in the middle of the room.
+
+(break)
+
+At the top, there was a large transparent container holding a variety of mysterious colorful fruit.
+Below that, there was a small pipe leading to a large, opaque tank.
+After the fruit came out of there, it was mush.
+The next pipe lead to a large, heated bowl (also transparent) where it seemed as if the mush was getting melted down to nothing more than a pulp.
+A tiny tube took the condensed syrup out of the melting chamber and into a collection container at the bottom.
+
+[A: Wow!]
+
+There was a loud thud followed by screaming.
+
+[B: AAHH!!]
+
+For >B, what was left of the air duct was like a slippery slide.
+
+[B: AAAA-(There's a very slight doppler effect as <B moves across the room and onto the couch.)-AAAA!]
+
+< slammed into the couch, breaking it in half.
+
+[B: Ohh...]
+
+[B: Why didn't you warn me..?]
+
+[A: Look!]
+
+@B got up and walked to the middle of the room, noticing the contraption.
+
+// When introducing a character for the first time, you may want to write sample dialogue like this to test the <style>:
+
+// [C: Hello World!]
+
+[B: What is that?]
+
+[A: Well, someone's making something...]
+
+They stepped closer and took a look at the intricate mechanisms for pumping the fruit solution around.
+
+(break)
+
+The metal door flew open, revealing a figure holding a crowbar.
+
+// I use "???" to signify an unknown character. I would recommend making this a standard, but this is really up to you.
+
+// However, since we are casting this character in, we need to start the code off with two hashtags (##).
+[##???: Who the hell are you!?]
+
+[A: Ah!]
+
+[##???: What are you doing!?]
+
+// Also, since we don't know anything about the character at this point, we should use the gender-neutral pronoun "they." (This is considered standard practice by scholar guidelines and has been mostly accepted for a long time.)
+// You could choose to introduce the character's gender, etc... before introducing the name, but I find it easier to avoid these details until you properly introduce and describe the character.
+The figure began to approach nearer and nearer, preparing to strike them both with the crowbar.
+@A stepped forward a bit and gave the shadowy countenance
+// 
+$ a bold, stern look.
+
+[##???: You're not afraid of me?]
+
+[A: I'm losing my job because of you!]
+
+[##???: Oh(em dash)Well, that explains your rudeness.. Hmph...]
+
+[B: You destroyed my business!]
+
+[##???: I never wanted to destroy anything. I only wanted a sure business plan.]
+
+// You can avoid retyping the same character code in a dialogue entry by leaving the code half blank. The reader will insert the last used character code in a dialogue entry.
+// (This is called dialogue shorthand.)
+[: My name is @C.]
+
+// Now we can switch over to Charles' styling:
+[C: It was several years ago. After enduring a hard time with my original bakery, I(em dash)]
+
+// No long exposition...
+
+[A: We don't care!]
+
+[B: Wait a minute, your business was struggling too.?]
+
+[C: Of course! Why else would I come up with a diabolical plan to extract an addictive substance found in trace amounts in a rare fruit?]
+
+[: For the fun of it? I guess it is pretty fun...]
+
+[: And now I never have to worry about economic downturns ever again!]
+
+[A: That's a horrible way to solve your money problems! Couldn't you have just rebalanced your budget?]
+
+[C: Do you really think I would have done all this without trying that? I'm insulted that you think I'm that incompetent!]
+
+Unfortunately, @C finally noticed the broken ventilation system.
+
+[: We can discuss thi(em dash) What happened to my vent!?]
+
+[A: (. . .)]
+
+[B: Uhh...]
+
+[C: How about you two fix this and I'll help your, whatever it is you do.]
+
+[B: I have a Flower Emporium.]
+
+@C put = hand on = chin as if that actually helped the thinking process.
+
+[C: Hmm... Oh, I've got it: addictive pollen!]
+
+[: Your customers will be begging for more seasonal allergies.]
+
+[A: Come on! That's ridiculous! How can you be addicted to flowers?]
+
+[C: I'm sure there's a patch of addictive flowers out there somewhere waiting to be discovered.]
+
+[B: Deal!]
+
+@B excitedly shook +C hand.
+
+[A: What.!? How can you do that?]
+
+[B: I don't want my business to die out! This could be my only chance.]
+
+[C: You've made a great choice! You won't be able to walk down the street without seeing pedestrians huffing the pollen of their very own flowers.]
+
+The power went out and @C turned on = flashlight.
+
+[C: For now, let's deal with this crowd.]
+
+The three of them walked through the door leading from the crazy laboratory to the upstairs hallway.
+Upon entering the top floor's main room, @C began shuffling through piles of documents, keys, desk paperweights, anything one could imagine as an article
+
+// People will sometimes say (more formally) "an article of clothing," where "article" means an item. So, in this case, by "an article of clutter" I mean a disorganized object contributing to the clutter.
+
+$ of clutter.
+
+[C: Aha! Here it is. The solution!]
+
+@C grabbed a spray bottle of what appeared to be a cleaning solution (the type of which you might spray on a window or a counter) and a box fan.
+
+[C: Here, carry this fan with me.]
+
+@B grabbed the box fan and @A followed the two of them up to the bakery's rooftop.
+
+(break)
+
+Each step was stranger than the last. The large, static concrete blocks formed a daunting climb, certainly not helped by the mysticism of +C demeanor. @A was not sure of the following outcome, but resolved to do something, < climbed the steps. Were they ascending toward a solution, or were they descending into a trap?
+
+(break)
+
+Upon reaching the rooftop, @B plugged the fan in, according to +C request. Once the fan was spinning at a sufficient velocity, @C sprayed the blue aerosolized solution, now luminously sparkling in the daylight, into the direct stream of the fan's current. The blue particles flew wildly about the building's upper facade before plummeting to the chaotic scene below.
+
+(break)
+
+The turbulent gathering in the street below began to slow. They moved more and more slowly, as if weights were being added to their shoulders. The previously abhorrent screams of the enraged customers turned to a murmur, followed by an eerily silent wave of calm.
+
+[C: Well, that's fixed(em dash)for now...]
+
+There was no sound of traffic, commotion, or any other usual sound of commerce within a city. Birds and crickets, usually muffled by this noise, were widely audible.
+
+[C: You didn't tell me about that!]
+
+@C had seen the exterior damage required to enter the building.
+
+[B: It's(em dash)well...]
+
+[C: More for you to fix.]
+
+There was nothing said for a few seconds.
+
+[A: What do we do now.?]
+
+@C pointed to a dusty broom leaning against the flat roof's edge wall.
+
+[C: There is cleaning to be done.]
+
+So, they took brooms and mops and all sorts of cleaning instruments and worked on cleaning the bakery and the flower emporium as each individual in the crowd woke up, one by one, and walked away with no regard for the previous events.
+
+(break)
+
+As @A watched these people, < felt upset that they got to leave and < got to clean up the mess. After all, they had broken even more than < had, and for a worse purpose. However, by the time sufficient thinking had been done, the presence that day of the long-gone crowd could only be theorized by the structural damage done to the street.
+
+(break)
+
+Once @C was satisfied, @A left and returned to = neighborhood, which, thankfully, had avoided any sort of catastrophe. The quiet scene of the street and houses felt ironic to @A, who immediately walked up = stairs and went straight to bed.
+
+// This is a division, created by the keyword "(divide)", which splits your document with breaks and adds a decoration in between. (In my opinion) this is most useful for indicating gaps in time that could otherwise be lost on the reader.
+
+(divide)
+
+[##Alarm Clock: AAAAAAA!]
+
+@A gradually woke up to the radiant sunlight greeting > from the window. Sitting up, < opened the window to let in a soothing current of fresh, outside air. The scent of flowers powered its way to her second floor window. The flowers smelled remarkable that morning.
+
+(break)
+
+< peeked = head out the window to ascertain more of the scent. The scent was lovely and warm, seemingly coming from beyond = yard even. In a sudden realization of the grim agreement of yesterday, < darted = head back inside and shut the window, not wanting anything to do with today's crowd.
 
 </text>
 
