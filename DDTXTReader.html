@@ -334,7 +334,7 @@ html {
 <tr id="documentInfo">
 
 <td id="ui-summary" class="ui-button">Summary</td>
-<td id="ui-toggle" class="ui-button">Hide stats.</td>
+<td id="ui-toggle" class="ui-button">Hide UI</td>
 
 </tr>
 
@@ -561,6 +561,7 @@ const charactersNotAllowedInCodes = [
 	".",
 	",",
 	";",
+	":",
 	"[",
 	"]",
 	"(",
@@ -645,9 +646,9 @@ var clearDDTXT = function () {
 				"",
 				// 3, NODEERROR
 				"",
-				// 4, FILEERROR,
+				// 4, FILEERROR
 				"",
-				// 5, REFERENCEERROR,
+				// 5, REFERENCEERROR
 			],
 			// Helper functions:
 			getTypeFromCode: function (code) { // Grab an error from the type list.
@@ -756,6 +757,10 @@ var clearDDTXT = function () {
 			allowBracketLiterals: false, // Whether the parser can literalize square brackets with dollar signs. (NOTE: Hashtags will always literalize square brackets as they are specific and emphatic.)
 			lastModified: null,
 			filename: "untitled.ddtxt",
+			rawWordCount: 0,
+			rawCharCount: 0,
+			wordCount: 0,
+			charCount: 0,
 		},
 		// This object holds character information and the main parsing function.
 		cast: {
@@ -1340,7 +1345,7 @@ var generateHTMLCharacterBiographies = function () {
 var generateHTMLSummaryText = function () {
 	const lastModifiedDate = new Date(DDTXT.global.lastModified); // Convert the integer to a Date object
 	const characterBios = generateHTMLCharacterBiographies();
-	return DDTXT.cast.format(DDTXT.global.summary) + "<hr>by <em>" + DDTXT.global.author + "</em><hr>Last modifed on " + lastModifiedDate.toDateString() + ", " + lastModifiedDate.toTimeString() + "<br>under " + DDTXT.global.filename + "<hr>(Click anywhere to close this summary.)" + characterBios + "<br><p style=\"text-align: center\">(Click anywhere to close this summary.)</p>"; // Return the entire summary box
+	return DDTXT.cast.format(DDTXT.global.summary) + "<hr>by <em>" + DDTXT.global.author + "</em><hr>Last modifed on " + lastModifiedDate.toDateString() + ", " + lastModifiedDate.toTimeString() + "<br>under " + DDTXT.global.filename + "<hr>Raw File Word Count: " + DDTXT.global.rawWordCount + "<br>Raw File Text Character Count: " + DDTXT.global.rawCharCount + "<br>Translated Document Word Count: " + DDTXT.global.wordCount + "<br>Translated Document Text Character Count: " + DDTXT.global.charCount + "<hr>(Click anywhere to close this summary.)" + characterBios + "<br><p style=\"text-align: center\">(Click anywhere to close this summary.)</p>"; // Return the entire summary box
 };
 
 // Create DDTXT content for the table of contents to be formatted upon convertDDTXTToHTML():
@@ -1369,7 +1374,7 @@ var convertDDTXTToHTML = function () {
 	// If there should be a table of contents, then generate that first:
 	if (DDTXT.global.provideTableOfContents) {
 		const tableOfContents = generateTableOfContents(); // Get generated table of contents in DDTXT format
-		HTMLFormat += "<div class=\"chapterHeading\"><h1 class=\"chapterTitle\" id=\"chapter-0\" style=\"color: " + DDTXT.style.headingColor + "\">Table of Contents</h1></div><br><p style=\"text-align: center; font-size: 20px\">" + DDTXT.cast.format(tableOfContents) + "</p>";
+		HTMLFormat += "<div class=\"chapterHeading\"><h1 class=\"chapterTitle\" id=\"chapter-0\" style=\"color: " + DDTXT.style.headingColor + "\">Table of Contents</h1></div><br><p id=\"tableOfContents\" style=\"text-align: center; font-size: 20px\">" + DDTXT.cast.format(tableOfContents) + "</p>";
 	}
 	
 	// Keep track of the numerical identity of each chapter
@@ -1690,12 +1695,94 @@ var updateExternalText = function () {
 	document.getElementById("editor-errorMenu").style.backgroundColor = (DDTXT.error.list.length > 0) ? "red" : "darkblue";
 };
 
+var calculateWords = function (text) {
+	var wordCount = 0;
+	var insideOfWord = true;
+	
+	// (Hopefully a single pass-through will render this code efficient enough to be included every parsing.)
+	
+	for (var currentChar = 0; currentChar < text.length; currentChar ++) {
+		// Every time we hit punctuation or a space, we end our current word.
+		// Then, whenever he hit an alphanumeric character, we increment the word count.
+		if (insideOfWord) {
+			if (charactersNotAllowedInCodes.includes(text [currentChar]) || text [currentChar] === " ") {
+				insideOfWord = false;
+			}
+		}
+		else {
+			if (!charactersNotAllowedInCodes.includes(text [currentChar]) && text [currentChar] !== " ") {
+				insideOfWord = true;
+				wordCount ++;
+			}
+		}
+	}
+	
+	return wordCount;
+};
+
+// Find the total amount of words in all chapters.
+// NOTE: This function is currently hefty and should be optimized.
+var calculateTranslatedDocumentLength = function () {
+	const allDDTXTNodes = document.getElementById("DDTXT").childNodes;
+	
+	var totalWordCount = 0;
+	var totalCharCount = 0;
+	
+	// Look inside of each chapter.
+	for (var currentNodeIndex = 0; currentNodeIndex < allDDTXTNodes.length; currentNodeIndex ++) {
+		const currentNode = allDDTXTNodes [currentNodeIndex]; // Grab the current node.
+		
+		// Occasionally, we might find strange [object Text]s. (I'll be honest, I know little of the causes of this predicament.) In this case, we will view them as the innerHTML of HTMLParagraphElements.
+		// To find them, we look at the generic text we get by printing the object simply.
+		if (currentNode.toString() === "[object Text]") { // .toString() might not be very stable, but it is the only way I know of identifying these objects.
+			totalWordCount += calculateWords(currentNode);
+			totalCharCount += currentNode.length;
+		}
+		// Tag names include any ID and Class, so it's better to look at the first characters only instead of making a direct comparison.
+		else if (currentNode.tagName [0] === "P" || currentNode.tagName.substring(0, 2) === "H3") {
+			totalWordCount += calculateWords(currentNode.innerHTML);
+			totalCharCount += currentNode.innerHTML.length;
+		}
+	}
+	
+	// Add chapter titles and subtitles to the word count.
+	for (var currentChapter = 0; currentChapter < DDTXT.chapters.length; currentChapter ++) {
+		totalWordCount += calculateWords(DDTXT.chapters [currentChapter].name);
+		totalCharCount += DDTXT.chapters [currentChapter].name.length;
+		// Subtitles:
+		totalWordCount += calculateWords(DDTXT.chapters [currentChapter].subtitle);
+		totalCharCount += DDTXT.chapters [currentChapter].subtitle.length;
+	}
+	
+	// Also, if there is a table of contents, subtract that from the word count.
+	
+	const tableOfContents = document.getElementById("tableOfContents");
+	// (Make sure the element exists before looking inside of it.)
+	if (tableOfContents) {
+		totalWordCount -= calculateWords(tableOfContents.innerHTML);
+		totalCharCount -= tableOfContents.innerHTML.length;
+		// The word and character count of the table of contents would be skewed anyway, as there are anchor tags that would add to the count of both.
+		// Anchor tags (links) throughout the document are counted as words, but I do not expect this to distort the total count by enough of an error to justify spending extra processing time on it each parsing.
+	}
+	
+	// Finally, add the document title to the word count.
+	totalWordCount += calculateWords(DDTXT.global.name);
+	totalCharCount += DDTXT.global.name.length;
+	
+	DDTXT.global.wordCount = totalWordCount;
+	DDTXT.global.charCount = totalCharCount;
+};
+
 var parseDDTXT = function (text = stringifiedDDTXT) {
 	stringifiedDDTXT = text; // In case we don't have the string yet, copy it to a more permanent location
 	clearDDTXT(); // Clear the DDTXT again in case we are refreshing and not loading
 	document.getElementById("editor-content").innerHTML = stringifiedDDTXT; // Pour the raw document into the editor.
 	
 	const startParseTime = Date.now();
+	
+	// Calculate raw word count
+	DDTXT.global.rawWordCount = calculateWords(text);
+	DDTXT.global.rawCharCount = text.length;
 	
 	// Break the file into lines:
 	const lines = text.split("\n");
@@ -1750,6 +1837,8 @@ var parseDDTXT = function (text = stringifiedDDTXT) {
 	console.log(DDTXT);
 	// Having loaded all file contents to the DDTXT object, convert the DDTXT object into a string readable by HTML
 	convertDDTXTToHTML();
+	// Calculate translated word and character count:
+	calculateTranslatedDocumentLength();
 	// Store loading time for debugging purposes:
 	DDTXT.debug.loadTime = (Date.now() - startParseTime) / 1000;
 	// If we want debug info, print it.
@@ -1887,7 +1976,7 @@ var updateScrollProgress = function () {
 };
 
 var updateToggleButton = function () {
-	UIToggle.innerHTML = (statsAreVisible) ? "Show stats." : "Hide stats.";
+	UIToggle.innerHTML = (statsAreVisible) ? "Show UI" : "Hide UI";
 };
 
 // Setup statistics toggle button:
