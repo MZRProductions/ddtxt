@@ -1362,11 +1362,11 @@ subtitle = A tool to be used occasionally (No link spamming!)
 
 <text>
 
-You can opt to include one of two kinds of links in your DDTXTs. To create a link, simply create a dialog entry with the character code "href". The link address will be the spoken words that write after the colon.
+You can opt to include one of two kinds of links in your DDTXTs. To create a link, simply create a dialog entry with the character code "href". The link address will be the spoken words that you write after the colon.
 
 [text: (left bracket)href: LINK (right bracket)]
 
-The link address can, of course, be to an external website. If you do this, you will likely want to place a dollar sign directly before the link to have the parser skip over any DDTXT symbols that might naturally occur within the link. It is also good practice to leave a space after the link to signify when the link stops and the end bracket is placed. Because of the nature of hashtags in the DDTXT language, you will need to convert all single hashtags to double hashtags so as to not lose them. Links to external websites will show the full address.
+The link address can, of course, be to an external website. If you do this, you will likely want to place a dollar sign directly before the link to have the parser skip over any DDTXT symbols that might naturally occur within the link. It is also good practice to leave a space after the link to signify when the link stops and the end bracket is placed. Because of the nature of hashtags in the DDTXT language, you may need to convert all single hashtags to double hashtags so as to not lose them, however the dollar sign should preserve hashtags. Links to external websites will show the full address.
 
 [text: (left bracket)href:
 // The first dollar sign is literalized, so the second dollar sign is actually functionalized.
@@ -1380,7 +1380,7 @@ The above link would take you to the beginning of the document.
 
 (break)
 
-The reason that we use two hashtags is that links to objects within a webpage start out with ## in HTML. However, since the DDTXT parser attributes a special meaning to a single hashtag, we must specify that we want the literal symbol and not the function.
+The reason that we use two hashtags is that links to objects within a webpage start out with ## in HTML. However, since the DDTXT parser attributes a special meaning to a single hashtag, we must specify that we want the literal symbol and not the functional symbol.
 
 [note: Since both kinds of DDTXT links are built inside of dialog brackets, you cannot embed links in character dialogue.]
 
@@ -1557,7 +1557,7 @@ Here is this document's global style subnode.
 $<style>
 (break)
 (break)
-#// You can use any color the same way that you would in CSS. Here, we are using the common color "white" as the main text color.
+// You can use any color the same way that you would in CSS. Here, we are using the common color "white" as the main text color.
 (break)
 color #= white
 (break)
@@ -1622,10 +1622,10 @@ This button will apply any changes made to the finished, translated document. Yo
 This button will scroll the editor and the finished document to the end. This way, you can easily append more content to the document without scrolling all the way down. This action can also be achieved by pressing the 0 key when not typing in the editor.
 (break)(em dash) Jump to Top
 (break)
-This button will scroll the editor and the finished document back to the beginning. This way, you can easily access initial global and character nodes without scrolling all the way to the top. This action can also be achieved by pressing the ` key (or ~ key) when not typing in the editor.
+This button will scroll the editor and the finished document back to the beginning. This way, you can easily access initial global and character nodes without scrolling all the way to the top. This action can also be achieved by pressing the ` key (or #~ key) when not typing in the editor.
 (break)(em dash) Errors
 (break)
-This button will bring up an error menu that shows any current errors and possible fixes. For convenience, this button will appear red when there errors that need to be addressed. If the button is blue, then you have solved any problems with your document.
+This button will bring up an error menu that shows any current errors and possible fixes. For convenience, this button will appear red when there are errors that need to be addressed. If the button is blue, then you have solved any problems with your document.
 (break)(em dash) Close Editor
 (break)
 This button closes the editor, leaving you to read the finished, translated document. You can trigger this same action by clicking off of the textbox and pressing "E" again.
@@ -1660,7 +1660,7 @@ By now, you should know that there are three types of main, top-level nodes. (By
 
 (break)
 
-Furthermore, DDTXTs are not like XML files. You can only have two layers of nodes at any time and they must follow one of these.
+Furthermore, DDTXTs are not like XML files. You can only have two concurrent layers of nodes at any time (a main node and a subnode) and the combination must follow one of these options.
 
 (break)
 
@@ -1670,7 +1670,7 @@ The following is a complete list of all document properties and where they shoul
 
 [note: $<global> node]
 
-$<global> have two kinds of $<subnodes>: $<style> and $<text>. The main $<global> node itself has four properties. Original explanation: [href: ##chapter-3]
+$<global> have two kinds of $<subnodes>: $<style> and $<text>. The main $<global> node itself has five properties. Original explanation: [href: ##chapter-3]
 (break)
 name #= word(s) | Full document name | Untitled DDTXT
 (break)
@@ -1688,7 +1688,7 @@ allowBracketLiterals #= true/false | "true" allows the dollar sign to literalize
 
 [note: $<global> $<style> subnode]
 
-The $<global> $<style> subnode has the following properties. Original explanation: [href: ##chapter-14].
+The $<global> $<style> subnode has the following nine properties. Original explanation: [href: ##chapter-14].
 (break)
 color #= CSS color | Main text color | "black"
 (break)
@@ -1718,7 +1718,7 @@ The $<global> $<text> subnode contributes formatted DDTXT text to the document s
 
 [note: $<character> node]
 
-The $<character> node has three types of $<subnodes>, $<style>, $<pronouns>, and $<text>. The main $<character> node itself has two properties. Original explanation: [href: ##chapter-4]
+The $<character> node has three types of $<subnodes>: $<style>, $<pronouns>, and $<text>. The main $<character> node itself has two properties. Original explanation: [href: ##chapter-4]
 
 (break)
 code #= single word | Word used to refer to this character in in-text references | NO DEFAULT; THIS IS MANDATORY
@@ -1731,7 +1731,7 @@ name #= Word(s) | How the reader sees characters in the finished, translated doc
 
 [note: $<character> $<style> subnode]
 
-Original explanation: [href: ##chapter-13].
+The $<style> subnode of the $<character> node has four properties. Original explanation: [href: ##chapter-13].
 
 (break)
 color #= CSS color | Color of character's dialogue | "inherit" ("black")
@@ -1748,7 +1748,7 @@ dialoguePadding #= N%, where N is a number | The amount of padding (space betwee
 
 [note: $<character> $<pronouns> subnode]
 
-This subnode sets the character's pronouns. Original explanation: [href: ##chapter-5]
+This subnode sets the character's pronouns. There are seven types of pronouns. Original explanation: [href: ##chapter-5]
 
 (break)
 subject #= word(s) | Subject pronoun | "they"
@@ -1857,7 +1857,7 @@ Una solución es poner las referencias posesivas inmediatamente dentro de los ad
 
 [translated: @ejemplo7 es aburrid=ejemplo7.]
 
-Para poner referencias posesivas dentro de las palabras, se necesita hacer el pronombre posesivo solamenta una letra (o, a, etc...). No sé que esta accion sea dura, pero es mejor que nada.
+Para poner referencias posesivas dentro de las palabras, se necesita hacer el pronombre posesivo solamente una letra (o, a, etc...). No sé que esta accion sea dura, pero es mejor que nada.
 
 (horizon)
 
@@ -1924,7 +1924,7 @@ The first thing you should do is open the editor by pressing E (if it's not alre
 
 This menu is a summary of your document's issues. If everything is fine, you'll see nothing there. If there is an error, you'll see an entry with an error type, location (or rough context), and broad solutions. Most of the time, these errors will be a mere reminder to close off dialogue or add a colon or equal sign to a line. However, some of these problems will be more serious and/or will require you to examine your document more carefully.
 
-[note: There is a second way to view errors. The following is the original method of viewing DDTXT errors. This method is more suitable for programmers and web developers than for common authors, although you are welcome to take a peek.]
+[note: There is a second way to view errors. The following is the original method of viewing DDTXT errors. This method is more suitable for programmers and web developers than for regular authors, although you are welcome to take a peek.]
 
 (divide)
 
@@ -2079,7 +2079,7 @@ I bet that you were really confused when I outlined author comments at the very 
 
 (break)
 
-In this chapter, I will briefly go over both types of author comments, from now on called "comments", and when each should be used. Comments should always be used wherever there is a need to clarify intention, internally connect information, or to record information for future use. Since they are not read as DDTXT information (or included at all in the final document), they can be used more casually and loosely than document attributes.
+In this chapter, I will briefly go over both types of author comments, from now on simply called "comments", and when each should be used. Comments should always be used wherever there is a need to clarify intention, internally connect information, or to record information for future use. Since they are not read as DDTXT information (or included at all in the final document), they can be used more casually and loosely than document attributes.
 
 (divide)
 
@@ -2112,7 +2112,7 @@ $// Way better now
 
 (divide)
 
-The other type of comment is the block comment. Block comments tell the parser to ignore multiple lines at once. These are useful for paragraphs or longer disclaimers (such as the one at the top of this raw document). These should be created by writing "/*" on a new line and ended by writing "#*/" on a second new line. If you have trouble remembering which is which, remember that the asterisks (#*) are on the inside and the slashes are on the outside.
+The other type of comment is the block comment. Block comments tell the parser to ignore multiple lines at once. These are useful for paragraphs or longer disclaimers (such as the one at the top of this raw document). These should be created by writing $"/*" on a new line and ended by writing $"*/" on a second new line. If you have trouble remembering which is which, remember that the asterisks (#*) are on the inside and the slashes are on the outside.
 
 (break)
 
