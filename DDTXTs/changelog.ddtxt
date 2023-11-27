@@ -20,7 +20,7 @@ name = (break)(em dash)
 
 <text>
 
-Used to condense each bullet point to a single character: "#@".
+Used to condense each bullet point to a single character by using repeated shorthand: "#@".
 
 </text>
 
@@ -34,8 +34,44 @@ instance = shortcut
 
 <chapter>
 
+name = Post-Release
+subtitle = v1.0 and up
+
+</chapter>
+
+<chapter>
+
+name = v1.0
+subtitle = First public release!
+
+<text>
+
+@listPoint Added word counts and text character counts for both the raw file and the final readable document.
+@ Continued expanding rough draft of cookout.ddtxt. No large-scale revision has taken place yet.
+
+</text>
+
+</chapter>
+
+<chapter>
+
+name = none
+subtitle = Future plans
+
+<text>
+
+@ Rebuild the print functionality, allowing for more predictable behavior.
+@ Separate the DDTXT Reader and the DDTXT Parser into distinct scripts so that API across different files/scripts is possible. This means that the language could be incorporated into other works according to the GPL v3.0.
+@ Create an optional writing program to convert all node typing and property setting to an easier to use UI. Maximum compatibility will still be ensured with manual typing, although there is unlikely to be a large discrepancy between these two methods of authoring a DDTXT.
+
+</text>
+
+</chapter>
+
+<chapter>
+
 name = Pre-Release
-subtitle = #< v1.0
+subtitle = #prior to v1.0
 
 </chapter>
 
@@ -46,7 +82,7 @@ subtitle = Printing and keyboard shortcuts!
 
 <text>
 
-@listPoint Added block comments started by "/#*" and ended by "#*/", (as in C-based languages).
+@ Added block comments started by "/#*" and ended by "#*/", (as in C-based languages).
 @ Added Ctrl#+S shortcut to editor to save your edited DDTXT. (You should be pressing this frequently.)
 @ Added Ctrl#+Q shortcut in editor to refresh changes to the final document.
 @ Added P shortcut to print the DDTXT (in addition to Ctrl#+P).
