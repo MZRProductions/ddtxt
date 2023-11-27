@@ -1345,7 +1345,13 @@ var generateHTMLCharacterBiographies = function () {
 var generateHTMLSummaryText = function () {
 	const lastModifiedDate = new Date(DDTXT.global.lastModified); // Convert the integer to a Date object
 	const characterBios = generateHTMLCharacterBiographies();
-	return DDTXT.cast.format(DDTXT.global.summary) + "<hr>by <em>" + DDTXT.global.author + "</em><hr>Last modifed on " + lastModifiedDate.toDateString() + ", " + lastModifiedDate.toTimeString() + "<br>under " + DDTXT.global.filename + "<hr>Raw File Word Count: " + DDTXT.global.rawWordCount + "<br>Raw File Text Character Count: " + DDTXT.global.rawCharCount + "<br>Translated Document Word Count: " + DDTXT.global.wordCount + "<br>Translated Document Text Character Count: " + DDTXT.global.charCount + "<hr>(Click anywhere to close this summary.)" + characterBios + "<br><p style=\"text-align: center\">(Click anywhere to close this summary.)</p>"; // Return the entire summary box
+	// Let's break this gigantic string apart a bit.
+	const documentDescription = DDTXT.cast.format(DDTXT.global.summary);
+	const twoFirstBlocks = documentDescription + "<hr>by <em>" + DDTXT.global.author + "</em><hr>Last modifed on " + lastModifiedDate.toDateString() + ", " + lastModifiedDate.toTimeString() + "<br>under " + DDTXT.global.filename;
+	const wordCounts = "These counts are merely estimates and do not include this summary. (A &quot;Text character&quot; is a letter, number, or other individual symbol.)<br><br>Raw File Word Count: " + DDTXT.global.rawWordCount + "<br>Raw File Text Character Count: " + DDTXT.global.rawCharCount + "<br>Translated Document Word Count: " + DDTXT.global.wordCount + "<br>Translated Document Text Character Count: " + DDTXT.global.charCount;
+
+	// Let's piece it back together now.
+	return twoFirstBlocks + "<hr>" + wordCounts + "<hr>(Click anywhere to close this summary.)" + characterBios + "<br><p style=\"text-align: center\">(Click anywhere to close this summary.)</p>"; // Return the entire summary box
 };
 
 // Create DDTXT content for the table of contents to be formatted upon convertDDTXTToHTML():
